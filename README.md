@@ -19,3 +19,9 @@ FEATURES:
 - Events system with support for multi-day events
 - Video-on-demand and live streaming player generation system based on video.js
 - Icecast/Shoutcast HTML5 live radio player which can be integrated into the live video system
+
+External code used
+-ckeditor
+-video.js
+-flashls (Mozilla Public Licence)
+-videojs-osmf (doesn't work)
