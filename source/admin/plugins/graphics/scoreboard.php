@@ -41,6 +41,17 @@ class graphics_scoreboard{
         echo "00";
         html::closeDiv();
         
+        html::div("logo","tvlogo");
+        html::closeDiv();
+        
+        html::div("timer","timer");
+        echo "00:00";
+        html::closeDiv();
+        
+        html::div("name","half");
+        echo "2nd";
+        html::closeDiv();
+        
         html::closeDiv();
         html::end();
     }
