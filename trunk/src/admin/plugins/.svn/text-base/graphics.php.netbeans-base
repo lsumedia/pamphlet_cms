@@ -1,0 +1,40 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+class scoreboard extends optionsPage{
+    //todo
+    public $name = "plugin_scoreboard";
+    public $title = "Scoreboard";
+    
+    public function displayPage(){
+        echo $_SESSION['team1'];
+    }
+    
+    public function configPage(){
+        
+        
+        ce::begin("ce-large");
+        $t1= new ajaxForm("team1form","$this->name&team=1","POST");
+        $t1->formTitle("Scoreboard Controller");
+        $t1->infoRow("Team 1");
+        $t1->labeledInput("name", "text", "", "Name");
+        $t1->labeledInput("colour", "colour", "", "Colour");
+        $t1->labeledInput("increment", "number", "1", "Increment size");
+        $t1->clipboardSubmit("Add Point", "Current Score");/*
+        $t2 = new ajaxForm('team2form',"$this->name&team=2","POST");
+        $t2->infoRow("Team 2");*/
+        ce::end();
+    }
+    public function updatePage(){
+        $_SESSION['team1'] += $_POST['increment'];
+        echo $_SESSION['team1'];
+}
+    
+}
+
+$pluginPages[] = new scoreboard();

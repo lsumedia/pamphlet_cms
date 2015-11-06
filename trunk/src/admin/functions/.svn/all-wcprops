@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/pamphlet/!svn/ver/102/pm_manage/functions
+END
+elements.php
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pamphlet/!svn/ver/101/pm_manage/functions/elements.php
+END
+usertemplate.sql
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pamphlet/!svn/ver/81/pm_manage/functions/usertemplate.sql
+END
+data_wrangler.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/pamphlet/!svn/ver/90/pm_manage/functions/data_wrangler.php
+END
+options_pages.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pamphlet/!svn/ver/102/pm_manage/functions/options_pages.php
+END

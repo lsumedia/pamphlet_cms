@@ -1,0 +1,63 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 23
+/svn/pamphlet/!svn/act/
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/pamphlet/!svn/ver/116/pm_manage/plugins
+END
+events.php
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/pamphlet/!svn/ver/102/pm_manage/plugins/events.php
+END
+video.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/pamphlet/!svn/ver/116/pm_manage/plugins/video.php
+END
+radio.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/pamphlet/!svn/ver/107/pm_manage/plugins/radio.php
+END
+graphics.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pamphlet/!svn/ver/117/pm_manage/plugins/graphics.php
+END
+committee.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pamphlet/!svn/ver/79/pm_manage/plugins/committee.php
+END
+boulevard.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pamphlet/!svn/ver/79/pm_manage/plugins/boulevard.php
+END
+blog.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/pamphlet/!svn/ver/102/pm_manage/plugins/blog.php
+END
+media.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/pamphlet/!svn/ver/79/pm_manage/plugins/media.php
+END
+pages.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/pamphlet/!svn/ver/79/pm_manage/plugins/pages.php
+END
