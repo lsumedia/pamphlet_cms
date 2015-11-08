@@ -1,0 +1,33 @@
+<?php
+
+class live extends optionsPage{
+    
+    public $name = "plugin_live";
+    public $title = "Live Streaming";
+    
+    public function configPage(){
+        global $connection;
+        
+        $ce = new centralElement("ce-medium");
+        
+        $form = new ajaxForm("controlForm", $this->name, "POST");
+        $form->formTitle("Live Stream Control");
+        $form->checkBox("live", "", "Make stream live");
+        $form->inputWithButton("cover", "", "Holding image", "browseServer", "Upload");
+        $form->plainText("embed", "", "Stream embed code");
+        $form->submit("Update");
+        
+        $ce->end();
+    }
+    
+    public function updatePage(){
+        
+        $live = filter_input(INPUT_POST,"live");
+        $cover = filter_input(INPUT_POST,"cover");
+        $embed = content("embed");
+        
+        echo "$live $cover" . htmlspecialchars($embed);
+    }
+}
+
+$pluginPages[] = new live();

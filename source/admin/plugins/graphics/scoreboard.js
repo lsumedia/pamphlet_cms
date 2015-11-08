@@ -5,21 +5,18 @@
  */
 
 function updateScores(){
-    var nowplaying = document.getElementById('nowplaying');
     var request = new XMLHttpRequest();
     request.onreadystatechange = function(){
             if(request.readyState == 4 && request.status == 200){
                 //update page
-                if(request.responseText.length > 0){
-                    document.getElementById('nowplaying').innerHTML = "Now Playing: "  + request.responseText;
-                    document.title = title + ": " + request.responseText;
-                    console.log("Received updated now playing info");
-                }else{
-                    console.log("Received blank now playing info");
-                }
+                var array = JSON.parse(request.responseText);
+                document.getElementById('team1score').innerHTML = array[0];
+                document.getElementById('team2score').innerHTML = array[1];
+                console.log('Scores updated');
             }
     }
     request.open("GET",'public.php?action=plugin_scoreboard&data=' + id,true);
     request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     request.send();
 }
+

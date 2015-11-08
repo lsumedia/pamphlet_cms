@@ -1,0 +1,37 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of schedule
+ *
+ * @author Cameron
+ */
+class schedule extends optionsPage{
+    
+    public $name = "plugin_schedule";
+    public $title = "Schedule";
+    
+    public function configPage(){
+        global $connection;
+       
+        
+       
+        
+        $ce = new centralElement("ce-medium");
+        
+        $form = new ajaxForm("newItemForm", $this->name, "POST");
+        $form->formTitle("New Scheduled Item");
+        $form->labeledInput("title", "text", "", "Title");
+        $form->largeText("description", "", "Summary");
+        $form->submit("Add new item");
+        $ce->end();
+    }
+    
+}
+
+$pluginPages[] = new schedule();

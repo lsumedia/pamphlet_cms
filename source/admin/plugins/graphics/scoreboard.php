@@ -53,6 +53,11 @@ class graphics_scoreboard{
         html::closeDiv();
         
         html::closeDiv();
+        
+        echo "<script>", PHP_EOL;
+        echo "var id = $id;", PHP_EOL;
+        echo "setInterval(updateScores,100);", PHP_EOL;
+        echo "</script>", PHP_EOL;
         html::end();
     }
 }

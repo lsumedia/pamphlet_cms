@@ -14,6 +14,7 @@ class scoreboard extends optionsPage{
     public function displayPage(){
         if(isset($_GET['data'])){
             $id = filter_input(INPUT_GET,'data');
+            echo json_encode(self::scores($id));
         }else if(isset($_GET['id'])){
             $id = filter_input(INPUT_GET,'id');
             include('plugins/graphics/scoreboard.php');
@@ -110,10 +111,12 @@ class scoreboard extends optionsPage{
             
         }else if(isset($_GET['control'])){
             $id = filter_input(INPUT_GET,'control');
-            $amount = intval($_POST['t1score']);
+            
             if(isset($_GET['team1'])){
+                $amount = intval($_POST['t1score']);
                 echo self::incrementScore($id,1,$amount);
             }else if(isset($_GET['team2'])){
+                $amount = intval($_POST['t2score']);
                 echo self::incrementScore($id,2,$amount);
             }
         }
@@ -123,6 +126,7 @@ class scoreboard extends optionsPage{
         global $connection;
         /* This is disgusting but it works */
         if($team == 1){
+            
             $stmt1 = $connection->prepare("SELECT team1score FROM plugin_scoreboard WHERE id=?");
             $stmt1->bind_param('i',$scoreboard);
             $stmt1->execute();
@@ -130,13 +134,15 @@ class scoreboard extends optionsPage{
             $stmt1->fetch();
             $stmt1->close();
             
-            $newscore = $oldscore + $amount;
+            $newscore = intval($oldscore) + $amount;
             
             $stmt2 = $connection->prepare("UPDATE plugin_scoreboard SET team1score=? WHERE id=?");
             $stmt2->bind_param('ii',$newscore,$scoreboard);
             $stmt2->execute();
             $stmt2->close();
+            
         }else if($team == 2){
+            
             $stmt1 = $connection->prepare("SELECT team2score FROM plugin_scoreboard WHERE id=?");
             $stmt1->bind_param('i',$scoreboard);
             $stmt1->execute();
@@ -144,12 +150,13 @@ class scoreboard extends optionsPage{
             $stmt1->fetch();
             $stmt1->close();
             
-            $newscore = $oldscore + $amount;
-            
+            $newscore = intval($oldscore) + $amount;
+
             $stmt2 = $connection->prepare("UPDATE plugin_scoreboard SET team2score=? WHERE id=?");
             $stmt2->bind_param('ii',$newscore,$scoreboard);
             $stmt2->execute();
             $stmt2->close();
+            
         }else{
             return "There is no team $team!";
         }
@@ -183,6 +190,24 @@ class scoreboard extends optionsPage{
                 $stmt->close();
                 
                 return array($team1name, $team1img, $team2name, $team2img);
+                
+        }else{
+            return false;
+        }
+    }
+    
+    public static function scores($id){
+        
+        global $connection;
+        
+        if($stmt = $connection->prepare("SELECT team1score,team2score,trunning,telapsed FROM plugin_scoreboard WHERE id=?")){
+                $stmt->bind_param('i',$id);
+                $stmt->execute();
+                $stmt->bind_result($team1score,$team2score,$running,$elapsed);
+                $stmt->fetch();
+                $stmt->close();
+                
+                return array($team1score, $team2score, $running, $elapsed);
                 
         }else{
             return false;
