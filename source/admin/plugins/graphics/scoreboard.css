@@ -47,3 +47,13 @@ body{
 .timer{
     width:400px;
 }
+
+#box img{
+    height:180px;
+}
+
+#team2img img{
+    margin-top:35px;
+    width:200px;
+    height:auto;
+}

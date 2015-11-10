@@ -47,16 +47,17 @@ class graphics_scoreboard{
         html::div("timer","timer");
         echo "00:00";
         html::closeDiv();
-        
+        /*
         html::div("name","half");
         echo "2nd";
         html::closeDiv();
-        
+        */
         html::closeDiv();
         
         echo "<script>", PHP_EOL;
         echo "var id = $id;", PHP_EOL;
         echo "setInterval(updateScores,100);", PHP_EOL;
+        echo "setInterval(updateTimer,100);", PHP_EOL;
         echo "</script>", PHP_EOL;
         html::end();
     }

@@ -15,6 +15,17 @@ class scoreboard extends optionsPage{
         if(isset($_GET['data'])){
             $id = filter_input(INPUT_GET,'data');
             echo json_encode(self::scores($id));
+        }else if(isset($_GET['timer'])){
+            $id = filter_input(INPUT_GET,'timer');
+            $elapsed = filter_input(INPUT_GET,'elapsed');
+            
+            global $connection;
+            $stmt = $connection->prepare("UPDATE plugin_scoreboard SET telapsed = ? WHERE id=?");
+            $stmt->bind_param('ii',$elapsed,$id);
+            $stmt->execute();
+            $stmt->close();
+            echo "Elapsed: $elapsed";
+            
         }else if(isset($_GET['id'])){
             $id = filter_input(INPUT_GET,'id');
             include('plugins/graphics/scoreboard.php');
@@ -94,6 +105,7 @@ class scoreboard extends optionsPage{
             $tr->formTitle("Reset things");
             $tr->otherActionButton("resetTeam1", "Reset Team 1 Score", "$this->name&control&reset=1");
             $tr->otherActionButton("resetTeam2", "Reset Team 2 Score", "$this->name&control&reset=2");
+            $tr->otherActionButton("resetTeam2", "Reset Timer", "$this->name&control&reset=$id");
             ce::end();
         }
         else{
@@ -118,6 +130,37 @@ class scoreboard extends optionsPage{
             }else if(isset($_GET['team2'])){
                 $amount = intval($_POST['t2score']);
                 echo self::incrementScore($id,2,$amount);
+            }
+            else if(isset($_GET['timer'])){
+                global $connection;
+                
+                $stmt1 = $connection->prepare("SELECT trunning FROM plugin_scoreboard WHERE id=?");
+                $stmt1->bind_param('i',$id);
+                $stmt1->execute();
+                $stmt1->bind_result($running);
+                $stmt1->fetch();
+                $stmt1->close();
+
+                if($running == 0){
+                    $running = 1;
+                }else{
+                    $running = 0;
+                }
+
+                $stmt2 = $connection->prepare("UPDATE plugin_scoreboard SET trunning=? WHERE id=?");
+                $stmt2->bind_param('ii',$running,$id);
+                $stmt2->execute();
+                $stmt2->close();
+                echo ($running == 0)? "Timer stopped" : "Timer started";
+            }
+            else if(isset($_GET['reset'])){
+                $id = $_GET['reset'];
+                global $connection;
+                $stmt2 = $connection->prepare("UPDATE plugin_scoreboard SET telapsed=0 WHERE id=?");
+                $stmt2->bind_param('i',$id);
+                $stmt2->execute();
+                $stmt2->close();
+                echo "Timer $id reset";
             }
         }
     }
