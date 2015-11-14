@@ -41,6 +41,21 @@ class scoreboard extends optionsPage{
                 echo "Fatal error! No team data received";
             }
             
+        }else if(isset($_GET['control'])){
+            $id = filter_input(INPUT_GET,'control');
+            include('plugins/graphics/scoreboard.php');
+            
+            $data = self::teams($id);
+            if($data){
+                $team1name = $data[0];
+                $team1img = $data[1];
+                $team2name = $data[2];
+                $team2img = $data[3];
+                graphics_scoreboard::build_controller($id, $team1name,$team2name);
+            }else{
+                echo "Fatal error! No team data received";
+            }
+            
         }
     }
     

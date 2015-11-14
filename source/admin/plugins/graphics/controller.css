@@ -1,0 +1,131 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 13-Nov-2015, 22:16:38
+    Author     : Cameron
+*/
+
+@font-face{
+	font-family:"Roboto Regular";
+	src:url("fonts/Roboto-Regular.ttf");
+}
+
+body{
+    margin:0;
+    color:white;
+    font-family:"Roboto Regular", Helvetica, Arial, sans-serif;
+}
+
+#wrapper{
+    width:100%;
+    max-width:1100px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#2196F3;
+    height:auto;
+    min-height:300px;
+    overflow:hidden;
+}
+
+#title{
+    font-size:1.4em;
+    height:2em;
+    line-height:2em;
+    text-align:center;
+    width:100%;
+}
+
+.row{
+    width:100%;
+    margin: 10px 0px;
+    clear:both;
+    text-align:center;
+}
+.scorecontrol{
+    width:50%;
+    width:calc(50%-20px);
+    margin:0;
+    height:auto;
+    text-align:center;
+    margin: 10px 0px;
+}
+#team1score{
+    float:left;
+}
+#team2score{
+    float:right;
+}
+
+
+button{
+    border-radius:none;
+    height:2.5em;
+    width:2.5em;
+    font-size:2.5em;
+    border:none;
+    cursor:pointer;
+}
+button:hover{
+    background-color:#F44336;
+}
+input{
+    height:2.5em;
+    width:auto;
+    font-size:2.5em;
+    padding:0;
+    margin:0;
+    border:none;
+}
+input:focus{
+    outline:none;
+}
+
+
+.scorefield{
+    display:inline;
+    width:3.5em;
+    padding:0;
+    border:none;
+    text-align:center;
+}
+.scorefield:focus{
+    border:none;
+    outline:none;
+}
+#timerdisplay{
+    clear:both;
+    margin:5px 0px;
+    width:100%;
+    text-align:center;
+    border:none;
+    font-size:2.5em;
+    font-weight:600;
+}
+#timermanual{
+    clear:both;
+    margin:0;
+    width:auto;
+    text-align:center;
+    border:none;
+    font-size:2.5em;
+    font-weight:600;
+}
+button:focus{
+    outline:none;
+}
+
+.bigbutton{
+    margin:0px 15px;
+    width:auto;
+    min-width:5em;
+}
+
+@media (max-width:1000px){
+    #wrapper{
+        width:100%;
+        margin:none;
+    }
+}

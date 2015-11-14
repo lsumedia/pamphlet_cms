@@ -42,6 +42,7 @@ class graphics_scoreboard{
         html::closeDiv();
         
         html::div("logo","tvlogo");
+        //echo "<img src=\"plugins/graphics/images/tvlogo.png\">";
         html::closeDiv();
         
         html::div("timer","timer");
@@ -60,5 +61,52 @@ class graphics_scoreboard{
         echo "setInterval(updateTimer,100);", PHP_EOL;
         echo "</script>", PHP_EOL;
         html::end();
+    }
+    
+    static function build_controller($id,$team1,$team2){
+        
+        html::start();
+        html::css("plugins/graphics/controller.css");
+        html::js("plugins/graphics/controller.js");
+        html::title("Scoreboard Controller");
+
+        html::endHead();
+
+        html::div("wrapper","wrapper");
+        html::div("title","title");
+        echo "Scoreboard Controller";
+        html::closeDiv();
+        
+        html::div("controller", "controller");
+        html::div("scorecontrol","team1score");
+        self::controlbuttons(1,$team1);
+        html::closeDiv();
+        html::div("scorecontrol","team2score");
+        self::controlbuttons(2,$team2);
+        html::closeDiv();
+        
+        html::closeDiv();
+        html::div("timercontroller","timer");
+        echo "<input type=\"text\" id=\"timerdisplay\" readonly value=\"00:00:000\">";
+        echo "<div class=\"row\"><button class=\"bigbutton\">Start</button><button class=\"bigbutton\">Reset</button></div>";
+        //echo "<div class=\"row\"><input type=\"time\" id=\"timermanual\"><button>Set</button></div>";
+        html::closeDiv();
+        
+        html::end();
+    }
+    public static function controlbuttons($teamid,$teamname){
+        html::div("buttonrow","scoreupdate_$teamid");
+        echo "<h2>$teamname</h2>";
+        echo "<button class=\"\" id=\"score_minus_$teamid\" onclick=\"scoreupdate($teamid,-1);\">&#8210;</button>";
+        echo "<input type=\"text\" class=\"scorefield\" id=\"currentscore_$teamid\"></input>";
+        echo "<button class=\"\" id=\"score_plus_$teamid\" onclick=\"scoreupdate($teamid,1);\">+</button>";
+        html::closeDiv();
+        
+        html::div("buttonrow","scorechange_$teamid");
+        
+        html::closeDiv();
+        
+        html::div("buttonrow","scorereset_$teamid");
+        html::closeDiv();
     }
 }

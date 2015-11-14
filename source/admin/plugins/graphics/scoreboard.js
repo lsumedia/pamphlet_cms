@@ -9,7 +9,7 @@ var start = new Date();
 var running = 1;    //Whether timer is running
 var elapsed = 0; //How long the timer has been running for
 var sent = true;
-var starting = 0; 
+var starting = 1; 
 var lasttime = 0; //Last time displayed on the timer
 var change = 0;
 
