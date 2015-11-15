@@ -4,4 +4,9 @@
  * and open the template in the editor.
  */
 
+var team1score;
+var team2score;
+var trunning;
+var telapsed;
+
 

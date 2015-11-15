@@ -44,6 +44,10 @@ body{
     clear:both;
     text-align:center;
 }
+.row span{
+    margin:0px 10px;
+    font-size:2.5em;
+}
 .scorecontrol{
     width:50%;
     width:calc(50%-20px);
@@ -78,6 +82,7 @@ input{
     padding:0;
     margin:0;
     border:none;
+    text-align:center;
 }
 input:focus{
     outline:none;
