@@ -33,13 +33,39 @@ class twitterscreen{
 
 class twitterscroller{
     public static function build($term){
-          html::start();
+        html::start();
+
+        html::css('plugins/twitter/twitter.css');
+        html::js('plugins/twitter/twitter.js');
+        html::endHead();
+
+        html::div('wrapper','wrapper');
+            html::div('profilebar','profilebar');
+        
+
+                html::div('profilepic','profilepic');
+                html::closeDiv();
+                
+                html::div('namebox','namebox');
+                echo "<p id=\"name\"></p><p id=\"handle\"></p>";
+                html::closeDiv();
+                
+            html::closeDiv();
+            html::div('result','result');
+            echo "No tweets found yet!";
+            html::closeDiv();
+            
+        html::closeDiv();
+        
+        html::div('bgimage','bgimage');
+        echo "<img style=\"transform:translate(0,-30%);\" src=\"/live/images/hustings.jpg\">";
+        html::closeDiv();
           
-          html::css('plugins/twitter/twitter.css');
-          html::js('plugins/twitter/twitter.js');
-          html::endHead();
-          
-          echo "";
+          echo "<script>", PHP_EOL;
+          echo "var term='$term';"
+                  . "loadAllTweets();"
+                  . "var timer1 = setInterval(loadNewTweet,10000);", PHP_EOL;
+          echo "</script>", PHP_EOL;
           
           html::end();
     }

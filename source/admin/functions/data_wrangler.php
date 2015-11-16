@@ -9,10 +9,16 @@ function today(){
 
 function get_username(){
 	//
+        session_start();
 	if($_SESSION['username']){
 		return $_SESSION['username'];
 	}
 	return false;
+}
+
+function loggedIn(){
+    if(get_username() != false){ return true;}
+    return false;
 }
 
 class DB {

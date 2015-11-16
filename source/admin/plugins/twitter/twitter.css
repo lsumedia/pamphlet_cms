@@ -8,3 +8,78 @@ and open the template in the editor.
     Author     : Cameron
 */
 
+body{
+    margin:0;
+    font-family: Myriad Pro, Arial, sans-serif;
+    overflow:hidden;
+}
+
+#wrapper{
+    
+}
+
+#profilebar{
+    margin-top:2vh;
+    margin-bottom:2vh;
+    width:30vw;
+    margin-left:auto;
+    margin-right:auto;
+    clear:both;
+    height:19vh;
+    overflow:hidden;
+}
+
+#profilepic{
+    float:left;
+    margin:10px;
+    border-radius:15px;
+    height:17vh;
+    width:17vh;
+    overflow:hidden;
+}
+#profilepic img{
+    width:17vh;
+    height:auto;
+}
+#result{
+    max-width:60vw;
+    margin-left:auto;
+    margin-right:auto;
+    width:auto;
+    font-size:4.8em;
+    text-align:centre;
+    padding:30px 30px;
+    color:white;
+    background-color:rgba(0,0,0,0.5);
+}
+
+#bgimage{
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100vw;
+    -webkit-filter:blur(4px);
+    -moz-filter:blur(4px);
+    filter:blur(4px);
+    z-index:-5;
+}
+#bgimage img{
+    width:100vw;
+    transform:translate(0,-50%);
+}
+
+#namebox{
+    float:left;
+    font-size:2em;
+    color:white;
+}
+
+#name{
+    font-size:1.2em;
+    margin:0;
+    margin-top:1em;
+}
+#handle{
+    color: #dedede;
+    margin:0;
+}

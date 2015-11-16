@@ -21,10 +21,10 @@ class twitter extends optionsPage{
         require_once('plugins/twitter/twitterscreen.php');
         
         if(isset($_GET['search'])){
-            $term = filter_input(INPUT_SEARCH,'search');
+            $term = filter_input(INPUT_GET,'search');
             twitterscroller::build($term);
         }else{
-            twitterscreen::build("falkegg","/live/images/falkeggmedia.png","#falkegghustings");
+            twitterscreen::build("falkegghustings","/live/images/falkeggmedia.png","#falkegghustings");
         }
         
     }
