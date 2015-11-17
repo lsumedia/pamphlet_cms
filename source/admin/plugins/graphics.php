@@ -56,6 +56,8 @@ class scoreboard extends optionsPage{
                 echo "Fatal error! No team data received";
             }
             
+        }else if(isset($_GET['update'])){
+            block(4);
         }
     }
     
@@ -80,7 +82,9 @@ class scoreboard extends optionsPage{
 
                 $t1= new ajaxForm("settingsForm","$this->name&settings=$id","POST");
                 $t1->formTitle("Scoreboard settings");
-                $t1->linkButton("controlButton", "Go to controller", "$this->name&control=$id");
+                //$t1->linkButton("controlButton", "Go to controller", "$this->name&control=$id");
+                $controlLink = actualLink() . "/public.php?action=$this->name&control=$id";
+                echo "<div class=\"fieldRow\"><p><a target=\"_blank\" href=\"$controlLink\">Go to Controller</a></p></div>", PHP_EOL;
                 $t1->labeledInput("name", "text", $name, "Scoreboard Name");
                 $t1->kpSelector("sport", self::kpSports(), $sport, "Sport");
                 $t1->infoRow("Team 1");
@@ -258,14 +262,14 @@ class scoreboard extends optionsPage{
         
         global $connection;
         
-        if($stmt = $connection->prepare("SELECT team1score,team2score,trunning,telapsed FROM plugin_scoreboard WHERE id=?")){
+        if($stmt = $connection->prepare("SELECT team1score,team2score,trunning,telapsed, quarter FROM plugin_scoreboard WHERE id=?")){
                 $stmt->bind_param('i',$id);
                 $stmt->execute();
-                $stmt->bind_result($team1score,$team2score,$running,$elapsed);
+                $stmt->bind_result($team1score,$team2score,$running,$elapsed, $quarter);
                 $stmt->fetch();
                 $stmt->close();
                 
-                return array($team1score, $team2score, $running, $elapsed);
+                return array($team1score, $team2score, $running, $elapsed, $quarter);
                 
         }else{
             return false;

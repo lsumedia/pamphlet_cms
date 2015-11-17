@@ -72,7 +72,7 @@ class graphics_scoreboard{
         
         html::start();
         html::css("plugins/graphics/controller.css");
-       
+        html::lockZoom();
         html::title("Scoreboard Controller");
 
         html::endHead();
@@ -94,11 +94,14 @@ class graphics_scoreboard{
         html::div("timercontroller","timer");
         echo "<div class=\"row\"><h1>Timer</h1></div>";
         echo "<input type=\"text\" id=\"timerdisplay\" readonly value=\"00:00:000\">";
-        echo "<div class=\"row\"><button class=\"bigbutton\">Start</button><button class=\"bigbutton\">Reset</button></div>";
+        echo "<div class=\"row\"><button class=\"bigbutton\" id=\"timerStopStart\">Start</button><button class=\"bigbutton\" id=\"timerReset\">Reset</button></div>";
         //echo "<div class=\"row\"><input type=\"time\" id=\"timermanual\"><button>Set</button></div>";
         echo "<div class=\"row\"><span>Quarter</span><input type=\"number\" min=\"1\" max=\"4\" id=\"quarter\" value=\"1\"><button id=\"setqtrbtn\">Set</button></div>";
         html::closeDiv();
         
+        echo "<script>", PHP_EOL;
+        echo "var id = $id;", PHP_EOL;
+        echo "</script>", PHP_EOL;
         
         html::js("plugins/graphics/controller.js");
         html::end();

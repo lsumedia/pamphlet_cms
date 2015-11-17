@@ -21,6 +21,7 @@ function updateScores(){
                 var array = JSON.parse(request.responseText);
                 document.getElementById('team1score').innerHTML = array[0];
                 document.getElementById('team2score').innerHTML = array[1];
+                document.getElementById('quarter').innerHTML = array[4];
                 console.log('Scores updated');
                 running = array[2];
                 if(!running){ newelapsed = array[3];}
@@ -46,6 +47,22 @@ function updateElapsed(){
     request.send();
 }
 
+function updateReference(){
+    var request = new XMLHttpRequest();
+    var reference = elapsed + change;
+    request.onreadystatechange = function(){
+            if(request.readyState == 4 && request.status == 200){
+                //update page
+                console.log(request.responseText);
+            }
+    }
+    console.log('Reference sent:' + reference);
+    request.open("GET",'public.php?action=plugin_scoreboard&timer=' + id + '&elapsed=' + reference,true);
+    request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    request.send();
+}
+
+
 function updateTimer(){
     
     if(running == 1){
@@ -68,6 +85,7 @@ function updateTimer(){
         if (excess_seconds == 0){ excess_seconds = "00"; }
         else if(excess_seconds < 10){ excess_seconds = "0" + excess_seconds; }
         document.getElementById('timer').innerHTML = minutes + ":" + excess_seconds;
+        updateReference();
     }else{
         
         if(!sent){
