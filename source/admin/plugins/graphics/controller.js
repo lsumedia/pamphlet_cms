@@ -16,7 +16,20 @@ function updateScore(){
 }
 
 function toggleTimer(){
-    
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function(){
+            if(request.readyState == 4 && request.status == 200){
+               console.log(request.responsetText);
+            }
+    }
+    request.open("GET",'request.php?update&action=plugin_scoreboard&control=' + id + '&timer',true);
+    request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    request.send();
+    if(trunning == 0){
+        document.getElementById('timerStopStart').innerHTML = "Stop";
+    }else{
+        document.getElementById('timerStopStart').innerHTML = "Start";
+    }
 }
 
 function resetTimer(){
@@ -40,7 +53,8 @@ function updateScores(){
                 trunning = array[2];
                 telapsed = array[3];
                 quarter = array[4];
-                //document.getElementById('team1score').innerHTML = array[0];
+                document.getElementById('currentscore_1').value = team1score;
+                document.getElementById('currentscore_2').value = team2score;
                 //document.getElementById('team2score').innerHTML = array[1];
                 console.log('Scores updated');
                 msToTimer(telapsed);
@@ -66,4 +80,4 @@ function msToTimer(milliseconds){
     else if(excess_seconds < 10){ excess_seconds = "0" + excess_seconds; }
     document.getElementById('timerdisplay').value = minutes + ":" + excess_seconds;
 }
-var update = setInterval(updateScores,500);
+var update = setInterval(updateScores,1000);

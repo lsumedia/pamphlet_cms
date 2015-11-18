@@ -82,8 +82,10 @@ class scoreboard extends optionsPage{
 
                 $t1= new ajaxForm("settingsForm","$this->name&settings=$id","POST");
                 $t1->formTitle("Scoreboard settings");
-                //$t1->linkButton("controlButton", "Go to controller", "$this->name&control=$id");
+                $t1->linkButton("controlButton", "Go to controller", "$this->name&control=$id");
+                $boardLink = actualLink() . "/public.php?action=$this->name&id=$id";
                 $controlLink = actualLink() . "/public.php?action=$this->name&control=$id";
+                echo "<div class=\"fieldRow\"><p><a target=\"_blank\" href=\"$boardLink\">Go to Scoreboard</a></p></div>", PHP_EOL;
                 echo "<div class=\"fieldRow\"><p><a target=\"_blank\" href=\"$controlLink\">Go to Controller</a></p></div>", PHP_EOL;
                 $t1->labeledInput("name", "text", $name, "Scoreboard Name");
                 $t1->kpSelector("sport", self::kpSports(), $sport, "Sport");

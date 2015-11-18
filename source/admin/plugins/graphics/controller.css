@@ -10,7 +10,7 @@ and open the template in the editor.
 
 @font-face{
 	font-family:"Roboto Regular";
-	src:url("fonts/Roboto-Regular.ttf");
+	src:url("/live/admin/fonts/Roboto-Regular.ttf");
 }
 
 body{

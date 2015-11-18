@@ -21,7 +21,7 @@ function updateScores(){
                 var array = JSON.parse(request.responseText);
                 document.getElementById('team1score').innerHTML = array[0];
                 document.getElementById('team2score').innerHTML = array[1];
-                document.getElementById('quarter').innerHTML = array[4];
+                //document.getElementById('quarter').innerHTML = array[4];
                 console.log('Scores updated');
                 running = array[2];
                 if(!running){ newelapsed = array[3];}
@@ -53,7 +53,7 @@ function updateReference(){
     request.onreadystatechange = function(){
             if(request.readyState == 4 && request.status == 200){
                 //update page
-                console.log(request.responseText);
+                //console.log(request.responseText);
             }
     }
     console.log('Reference sent:' + reference);
