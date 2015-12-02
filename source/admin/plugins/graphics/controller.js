@@ -53,8 +53,12 @@ function updateScores(){
                 trunning = array[2];
                 telapsed = array[3];
                 quarter = array[4];
-                document.getElementById('currentscore_1').value = team1score;
-                document.getElementById('currentscore_2').value = team2score;
+                var score1 = document.getElementById('currentscore_1');
+                var score2 = document.getElementById('currentscore_2');
+                var qBox = document.getElementById('quarter');
+                if(document.activeElement != score1){ score1.value = team1score; }
+                if(document.activeElement != score2){ score2.value = team2score; }
+                if(document.activeElement != qBox){ qBox.value = quarter; }
                 //document.getElementById('team2score').innerHTML = array[1];
                 console.log('Scores updated');
                 msToTimer(telapsed);

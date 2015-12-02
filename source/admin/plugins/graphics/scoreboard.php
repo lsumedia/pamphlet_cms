@@ -41,12 +41,15 @@ class graphics_scoreboard{
         echo "00";
         html::closeDiv();
         
-        html::div("logo","tvlogo");
-        //echo "<img src=\"plugins/graphics/images/tvlogo.png\">";
+        html::div("name","tvlogo");
+        echo "<img src=\"plugins/graphics/images/LSUTV_White.png\">";
         html::closeDiv();
         
         html::div("timer","timer");
         echo "00:00";
+        html::closeDiv();
+        
+        html::div("name","quarter");
         html::closeDiv();
         /*
         html::div("name","half");

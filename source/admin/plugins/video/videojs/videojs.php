@@ -11,9 +11,11 @@ class videojs{
      */
     static function init(){
         html::css("plugins/video/videojs/core/video-js-custom-css");
+        //html::css("http://vjs.zencdn.net/4.8.1/video-js.css");
+        //html::js("http://vjs.zencdn.net/4.8.1/video.js");	//CDN version
         html::js("plugins/video/videojs/core/video.min.js");
         html::js("plugins/video/video-js/flashls/videojs.flashls.js");
-        echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); /* videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; *//* videojs.options.techOrder = ['flash', 'html5']; */</script>";
+        echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); /* videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; *//* videojs.options.techOrder = ['html5', 'flash']; */</script>";
         //html::js("plugins/video/video-js/osmf/videojs-osmf.js");
         //echo "<script>videojs.options.osmf.swf=\"plugins/video/video-js/osmf/videojs-osmf.swf\";</script>";
     }
