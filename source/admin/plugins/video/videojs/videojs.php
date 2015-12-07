@@ -10,29 +10,39 @@ class videojs{
      * 
      */
     static function init(){
-        html::css("plugins/video/videojs/core/video-js-custom-css");
-        //html::css("http://vjs.zencdn.net/4.8.1/video-js.css");
-        //html::js("http://vjs.zencdn.net/4.8.1/video.js");	//CDN version
-        html::js("plugins/video/videojs/core/video.min.js");
-        html::js("plugins/video/video-js/flashls/videojs.flashls.js");
-        echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); /* videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; *//* videojs.options.techOrder = ['html5', 'flash']; */</script>";
+        
+        echo PHP_EOL;
+        /* INCLUDE CORE */
+        //html::css("plugins/video/videojs/core/video-js-custom-css");
+        html::css("//vjs.zencdn.net/4.8.2/video-js.css");
+        html::js("//vjs.zencdn.net/4.8.2/video.js");	//CDN version
+        
+        //html::css("//vjs.zencdn.net/5.0/video-js.css");
+        //html::js("//vjs.zencdn.net/5.0/video.js");	//CDN version
+        
+        //html::js("plugins/video/videojs/core/video.js");
+        
+        /* INCLUDE PLUGINS */
+        
+        //html::js("plugins/video/video-js/flashls/videojs.flashls.js");
+        
+        html::css("plugins/video/videojs/qualitysel/video-quality-selector.css");
+        html::js("plugins/video/videojs/qualitysel/video-quality-selector.js");
+        
+        /* ENABLE PLUGINS */
+        
+        //echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; /* videojs.options.techOrder = ['html5', 'flash']; */</script>";
         //html::js("plugins/video/video-js/osmf/videojs-osmf.js");
         //echo "<script>videojs.options.osmf.swf=\"plugins/video/video-js/osmf/videojs-osmf.swf\";</script>";
+        //echo "<script>videojs.plugin('resolutionSelector',resolutionSelector);</script>";
     }
     static function run(){
-        //Place after the player you wish to activate. Will activate any tags with the "html5vid" class
+        //Place after the player you wish to activate. Will activate the FIRST tag with the "html5vid" class
+        echo PHP_EOL;
         echo "<script>"
-        . "var vidPlayer = document.getElementsByClassName('html5vid')[0];"
+        . "var vidPlayer = document.getElementsByClassName('html5vid')[0]; "
         . "videojs(vidPlayer, {}, function() {}); "
-                /*
-        . "if(document.getElementsByClassName('html5vid').length > 0){ "
-            . "function play(){ vidPlayer.play(); } "
-            . "function pause(){ vidPlayer.pause(); } "
-            . "function playing(){ return vidPlayer.playing; } "
-            . "function stopstart(){ "
-                . "if(playing() == true){ pause(); }"
-                . "else{play();}"
-        . "}}"*/
-                . "</script>", PHP_EOL;
+        . "videojs( '#video', { plugins : { resolutionSelector : {default_res : '720'} } });"
+        . "</script>", PHP_EOL;
     }
 }

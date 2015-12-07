@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Video.js | Resolution Selector Plugin</title>
+	
+	<!-- Load Video.js core components -->
+	<link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet" />
+	<script src="//vjs.zencdn.net/4.5/video.js"></script>
+	
+	<!-- Load the plugin -->
+	<link href="video-quality-selector.css" rel="stylesheet" type="text/css" />
+	<script src="video-quality-selector.js"></script>
+	
+</head>
+<body>
+	
+	<h1>Example Setup</h1>
+	
+	<!-- This video has no data-setup attribute and needs to be initialized manually -->
+        <!--
+	<video id="example" class="video-js vjs-default-skin" controls width="640" height="360">
+		<source src="video-360.mp4" type="video/mp4" data-res="360" />
+		<source src="video-480.mp4" type="video/mp4" data-res="480" />
+	</video>
+	-->
+        <!--
+        <video id="vidplayer" class="vidplayer video-js vjs-default-skin html5vid" width="640" height="360" poster="http://media.lsu.co.uk/wp-content/uploads/2015/03/NaSTA-2015-LSUTV-Broadcaster.jpg" controls autoplay data-setup='{ "plugins" : { "resolutionSelector" : { "default_res" : "720" } } }'>
+            <source data-res="576" src="rtmp://158.125.14.15/lsutv/live_1" type="rtmp/mp4">
+            <source data-res="720" src="rtmp://158.125.14.15/lsutv/live_2" type="rtmp/mp4">
+            <source data-res="1080" src="rtmp://158.125.14.15/lsutv/live_3" type="rtmp/mp4">
+        </video>
+        -->
+        <video id="example" class="vidplayer video-js vjs-default-skin html5vid" width="640" height="360" poster="http://media.lsu.co.uk/wp-content/uploads/2015/03/NaSTA-2015-LSUTV-Broadcaster.jpg" controls autoplay>
+            <source src="https://webvids.lsu.co.uk/2015-16/music/coffeehouse/ep3_webhd.mp4" type="video/mp4" data-res="720">
+            <source src="https://webvids.lsu.co.uk/2015-16/music/coffeehouse/ep3_webhd_clean.mp4" type="video/mp4" data-res="576">
+        </video>
+        
+        
+	<!-- This video has a data-setup attribute and will be initialized by video.js automatically -->
+	<!--
+        <video id="example-2" class="video-js vjs-default-skin" controls width="640" height="360" data-setup='{ "plugins" : { "resolutionSelector" : { "default_res" : "480" } } }'>
+		<source src="video-360.mp4" type="video/mp4" data-res="360" />
+		<source src="video-480.mp4" type="video/mp4" data-res="480" />
+	</video>
+	-->
+	<script type="text/javascript">
+		
+		/*
+		The first video tag does not have a data-setup attribute, so we will initialize
+		video.js and our plugin here. This technique is well suited for videos that are loaded
+		dynamically.
+		
+		The second video tag includes a data-setup attribute and it will be initialized
+		automatically when video.js loads.
+		*/
+		/*
+		// Initialize video.js and activate the resolution selector plugin
+		videojs( '#example', { plugins : { resolutionSelector : {
+			
+			// Pass any options here
+			default_res : '480'
+		
+		// Define an on.ready function
+		} } }, function() {
+			
+			// "this" will be a reference to the player object
+			var player = this;
+			
+			// Listen for the changeRes event
+			player.on( 'changeRes', function() {
+				
+				// player.getCurrentRes() can be used to get the currently selected resolution
+				console.log( 'Current Res is: ' + player.getCurrentRes() );
+			});
+		});
+		*/
+                
+                videojs( '#example', { plugins : { resolutionSelector : {default_res : '576'} } });
+	</script>
+	
+</body>
+</html>
