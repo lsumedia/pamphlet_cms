@@ -24,12 +24,12 @@ class videojs{
         
         /* FLASHLS */
         
-        html::js("plugins/video/video-js/flashls/videojs.flashls.js");
+        //html::js("plugins/video/video-js/flashls/videojs.flashls.js");
         
         /* THE (hopefully) AWESOME FLASH-FREE HLS - WIP */
         
-        //html::js('plugins/video/videojs/media-sources/videojs-media-sources.js');
-        //html::js('plugins/video/videojs/hls/videojs.hls.js');
+        html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
+        html::js('plugins/video/videojs/hls/videojs.hls.min.js');
         
         /* QUALITY SELECTOR (DOESN'T WORK IN VJS 5.0) */
         
@@ -38,7 +38,7 @@ class videojs{
         
         /* ENABLE PLUGINS */
         
-        echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; /* videojs.options.techOrder = ['html5', 'flash']; */</script>";
+        //echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; /* videojs.options.techOrder = ['html5', 'flash']; */</script>";
         //html::js("plugins/video/video-js/osmf/videojs-osmf.js");
         //echo "<script>videojs.options.osmf.swf=\"plugins/video/video-js/osmf/videojs-osmf.swf\";</script>";
         //echo "<script>videojs.plugin('resolutionSelector',resolutionSelector);</script>";
