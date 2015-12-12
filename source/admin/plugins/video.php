@@ -819,7 +819,7 @@ class live extends optionsPage{
     }
     public static function hlsStream($url,$cover){
         //Designed for videoJS with FlasHLS
-        return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$cover\" controls autoplay data-setup='{\"techOrder\": [\"flash\",\"html5\"]}'>" . "<source src=\"$url\" type=\"video/mp4\">" . "Your browser does not support the video tag" . "</video>";
+        return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$cover\" controls autoplay data-setup='{\"techOrder\": [\"flash\",\"html5\"]}'>" . "<source src=\"$url\" type=\"application/x-mpegURL\">" . "Your browser does not support the video tag" . "</video>";
     }
     public static function rtmpStream($url,$cover){
         return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$cover\" controls autoplay>" . "<source src=\"$url\" type=\"rtmp/mp4\">" . "Your browser does not support the video tag" . "</video>";        

@@ -58,7 +58,7 @@ class twitterscroller{
         html::closeDiv();
         
         html::div('bgimage','bgimage');
-        echo "<img style=\"transform:translate(0,-30%);\" src=\"/live/images/hustings.jpg\">";
+        echo "<img style=\"transform:translate(0,0);\" src=\"//falkegg.co.uk/images/bouleyblur.min.jpg\">";
         html::closeDiv();
           
           echo "<script>", PHP_EOL;

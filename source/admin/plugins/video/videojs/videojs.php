@@ -15,10 +15,10 @@ class videojs{
         /* INCLUDE CORE */
         html::css("plugins/video/videojs/core/video-js-custom-css");
         
-        //html::css("//vjs.zencdn.net/4.8.2/video-js.css");
-        //html::js("//vjs.zencdn.net/4.8.2/video.js");	//CDN version
+        //html::css("//vjs.zencdn.net/5.3.0/video-js.css");
+        html::js("//vjs.zencdn.net/5.3.0/video.js");	//CDN version
         
-        html::js("plugins/video/videojs/core/video.min.js");
+        //html::js("plugins/video/videojs/core/video.min.js");
         
         /* INCLUDE PLUGINS */
         

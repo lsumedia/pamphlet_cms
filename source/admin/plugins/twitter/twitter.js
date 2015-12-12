@@ -9,6 +9,8 @@ var tweetIndex;
 var tweet;
 var batchIndex = 0;
 
+var defaultImage = '//falkegg.co.uk/images/bouleyblur.min.jpg';
+
 function loadAllTweets(){
     var request = new XMLHttpRequest();
     request.onreadystatechange = function(){
@@ -42,7 +44,7 @@ function loadNewTweet(){
             document.getElementById('bgimage').innerHTML = "<img src=\"" + url + "\">";
            
         }else{
-            document.getElementById('bgimage').innerHTML = "<img style=\"transform:translate(0,-30%);\" src=\"/live/images/hustings.jpg\">";
+            document.getElementById('bgimage').innerHTML = "<img style=\"transform: translate(0,0);\" src=\"" + defaultImage + "\">";
         }
         console.log('Loaded tweet ' + tweetIndex + ' from batch ' + batchIndex);
         tweetIndex++;

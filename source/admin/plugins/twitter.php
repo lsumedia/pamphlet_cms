@@ -24,7 +24,7 @@ class twitter extends optionsPage{
             $term = filter_input(INPUT_GET,'search');
             twitterscroller::build($term);
         }else{
-            twitterscreen::build("falkegghustings","/live/images/falkeggmedia.png","#falkegghustings");
+            twitterscreen::build("fewinterball","/live/images/falkeggmedia.png","#FEWinterBall");
         }
         
     }
