@@ -8,7 +8,7 @@
 
 class twitter extends optionsPage{
     public $name = "plugin_twitter";
-    public $title = "Twitter";
+    //public $title = "Twitter";
     
     function setup(){
         

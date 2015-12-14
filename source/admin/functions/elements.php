@@ -514,7 +514,10 @@ class standardOptionsPages{
 		require 'functions/options_pages.php';
 		 $this->pageArray = array_merge($this->pageArray,$standardPages);
 	}
-	
+	/**
+         * Import all plugin pages from the plugin folder
+         * All files in the plugin folder containing .php will be executed
+         */
 	function importPluginPages(){
             $pluginPages = array();
             $plugindir = './plugins';

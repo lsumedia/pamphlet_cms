@@ -26,36 +26,53 @@ function iframeOutput($title,$code){
     html::end();
 }
 
-/* Globally accessibly array of mediaPlayer-derived objects which represent video or audio output modules */
-$mediaPlayers = array();
+class source{
+    public $src;
+    public $type;
+    public $res;
+    
+    public function __construct($src,$type,$res) {
+        $this->src = $src;
+        $this->type = $type;
+        $this->res = $res;
+    }
+}
 
+class video{
+    public $title;
+    public $sources = array();
+    public $poster;
+    public $description;
+    public $type;
+    public $date;
+}
 /**
  * Extendable class for defining media player modules
+ * 
+ * New media players MUST be an extension of this class or they will not be detected
  */
 class mediaPlayer {
     
     /* $name: unique and machine-friendly (lowercase, no spaces) name for the player module */
-    public static $name;
+    public $name;
     /* $title: human-friendly title for the player module */
-    public static $title;
+    public $title;
     /* $supported: video player supported sources, array of MIME types as strings */
-    public static $supported = array();
+    public $supported = array();
     /* $properties: defines a set of text properties in key/pair format which may be used by the player */
-    public static $properties = array();
+    public $properties = array();
     /**
      * build
      * Generates HTML source code for the player for use in an iframe.
      * Return as a string.
      * Return false for invalid input.
      * 
-     * @param type $sources
-     * - Array of sources as defined in sources doc
-     * @param type $poster
-     * - URL for poster image
-     * @param type $conditions
-     * - Any further conditions, may be player-specific
+     * @param type $video
+     * -Video object to generate a player from
+     * @param type $setup
+     * - Any further setup conditions, may be player-specific
      */
-    public function build($sources,$poster,$conditions){
+    public static function build($video,$setup){
         return false;
     }
 }
@@ -534,17 +551,28 @@ class videos extends optionsPage{
         }
     }
 
-    
+    /*
     public static function kpTypes(){
         return array("html5" => "HTML 5", "iframe" => "IFrame Embed", "custom" => "Custom embed code", "youtube" => "YouTube ID");
+    } */
+    
+    public static function getPlayerTypes(){
+        $players = array();
+        foreach(get_declared_classes() as $class){
+            if(is_subclass_of($class, 'mediaPlayer')){
+                $players[] = new $class();
+            }
+        }
+        return $players;
     }
     
-    public static function kpTypes2(){
-        global $mediaPlayers;
+    public static function kpTypes(){
+        $players = self::getPlayerTypes();
         $types = array();
-        foreach($mediaPlayers as $player){
-            $name = $player::name;
-            $title = $player::title;
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
             $types[$name] = $title;
         }
         return $types;
@@ -566,14 +594,25 @@ class videos extends optionsPage{
             $vstmt->fetch();
 
             $video['title'] = $title;
-            $video['length'] = $length;
             $video['date'] = $date;
             $video['description'] = $desc;
             $video['type'] = $type;
-            $video['url'] = $url;
+            $video['sources'] = array();
             $video['code'] = $source;
             $video['poster'] = $poster;
-
+            
+            $video['url'] = $url;
+            $source = new source($url,'video/mp4','720');
+            $video['sources'][] = $source;
+            
+            $players = self::getPlayerTypes();
+            foreach($players as $player){
+                if($player->name == $type){
+                    $video = $player->build($video,$setup);
+                }
+            }
+            return $video;
+            /*
             switch($type){
                 case "iframe":
                     $video['source'] = self::iframeCode($url);
@@ -591,11 +630,15 @@ class videos extends optionsPage{
                     $video['source'] = $source;
                     break;
             }
-
-            return $video;
+            */
+            //return $video;
         }else{
             echo "Error - VOD database request failed!";
         }
+    }
+    
+    public static function generateCorrectCode(){
+        
     }
     
     public static function iframeCode($url){
