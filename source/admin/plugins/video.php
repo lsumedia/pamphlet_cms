@@ -39,12 +39,58 @@ class source{
 }
 
 class video{
-    public $title;
+    /* Video ID code */
+    public $id;
+
+    /* TECH DATA */
+    
+    /* Array of source objects only */
     public $sources = array();
-    public $poster;
-    public $description;
+    /* Video type to determine which mediaPlayer to use */
     public $type;
+    /* Generated source code for the video */
+    public $source;
+    /* Poster image URL for video */
+    public $poster;
+
+    /* OTHER METADATA */
+    
+    /* Video title */
+    public $title;
+    /* Video description */
+    public $description;
+    /* Publish date */
     public $date;
+    /* Video tags for easier searching */
+    public $tags;
+    
+    /**
+     * 
+     * @param int $id
+     * @param string $type
+     * @param array $sources
+     * @param string $source
+     * @param string $poster
+     * @param string $title
+     * @param string $description
+     * @param date $date
+     * @param string $tags
+     */
+    public function __construct($id,$type,$sources,$source,$poster,$title,$description,$date,$tags){
+        $this->id = $id;
+        
+        $this->type = $type;
+        $this->sources = $sources;
+        $this->source = $source;
+        $this->poster = $poster;
+        
+        $this->title = $title;
+        $this->description = $description;
+        $this->date = $date;
+        $this->tags = $tags;
+        
+    }
+    
 }
 /**
  * Extendable class for defining media player modules
