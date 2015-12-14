@@ -6,7 +6,7 @@
  * If 
  */
 
-if(0){	//Error reporting - disable for production
+if(isset($_GET['debug'])){	//Error reporting - disable for production
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 error_reporting(-1);

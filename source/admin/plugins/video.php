@@ -92,6 +92,22 @@ class video{
     }
     
 }
+
+class channel{
+    public $id;
+    public $title;
+    public $programme;
+    public $thumbnail;
+    public $content_id;
+    
+    public function __construct($id,$title,$programme,$thumbnail,$content_id) {
+        $this->id = $id;
+        $this->title = $title;
+        $this->programme = $programme;
+        $this->thumbnail = $thumbnail;
+        $this->content_id = $content_id;
+    }
+}
 /**
  * Extendable class for defining media player modules
  * 
@@ -120,6 +136,16 @@ class mediaPlayer {
      */
     public static function build($video,$setup){
         return false;
+    }
+    
+    public static function getPlayerTypes(){
+        $players = array();
+        foreach(get_declared_classes() as $class){
+            if(is_subclass_of($class, 'mediaPlayer')){
+                $players[] = new $class();
+            }
+        }
+        return $players;
     }
 }
 
@@ -229,7 +255,7 @@ class manager extends optionsPage{
         else if(isset($_GET['iframe'])){
             $iframeid = filter_input(INPUT_GET,"iframe");
             $video = self::kpChannel($iframeid);
-            iframeOutput($video['title'], $video['source']);
+            iframeOutput($video->title, $video->source);
         }else{
   
             if(isset($_GET['id'])){
@@ -240,7 +266,7 @@ class manager extends optionsPage{
             
             $video = self::kpChannel($playerid);
             $iframe_link = actualLink() . "/public.php?action=$this->name&iframe=$playerid";
-            $video['iframe'] = $iframe_link;
+            $video->iframe = $iframe_link;
             //Displays memory for optimisation processes
             //$video['description'] .= "<p>Memory usage: " . memory_get_peak_usage() . "<br />Stream ID: " . $video['id'] . "</p>";
             echo json_encode($video);
@@ -395,14 +421,14 @@ class manager extends optionsPage{
         $stmt->bind_result($id,$title,$type,$live,$vod,$cover,$thumbnail);
         $channels = array();
         while($stmt->fetch()){
-            $channels[] = array("id" => $id, "title" => $title, "thumbnail"=> $thumbnail);
+            $channels[] = new channel($id, $title, "", $thumbnail, "");
         }
         foreach($channels as $key => $channel){
-            $id = $channel["id"];
+            $id = $channel->id;
             $data = self::kpChannel($id);
-            $channels[$key]["programme"] = $data['title'];
-            if($data['poster']){
-                $channels[$key]['thumbnail'] = $data['poster'];
+            $channels[$key]->programme = $data->title;
+            if($data->poster){
+                $channels[$key]->thumbnail = $data->poster;
             }
         }
         return $channels;
@@ -533,7 +559,7 @@ class videos extends optionsPage{
             //html::div("player_container","player1");
             $videoid = filter_input(INPUT_GET,"id");
             $video = self::getVideo($videoid);
-            iframeOutput($video['title'], $video['source']);
+            iframeOutput($video->title, $video->source);
         }
     }
 
@@ -602,18 +628,10 @@ class videos extends optionsPage{
         return array("html5" => "HTML 5", "iframe" => "IFrame Embed", "custom" => "Custom embed code", "youtube" => "YouTube ID");
     } */
     
-    public static function getPlayerTypes(){
-        $players = array();
-        foreach(get_declared_classes() as $class){
-            if(is_subclass_of($class, 'mediaPlayer')){
-                $players[] = new $class();
-            }
-        }
-        return $players;
-    }
+    
     
     public static function kpTypes(){
-        $players = self::getPlayerTypes();
+        $players = mediaPlayer::getPlayerTypes();
         $types = array();
         //$types['--'] = var_dump($players) . ' modules found';
         foreach($players as $player){
@@ -638,23 +656,19 @@ class videos extends optionsPage{
             $vstmt->bind_result($title,$length,$date,$desc,$type,$url,$source,$poster);
             $vstmt->store_result();
             $vstmt->fetch();
-
-            $video['title'] = $title;
-            $video['date'] = $date;
-            $video['description'] = $desc;
-            $video['type'] = $type;
-            $video['sources'] = array();
-            $video['code'] = $source;
-            $video['poster'] = $poster;
             
-            $video['url'] = $url;
-            $source = new source($url,'video/mp4','720');
-            $video['sources'][] = $source;
+            $sources = array();
+            $source1 = new source($url,'video/mp4','720');
+            $sources[] = $source1;
+            $tags = "";
             
-            $players = self::getPlayerTypes();
+            $video = new video($id, $type, $sources, $source, $poster, $title, $desc, $date, $tags);
+            
+            $players = mediaPlayer::getPlayerTypes();
             foreach($players as $player){
                 if($player->name == $type){
-                    $video = $player->build($video,$setup);
+                    //TODO - add setup 
+                    $video = $player->build($video,"");
                 }
             }
             return $video;
