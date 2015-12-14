@@ -26,6 +26,40 @@ function iframeOutput($title,$code){
     html::end();
 }
 
+/* Globally accessibly array of mediaPlayer-derived objects which represent video or audio output modules */
+$mediaPlayers = array();
+
+/**
+ * Extendable class for defining media player modules
+ */
+class mediaPlayer {
+    
+    /* $name: unique and machine-friendly (lowercase, no spaces) name for the player module */
+    public static $name;
+    /* $title: human-friendly title for the player module */
+    public static $title;
+    /* $supported: video player supported sources, array of MIME types as strings */
+    public static $supported = array();
+    /* $properties: defines a set of text properties in key/pair format which may be used by the player */
+    public static $properties = array();
+    /**
+     * build
+     * Generates HTML source code for the player for use in an iframe.
+     * Return as a string.
+     * Return false for invalid input.
+     * 
+     * @param type $sources
+     * - Array of sources as defined in sources doc
+     * @param type $poster
+     * - URL for poster image
+     * @param type $conditions
+     * - Any further conditions, may be player-specific
+     */
+    public function build($sources,$poster,$conditions){
+        return false;
+    }
+}
+
 /**
  * Channel manager class
  * 
@@ -503,6 +537,17 @@ class videos extends optionsPage{
     
     public static function kpTypes(){
         return array("html5" => "HTML 5", "iframe" => "IFrame Embed", "custom" => "Custom embed code", "youtube" => "YouTube ID");
+    }
+    
+    public static function kpTypes2(){
+        global $mediaPlayers;
+        $types = array();
+        foreach($mediaPlayers as $player){
+            $name = $player::name;
+            $title = $player::title;
+            $types[$name] = $title;
+        }
+        return $types;
     }
     
     public static function getVideo($id){
