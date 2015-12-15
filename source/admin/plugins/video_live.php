@@ -278,4 +278,5 @@ class live extends optionsPage{
         return radioPlayer::build($url,$cover,$nowplaying, $title);
     }
 }
+
 $pluginPages[] = new live();
