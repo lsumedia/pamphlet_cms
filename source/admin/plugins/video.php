@@ -147,6 +147,18 @@ class mediaPlayer {
         }
         return $players;
     }
+    
+    public static function kpTypes(){
+        $players = self::getPlayerTypes();
+        $types = array();
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
+            $types[$name] = $title;
+        }
+        return $types;
+    }
 }
 
 /**
@@ -364,7 +376,7 @@ class manager extends optionsPage{
             $stmt->bind_result($id,$type,$live,$vod,$cover);
             $stmt->fetch();
             $stmt->close();
-        
+            
             switch($type){
                 case "live":
                     $player_content = live::getStream($live);
@@ -376,6 +388,9 @@ class manager extends optionsPage{
                     $player_content = cover::getImage($cover);
                     break;
             }
+            
+            $player_content->id = $type . '_' . $player_content->id;
+            
             return $player_content;
         }else {
             echo "Error - database request failed";
@@ -454,7 +469,7 @@ class videos extends optionsPage{
             $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $video, "POST");
             $editForm->formTitle("Edit video");
             $editForm->labeledInput("title", "text", $details['title'], "Title");
-            $editForm->kpSelector("type", videos::kpTypes(), $details['type'], "Video type");
+            $editForm->kpSelector("type", mediaPlayer::kpTypes(), $details['type'], "Video type");
             $editForm->labeledInput("url", "text", $details['url'], "Video URL/ID");
             ajaxForm::startOptionalSection("embed","Embed code (Custom code)");
             $editForm->plainText("code", $details['code'], "Custom embed code");
@@ -471,7 +486,7 @@ class videos extends optionsPage{
             $form = new ajaxForm("newItemForm", $this->name, "POST");
             $form->formTitle("New video");
             $form->labeledInput("title", "text", "", "Title");
-            $form->kpSelector("type", videos::kpTypes(), $current, "Video type");
+            $form->kpSelector("type", mediaPlayer::kpTypes(), $current, "Video type");
             $form->labeledInput("url", "text", "", "Video URL/ID");
             ajaxForm::startOptionalSection("embed","Embed code (Custom code)");
             $form->plainText("code", "", "Custom embed code");
@@ -588,7 +603,7 @@ class videos extends optionsPage{
             $stmt->bind_result($id,$vtitle,$type,$length,$date);
             while($stmt->fetch()){
                  $onclick = "cm_loadPage('plugin_vod&edit=$id');";
-                $videos[] = array("Title" => $vtitle, "Type" => self::kpTypes()[$type], "Length" => $length, "Date posted" => $date, "onclick" => $onclick);
+                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Length" => $length, "Date posted" => $date, "onclick" => $onclick);
             }
             return $videos;
         }else{
@@ -630,17 +645,7 @@ class videos extends optionsPage{
     
     
     
-    public static function kpTypes(){
-        $players = mediaPlayer::getPlayerTypes();
-        $types = array();
-        //$types['--'] = var_dump($players) . ' modules found';
-        foreach($players as $player){
-            $name = $player->name;
-            $title = $player->title;
-            $types[$name] = $title;
-        }
-        return $types;
-    }
+   
     
     public static function getVideo($id){
         global $connection;
@@ -695,20 +700,6 @@ class videos extends optionsPage{
         }else{
             echo "Error - VOD database request failed!";
         }
-    }
-    
-    public static function generateCorrectCode(){
-        
-    }
-    
-    public static function iframeCode($url){
-        return "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"$url\"></iframe>";
-    }
-    public static function htmlcode($url,$poster){
-        return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"]}'>" . "<source src=\"$url\" type=\"video/mp4\">" . "Your browser does not support the video tag" . "</video>";
-    }
-    public static function ytCode($url){
-        return "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://www.youtube.com/embed/$url?autoplay=1\"></iframe>";
     }
     
 }
@@ -861,13 +852,16 @@ class live extends optionsPage{
             $stmt->fetch();
             
             
-            $cover_url = cover::getImage($cover)['url'];
+            $cover = cover::getImage($cover);
+            $cover_url = $cover->poster;
             if($mobile && onMobile()){
               $mobStream = self::getStream($mobile);
               $source = $mobStream['source'];
               $description = $mobStream['description'];
             }else{
-            
+                
+                
+                
                 switch($type){
                     case "hds":
                         $source = self::hdsStream($url,$cover_url);
@@ -889,7 +883,9 @@ class live extends optionsPage{
                 }
             }
             
-            return array("id" => "live_$id", "title" => $title, "type" => $type, "mobile" => $mobile, "code" => $code, "url" => $url, "description" => $description, "source" => $source, "cover" => $cover);
+            $video = new video($id, $type, $sources, $source, $poster, $title, $description, "", "");
+            
+            return $video;
         }else{
             return false;
         }
@@ -1124,7 +1120,8 @@ class cover extends optionsPage{
             $id = "cover_" . $cover_id;
             $source = "<img class=\"vidplayer cover\" src=\"$url\" alt=\"$title\">";
             
-            $array = array("id" => $id, "title" => $title, "description" => $description, "url" => $url, "source" => $source);
+            //$array = array("id" => $id, "title" => $title, "description" => $description, "url" => $url, "source" => $source);
+            $array = new video($cover_id, "", "", $source, $url, $title, $description, "", "");
             return $array;
         }
     }
