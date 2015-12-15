@@ -630,7 +630,9 @@ class videos extends optionsPage{
             }
             foreach($ids as $id){
                 //Writes other videos to array
-                $videos[] = self::getVideo($id);
+                $video = self::getVideo($id);
+                $video->video_id = $id;
+                $videos[] = $video;
             }
             return $videos;
         }else{
@@ -883,7 +885,7 @@ class live extends optionsPage{
                 }
             }
             
-            $video = new video($id, $type, null, $source, $cover_url, $title, $description, "", "");
+            $video = new video($id, $type, null, $source, null, $title, $description, "", "");
             
             return $video;
         }else{
