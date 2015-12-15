@@ -124,9 +124,9 @@ class mediaPlayer {
     /* $properties: defines a set of text properties in key/pair format which may be used by the player */
     public $properties = array();
     /* bool $live: whether the player supports live playback */
-    public $live;
+    public $live = true;
     /* bool $ondemand: whether the player supports on-demand playback */
-    public $ondemand;
+    public $ondemand = true;
     /**
      * build
      * Generates HTML source code for the player for use in an iframe.

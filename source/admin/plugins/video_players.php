@@ -44,7 +44,7 @@ class iframe extends mediaPlayer{
 
 class html5 extends mediaPlayer{
     public $name = 'html5';
-    public $title = 'HTML5';
+    public $title = 'VideoJS';
     
     public $live = true;
     public $ondemand = true;
@@ -65,26 +65,16 @@ class html5 extends mediaPlayer{
     
 }
 
-class radioPlayer extends mediaPlayer{
-    public $name = 'radio';
-    public $title = 'Radio';
-    
-    public $live = true;
-    public $ondemand = false;
-    
-    public $supported = array('audio/mp3');
-    
-    public static function build($content,$setup){
-        
-    }
-}
 
 class custom extends mediaPlayer{
     public $name = 'custom';
     public $title = 'Custom code';
     
+    public $live = true;
+    public $ondemand = true;
+    
     public static function build($video,$setup){
-        $video['source'] = $video['code'];
+        $video->source = $video->code;
         return $video;
     }
     

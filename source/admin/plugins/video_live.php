@@ -26,7 +26,7 @@ class live extends optionsPage{
                 $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $stream, "POST");
                 $editForm->formTitle("Edit stream");
                 $editForm->labeledInput("title", "text", $title, "Title");
-                $editForm->kpSelector("type", self::kpStreamTypes(), $type, "Stream type");
+                $editForm->kpSelector("type", mediaPlayer::kpLiveTypes(), $type, "Stream type");
                 $editForm->kpSelector("mobile", self::kpOtherStreams($stream), $mobile, "Mobile stream");
                 $editForm->labeledInput("url", "text", $url, "Stream URL");
                 $editForm->kpSelector("cover", cover::kpCovers(), $cover, "Loading screen");
@@ -45,7 +45,7 @@ class live extends optionsPage{
             $form = new ajaxForm("newItemForm", $this->name, "POST");
             $form->formTitle("New stream");
             $form->labeledInput("title", "text", "", "Title");
-            $form->kpSelector("type", self::kpStreamTypes(), "custom", "Stream type");
+            $form->kpSelector("type", mediaPlayer::kpLiveTypes(), "custom", "Stream type");
             $form->kpSelector("mobile", self::kpStreams(), "", "Mobile stream");
             $form->labeledInput("url", "text", "", "Stream URL");
             $form->kpSelector("cover", cover::kpCovers(), "", "Loading screen");
@@ -130,7 +130,7 @@ class live extends optionsPage{
         }else if(isset($_GET['id'])){
             $streamid = filter_input(INPUT_GET,"id");
             $stream = self::getStream($streamid);
-            iframeOutput($stream['title'], $stream['source']);
+            iframeOutput($stream->title, $stream->source);
         }else{
             echo "Live stream iFrame generator<br />", PHP_EOL;
             echo "Valid requests:<br />";
@@ -154,36 +154,30 @@ class live extends optionsPage{
             
             $cover = cover::getImage($cover);
             $cover_url = $cover->poster;
+            
+            $src = new source($url,'rtmp/mp4','720');
+            $sources = array($src);
+            
+            
+            $video = new video($id, $type, $sources, $code, $cover_url, $title, $description, "", "");
+            
             if($mobile && onMobile()){
-              $mobStream = self::getStream($mobile);
-              $source = $mobStream['source'];
-              $description = $mobStream['description'];
+                $video = self::getStream($mobile);
+                $video->title = $title;
             }else{
                 
+                $players = mediaPlayer::getPlayerTypes();
                 
-                
-                switch($type){
-                    case "hds":
-                        $source = self::hdsStream($url,$cover_url);
-                        break;
-                    case "hls":
-                        $source = self::hlsStream($url,$cover_url);
-                        break;
-                    case "rtmp":
-                        $source = self::rtmpStream($url,$cover_url);
-                        break;
-                    case "icecast":
-                        require_once('plugins/radio/player.php');
-                        $source = self::icecastStream($url, $cover_url, $code, $title);
-                        $title = radioPlayer::getNowPlaying($code, $title);
-                        break;
-                    default:
-                        $source = $code;
-                        break;
-                }
+                foreach($players as $player){
+                    if($player->name == $type){
+                        //TODO - add setup 
+                        $video = $player->build($video,"");
+                    }
+                }   
             }
             
-            $video = new video($id, $type, null, $source, null, $title, $description, "", "");
+           
+            
             
             return $video;
         }else{
@@ -222,7 +216,7 @@ class live extends optionsPage{
             $streams = array();
             while($stmt->fetch()){
                 $onclick = "cm_loadPage('plugin_live&edit=$id');";
-                $streams[] = array("Title" => $title, "Type" => self::kpStreamTypes()[$type], "onclick" => $onclick);
+                $streams[] = array("Title" => $title, "Type" => mediaPlayer::kpTypes()[$type], "onclick" => $onclick);
             }
             return $streams;
             
