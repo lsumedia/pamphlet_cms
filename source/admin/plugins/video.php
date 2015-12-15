@@ -883,7 +883,7 @@ class live extends optionsPage{
                 }
             }
             
-            $video = new video($id, $type, $sources, $source, $poster, $title, $description, "", "");
+            $video = new video($id, $type, null, $source, $cover_url, $title, $description, "", "");
             
             return $video;
         }else{
