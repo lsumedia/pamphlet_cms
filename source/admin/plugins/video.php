@@ -13,7 +13,7 @@
  * @param type $code string
  */
 function iframeOutput($title,$code){
-    require_once('video/videojs/videojs.php');
+    require_once('video/videojs/videojs.php'); 
     html::start();
     html::css("plugins/video/iframe.css");
     html::title($title);
@@ -123,6 +123,10 @@ class mediaPlayer {
     public $supported = array();
     /* $properties: defines a set of text properties in key/pair format which may be used by the player */
     public $properties = array();
+    /* bool $live: whether the player supports live playback */
+    public $live;
+    /* bool $ondemand: whether the player supports on-demand playback */
+    public $ondemand;
     /**
      * build
      * Generates HTML source code for the player for use in an iframe.
@@ -159,6 +163,35 @@ class mediaPlayer {
         }
         return $types;
     }
+    
+    public static function kpLiveTypes(){
+        $players = self::getPlayerTypes();
+        $types = array();
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
+            if($player->live){
+                $types[$name] = $title;
+            }
+        }
+        return $types;
+    }
+    
+    public static function kpVodTypes(){
+        $players = self::getPlayerTypes();
+        $types = array();
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
+            if($player->ondemand){
+                $types[$name] = $title;
+            }
+        }
+        return $types;
+    }
+    
 }
 
 /**

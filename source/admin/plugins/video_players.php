@@ -11,6 +11,9 @@ class youtube extends mediaPlayer{
     public $name = 'youtube';
     public $title = "YouTube";
     
+    public $live = true;
+    public $ondemand = true;
+    
     public static function build($video,$setup){
         $primarySource = $video->sources[0];
         $id = $primarySource->src;
@@ -27,11 +30,14 @@ class iframe extends mediaPlayer{
     public $name = 'iframe';
     public $title = 'IFrame Embed';
     
+    public $live = true;
+    public $ondemand = true;
+    
     public static function build($video,$setup){
         $primarySource = $video->sources[0];
         $src = $primarySource->src;
         
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"$url\"></iframe>";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"$src\"></iframe>";
         return $video;
     }
 }
@@ -39,6 +45,9 @@ class iframe extends mediaPlayer{
 class html5 extends mediaPlayer{
     public $name = 'html5';
     public $title = 'HTML5';
+    
+    public $live = true;
+    public $ondemand = true;
     
     public static function build($video,$setup){
         $poster = $video->poster;
@@ -54,6 +63,20 @@ class html5 extends mediaPlayer{
         return $video;
     }
     
+}
+
+class radioPlayer extends mediaPlayer{
+    public $name = 'radio';
+    public $title = 'Radio';
+    
+    public $live = true;
+    public $ondemand = false;
+    
+    public $supported = array('audio/mp3');
+    
+    public static function build($content,$setup){
+        
+    }
 }
 
 class custom extends mediaPlayer{
