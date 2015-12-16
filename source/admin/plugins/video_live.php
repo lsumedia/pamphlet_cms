@@ -176,8 +176,8 @@ class live extends optionsPage{
                 }   
             }
             
-           
-            
+            /* Remove video poster so channel logo is displayed instead */
+            $video->poster = null;
             
             return $video;
         }else{

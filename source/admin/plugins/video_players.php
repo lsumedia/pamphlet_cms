@@ -51,15 +51,27 @@ class html5 extends mediaPlayer{
     
     public static function build($video,$setup){
         $poster = $video->poster;
-        $code = "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"]}'>";
+        
+        require_once('plugins/video/videojs/videojs.php');
+        
+        ob_start();
+        
+        videojs::init();
+        
+        echo "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"]}'>";
         foreach($video->sources as $source){
             $src = $source->src;
             $type = $source->type;
             $res = $source->res;
-            $code .= "<source src=\"$src\" type=\"$type\" data-res=\"$res\">" . PHP_EOL;
+            echo "<source src=\"$src\" type=\"$type\" data-res=\"$res\">", PHP_EOL;
         }
-        $code .= "Your browser does not support the video tag" . "</video>";
-        $video->source = $code;
+        echo "Your browser does not support the video tag" . "</video>";
+        
+        videojs::run();
+        
+        $video->source =  ob_get_contents();
+        ob_end_clean();
+        
         return $video;
     }
     
