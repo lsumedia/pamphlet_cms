@@ -52,7 +52,7 @@ class live extends optionsPage{
             ajaxForm::startOptionalSection("sourceSection", "Custom code");
             $form->plainText("source", "", "Custom embed code");
             ajaxForm::endOptionalSection();
-            $form->largeText("description", $details['description'], "Description");
+            $form->largeText("description", "", "Description");
             $form->submit("Add new item");
             
             $videos = self::allStreams();
@@ -129,7 +129,7 @@ class live extends optionsPage{
             echo json_encode(self::listStreams());
         }else if(isset($_GET['id'])){
             $streamid = filter_input(INPUT_GET,"id");
-            $stream = self::getStream($streamid);
+            $stream = self::getStream($streamid,true);
             iframeOutput($stream->title, $stream->source);
         }else{
             echo "Live stream iFrame generator<br />", PHP_EOL;
@@ -142,8 +142,13 @@ class live extends optionsPage{
     public static function kpStreamTypes(){
         return array("hds" => "HDS", "hls" => "HLS", "rtmp" => "RTMP","icecast" => "Radio", "custom" => "Custom embed code" );
     }
-    public static function getStream($id){
+    public static function getStream($id, $build){     
         global $connection;
+        
+        if(!isset($build)){
+            $build = false;
+        }
+        
         if($stmt = $connection->prepare("SELECT title,type,url,mobile,source,description,cover FROM plugin_live WHERE id=?")){
             $stmt->bind_param("i",$id);
             $stmt->execute();
@@ -155,6 +160,7 @@ class live extends optionsPage{
             $cover = cover::getImage($cover);
             $cover_url = $cover->poster;
             
+            /*TODO - get rid of this and build multiple sources into database */
             $src = new source($url,'rtmp/mp4','720');
             $sources = array($src);
             
@@ -162,18 +168,21 @@ class live extends optionsPage{
             $video = new video($id, $type, $sources, $code, $cover_url, $title, $description, "", "");
             
             if($mobile && onMobile()){
-                $video = self::getStream($mobile);
+                $video = self::getStream($mobile,true);
                 $video->title = $title;
             }else{
                 
                 $players = mediaPlayer::getPlayerTypes();
                 
-                foreach($players as $player){
-                    if($player->name == $type){
-                        //TODO - add setup 
-                        $video = $player->build($video,"");
+                if($build == true){
+                    foreach($players as $player){
+                        if($player->name == $type){
+                            //TODO - add setup 
+                            $video = $player->build($video,"");
+                        }
                     }
-                }   
+                }
+                
             }
             
             /* Remove video poster so channel logo is displayed instead */

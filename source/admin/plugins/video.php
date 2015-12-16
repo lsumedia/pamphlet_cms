@@ -412,7 +412,7 @@ class manager extends optionsPage{
             
             switch($type){
                 case "live":
-                    $player_content = live::getStream($live);
+                    $player_content = live::getStream($live,true);
                     break;
                 case "vod":
                     $player_content = videos::getVideo($vod,true);
