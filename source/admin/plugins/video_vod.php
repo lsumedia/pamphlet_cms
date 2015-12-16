@@ -17,7 +17,7 @@ class videos extends optionsPage{
         if($video = filter_input(INPUT_GET,"edit")){
             
             backButton($this->name);
-            $details = self::getVideo($video);
+            $details = self::getVideo($video, false);
             $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $video, "POST");
             $editForm->formTitle("Edit video");
             $editForm->labeledInput("title", "text", $details->title, "Title");
@@ -125,7 +125,7 @@ class videos extends optionsPage{
         }else if(isset($_GET['id'])){
             //html::div("player_container","player1");
             $videoid = filter_input(INPUT_GET,"id");
-            $video = self::getVideo($videoid);
+            $video = self::getVideo($videoid,true);
             iframeOutput($video->title, $video->source);
         }
     }
@@ -182,7 +182,7 @@ class videos extends optionsPage{
             }
             foreach($ids as $id){
                 //Writes other videos to array
-                $video = self::getVideo($id);
+                $video = self::getVideo($id,true);
                 $video->video_id = $id;
                 $videos[] = $video;
             }
@@ -200,14 +200,19 @@ class videos extends optionsPage{
     
     
    
-    
-    public static function getVideo($id){
+    /**
+     * 
+     * @global type $connection
+     * @param bool $id
+     * @param bool $build - whether or not to build the player source code
+     * @return video
+     */
+    public static function getVideo($id, $build){
         global $connection;
         
-        $video = array();
-        $video['id'] = "vod_" . $id;
-        $video['video_id'] = $id;
-        
+        if(!isset($build)){
+            $build = false;
+        }
         
         if($vstmt = $connection->prepare("SELECT title,length,date,description,type,url,source,poster FROM plugin_vod WHERE id=?")){
             $vstmt->bind_param("i",$id);
@@ -223,11 +228,15 @@ class videos extends optionsPage{
             
             $video = new video($id, $type, $sources, $source, $poster, $title, $desc, $date, $tags);
             
+            $video->video_id = $id;
+            
             $players = mediaPlayer::getPlayerTypes();
-            foreach($players as $player){
-                if($player->name == $type){
-                    //TODO - add setup 
-                    $video = $player->build($video,"");
+            if($build == true){
+                foreach($players as $player){
+                    if($player->name == $type){
+                        //TODO - add setup 
+                        $video = $player->build($video,"");
+                    }
                 }
             }
             return $video;

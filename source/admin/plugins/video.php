@@ -313,7 +313,7 @@ class manager extends optionsPage{
             $iframe_link = actualLink() . "/public.php?action=$this->name&iframe=$playerid";
             $video->iframe = $iframe_link;
             //Displays memory for optimisation processes
-            //$video['description'] .= "<p>Memory usage: " . memory_get_peak_usage() . "<br />Stream ID: " . $video['id'] . "</p>";
+            //$video->description .= "<p>Memory usage: " . memory_get_peak_usage() . "<br />Stream ID: " . $video->id . "</p>";
             echo json_encode($video);
         }
     }
@@ -415,7 +415,7 @@ class manager extends optionsPage{
                     $player_content = live::getStream($live);
                     break;
                 case "vod":
-                    $player_content = videos::getVideo($vod);
+                    $player_content = videos::getVideo($vod,true);
                     break;
                 case "cover":
                     $player_content = cover::getImage($cover);
