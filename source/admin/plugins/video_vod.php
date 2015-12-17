@@ -26,7 +26,7 @@ class videos extends optionsPage{
             ajaxForm::startOptionalSection("embed","Embed code (Custom code)");
             $editForm->plainText("code", $details->code, "Custom embed code");
             ajaxForm::endOptionalSection();
-            //$editForm->labeledInput("length", "text", $details['length'], "Video length");
+            $editForm->labeledInput("tags", "text", $details->tags, "Tags (space seperated)");
             $editForm->labeledInput("date", "date", $details->date, "Date posted");
             $editForm->labeledInput("poster", "text", $details->poster, "Poster URL");
             $editForm->largeText("description", $details->description, "Description");
@@ -43,7 +43,7 @@ class videos extends optionsPage{
             ajaxForm::startOptionalSection("embed","Embed code (Custom code)");
             $form->plainText("code", "", "Custom embed code");
             ajaxForm::endOptionalSection();
-            $form->labeledInput("length", "text", "", "Video length");
+            $form->labeledInput("tags", "text", "", "Tags (space seperated)");
             $nowdate = date("Y-m-d");
             $form->labeledInput("date", "date", $nowdate, "Date posted");
             $form->labeledInput("poster", "text", "", "Poster URL");
@@ -63,7 +63,7 @@ class videos extends optionsPage{
         global $connection;
         
         $title = filter_input(INPUT_POST,"title");
-        $length = filter_input(INPUT_POST,"length");
+        $tags = filter_input(INPUT_POST,"tags");
         $date = filter_input(INPUT_POST,"date");
         $description = content("description");
         $type = filter_input(INPUT_POST,"type");
@@ -90,8 +90,8 @@ class videos extends optionsPage{
             block(2);
             $edit = filter_input(INPUT_GET,"edit");
             //Editing existing post
-            if($bstmt = $connection->prepare("UPDATE $this->name SET title=?, length=?, date=?, description=?, type=? ,url=?, source=?, poster=?  WHERE id=?")){
-                $bstmt->bind_param("ssssssssi",$title,$length,$date,$description,$type,$url,$code,$poster,$edit);
+            if($bstmt = $connection->prepare("UPDATE $this->name SET title=?, tags=?, date=?, description=?, type=? ,url=?, source=?, poster=?  WHERE id=?")){
+                $bstmt->bind_param("ssssssssi",$title,$tags,$date,$description,$type,$url,$code,$poster,$edit);
                 if($bstmt->execute()){
                     echo "Saved changes";
                     return;
@@ -108,8 +108,8 @@ class videos extends optionsPage{
                 echo "Please enter a title";
                 return;
             }else{
-                $nbstmt = $connection->prepare("INSERT INTO $this->name (title,length,date,description,type,url,source,poster) VALUES (?,?,?,?,?,?,?,?);");
-                $nbstmt->bind_param("ssssssss",$title,$length,$date,$description,$type,$url,$source,$poster);
+                $nbstmt = $connection->prepare("INSERT INTO $this->name (title,tags,date,description,type,url,source,poster) VALUES (?,?,?,?,?,?,?,?);");
+                $nbstmt->bind_param("ssssssss",$title,$tags,$date,$description,$type,$url,$source,$poster);
                 if($nbstmt->execute()){
                     echo "reload";
                     return;
@@ -125,6 +125,10 @@ class videos extends optionsPage{
         }else if(isset($_GET['id'])){
             //html::div("player_container","player1");
             $videoid = filter_input(INPUT_GET,"id");
+            $video = self::getVideo($videoid,true);
+            echo json_encode($video);
+        }else if(isset($_GET['iframe'])){
+            $videoid = filter_input(INPUT_GET,"iframe");
             $video = self::getVideo($videoid,true);
             iframeOutput($video->title, $video->source);
         }
@@ -149,13 +153,13 @@ class videos extends optionsPage{
     public static function allVideos(){
         /* Returns all video information in a multi-dimensional array */
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,type,length,date FROM plugin_vod ORDER BY id DESC")){
+        if($stmt = $connection->prepare("SELECT id,title,type,tags,date FROM plugin_vod ORDER BY id DESC")){
             $stmt->execute();
             $videos = array();
-            $stmt->bind_result($id,$vtitle,$type,$length,$date);
+            $stmt->bind_result($id,$vtitle,$type,$tags,$date);
             while($stmt->fetch()){
                  $onclick = "cm_loadPage('plugin_vod&edit=$id');";
-                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Length" => $length, "Date posted" => $date, "onclick" => $onclick);
+                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Tags" => $tags, "Date posted" => $date, "onclick" => $onclick);
             }
             return $videos;
         }else{
@@ -172,11 +176,11 @@ class videos extends optionsPage{
     public static function listVideos(){
         /* Returns all video information in a multi-dimensional array ordered by date */
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,url,type,length,date FROM plugin_vod ORDER BY date desc")){
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod ORDER BY date desc")){
             $stmt->execute();
             $ids = array();
             $videos = array();
-            $stmt->bind_result($id,$vtitle,$url,$type,$length,$date);
+            $stmt->bind_result($id,$vtitle,$url,$type,$tags,$date);
             while($stmt->fetch()){
                 $ids[] = $id;
             }
@@ -214,32 +218,52 @@ class videos extends optionsPage{
             $build = false;
         }
         
-        if($vstmt = $connection->prepare("SELECT title,length,date,description,type,url,source,poster FROM plugin_vod WHERE id=?")){
+        if($vstmt = $connection->prepare("SELECT title,tags,date,description,type,url,source,poster FROM plugin_vod WHERE id=?")){
             $vstmt->bind_param("i",$id);
             $vstmt->execute();
-            $vstmt->bind_result($title,$length,$date,$desc,$type,$url,$source,$poster);
+            $vstmt->bind_result($title,$tags,$date,$desc,$type,$url,$source,$poster);
             $vstmt->store_result();
             $vstmt->fetch();
+            $vstmt->close();
             
+            $sstmt = $connection->prepare("SELECT source_id, src, type, res FROM plugin_vod_sources WHERE video_id=?");
+            $sstmt->bind_param('i',$id);
+            $sstmt->execute();
+            $sstmt->bind_result($source_id,$source_src,$source_type,$source_res);
+
             $sources = array();
-            $source1 = new source($url,'video/mp4','720');
-            $sources[] = $source1;
-            $tags = "";
+            while($sstmt->fetch()){
+                $sources[] = new source($source_src,$source_type,$source_res);
+            }
             
+            if(count($sources) == 0){
+                $sources[] = new source($url,'video/mp4','720');
+            }
+
+            //$source1 = new source($url,'video/mp4','720');
+            //$sources[] = $source1;
+
             $video = new video($id, $type, $sources, $source, $poster, $title, $desc, $date, $tags);
-            
+
             $video->video_id = $id;
-            
+
             $players = mediaPlayer::getPlayerTypes();
             if($build == true){
+                $built = false;
                 foreach($players as $player){
                     if($player->name == $type){
                         //TODO - add setup 
                         $video = $player->build($video,"");
+                        $built = true;
                     }
                 }
             }
+            
+            if($build && !$built){
+                echo "Failed to build video - player module '$type' not found", PHP_EOL;
+            }
             return $video;
+           
             /*
             switch($type){
                 case "iframe":

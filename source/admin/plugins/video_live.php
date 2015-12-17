@@ -130,6 +130,10 @@ class live extends optionsPage{
         }else if(isset($_GET['id'])){
             $streamid = filter_input(INPUT_GET,"id");
             $stream = self::getStream($streamid,true);
+            echo json_encode($stream);
+        }else if(isset($_GET['iframe'])){
+            $streamid = filter_input(INPUT_GET,"id");
+            $stream = self::getStream($streamid,true);
             iframeOutput($stream->title, $stream->source);
         }else{
             echo "Live stream iFrame generator<br />", PHP_EOL;

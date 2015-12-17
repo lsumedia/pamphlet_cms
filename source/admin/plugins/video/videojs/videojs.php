@@ -13,10 +13,10 @@ class videojs{
         
         echo PHP_EOL;
         /* INCLUDE CORE */
-        html::css("plugins/video/videojs/core/video-js-custom-css");
+        //html::css("plugins/video/videojs/core/video-js-custom-css");
         
-        //html::css("//vjs.zencdn.net/5.3.0/video-js.css");
-        html::js("//vjs.zencdn.net/5.3.0/video.js");	//CDN version
+        html::css("//vjs.zencdn.net/4.9/video-js.css");
+        html::js("//vjs.zencdn.net/4.9/video.js");	//CDN version
         
         //html::js("plugins/video/videojs/core/video.min.js");
         
@@ -28,13 +28,13 @@ class videojs{
         
         /* THE (hopefully) AWESOME FLASH-FREE HLS - WIP */
         
-        html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
-        html::js('plugins/video/videojs/hls/videojs.hls.min.js');
+        //html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
+        //html::js('plugins/video/videojs/hls/videojs.hls.min.js');
         
         /* QUALITY SELECTOR (DOESN'T WORK IN VJS 5.0) */
         
-        //html::css("plugins/video/videojs/qualitysel/video-quality-selector.css");
-        //html::js("plugins/video/videojs/qualitysel/video-quality-selector.js");
+        html::css("plugins/video/videojs/qualitysel/video-quality-selector.css");
+        html::js("plugins/video/videojs/qualitysel/video-quality-selector.js");
         
         /* ENABLE PLUGINS */
         
@@ -43,13 +43,18 @@ class videojs{
         //echo "<script>videojs.options.osmf.swf=\"plugins/video/video-js/osmf/videojs-osmf.swf\";</script>";
         //echo "<script>videojs.plugin('resolutionSelector',resolutionSelector);</script>";
     }
+    
+    /* NO LONGER NECESSARY */
     static function run(){
         //Place after the player you wish to activate. Will activate the FIRST tag with the "html5vid" class
+        /*
         echo PHP_EOL;
         echo "<script>"
         . "var vidPlayer = document.getElementsByClassName('html5vid')[0]; "
         . "videojs(vidPlayer, {}, function() {}); "
         . "videojs( '#video', { plugins : { resolutionSelector : {default_res : '720'} } });"
         . "</script>", PHP_EOL;
+         * 
+         */
     }
 }

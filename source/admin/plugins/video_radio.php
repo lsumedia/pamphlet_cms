@@ -14,7 +14,7 @@ class radio extends mediaPlayer{
         $primarySource = $content->sources[0];
         $url= $primarySource->src;
         
-        $poster = $conent->poster;
+        $poster = $content->poster;
         $nowplaying = $content->source;
         
         require_once('plugins/radio/player.php');
