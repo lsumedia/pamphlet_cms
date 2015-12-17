@@ -139,7 +139,8 @@ class live extends optionsPage{
             echo "Live stream iFrame generator<br />", PHP_EOL;
             echo "Valid requests:<br />";
             echo "&list : Returns list of streams in JSON format<br />";
-            echo "&id=id : Returns a particular stream's source code";
+            echo "&id=[id] : Returns a particular stream's source code<br />";
+            echo "&iframe=[id] : Return a stream's source code for use in iframe<br />";
         }
     }
     

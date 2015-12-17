@@ -131,6 +131,12 @@ class videos extends optionsPage{
             $videoid = filter_input(INPUT_GET,"iframe");
             $video = self::getVideo($videoid,true);
             iframeOutput($video->title, $video->source);
+        }else{
+            echo "VOD iFrame generator<br />", PHP_EOL;
+            echo "Valid requests:<br />";
+            echo "&list : Returns list of videos in JSON format<br />";
+            echo "&id=[id] : Returns a particular video's source code<br />";
+            echo "&iframe=[id] : Return a video's source code for use in iframe<br />";
         }
     }
 
