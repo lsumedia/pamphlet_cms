@@ -1,12 +1,10 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 30-Oct-2015, 01:16:27
-    Author     : Cameron
-*/
+
+
+@font-face{
+	font-family:Vehicle;
+	src:url("plugins/graphics/vehicle.otf");
+}
+
 
 body{
     margin:0;
@@ -14,14 +12,14 @@ body{
 }
 
 #box{
-    font-family:Arial, sans-serif;
+    font-family:Vehicle, sans-serif;
     margin-top:20vh;
     width:1920px;
-    background-color:white;
+    background-color:#474747;
     height:180px;
     line-height:180px;
     font-size:7em;
-    color:black;
+    color:white;
     cell-padding:0;
 }
 
@@ -38,10 +36,11 @@ body{
 }
 
 .name{
-    background-color:#EC2228;
+    background-color:#464646;
     color:white;
     height:100%;
     width:260px;
+    display:none;
 }
 
 .timer{
@@ -53,14 +52,13 @@ body{
 }
 
 #team2img img{
-    margin-top:35px;
+    margin-top:15px;
     width:200px;
     height:auto;
 }
 
 #tvlogo{
-    background-color:#EC2228;
-    
+    background-color:#464646;
 }
 
 #quarter{
@@ -69,7 +67,6 @@ body{
 
 #team2img img{
     width:150px;
-    margin-top:45px;
     height:auto;
 }
 
@@ -77,4 +74,8 @@ body{
     width:160px;
     height:auto;
     margin-top:20px;
+}
+
+.logo{
+    display:none;
 }

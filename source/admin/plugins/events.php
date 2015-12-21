@@ -46,7 +46,7 @@ class events extends optionsPage{
             $editBlog->kpSelector("author", kpFullnames(), $author, "Author");
             $editBlog->largeText("description", $desc, "Event description");
             
-             $editBlog->otherActionButton("deleteEvent", "Delete event", "&delete=$post");
+             $editBlog->otherActionButton("deleteEvent", "Delete event", "&delete=$post",'plugin_events');
             $editBlog->submit("Update post");
             $pstmt->close();
             

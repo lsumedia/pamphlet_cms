@@ -10,9 +10,16 @@ var trunning;
 var telapsed;
 var quarter;
 
-
-function updateScore(){
-    
+function updateScore(team,value){
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function(){
+            if(request.readyState == 4 && request.status == 200){
+               console.log(request.responsetText);
+            }
+    }
+    request.open("GET",'request.php?update&action=plugin_scoreboard&control=' + id + '&team' + team +  '=' + value ,true);
+    request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    request.send();
 }
 
 function toggleTimer(){
@@ -33,12 +40,30 @@ function toggleTimer(){
 }
 
 function resetTimer(){
-    
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function(){
+            if(request.readyState == 4 && request.status == 200){
+               console.log(request.responseText);
+            }
+    }
+    action = 'request.php?update&action=plugin_scoreboard&control=' + id + '&reset';
+    request.open("GET",action,true);
+    console.log(action);
+    request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    request.send();
 }
 
 function updateQuarter(){
     var quarter = document.getElementById('quarter').value;
-    
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function(){
+            if(request.readyState == 4 && request.status == 200){
+               console.log(request.responsetText);
+            }
+    }
+    request.open("GET",'request.php?update&action=plugin_scoreboard&control=' + id + '&quarter=' + quarter,true);
+    request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    request.send();
 }
 
 

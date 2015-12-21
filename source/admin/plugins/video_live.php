@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+
 class live extends optionsPage{
     
     public $name = "plugin_live";
@@ -35,7 +36,7 @@ class live extends optionsPage{
                 ajaxForm::endOptionalSection();
                 $editForm->largeText("description", $description, "Description");
                 $editForm->lockedInput(actualLink() . "/public.php?action=$this->name&id=$stream", "External embed URL");
-                $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream");
+                $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream" , 'plugin_live');
                 $editForm->submit("Save changes");
             }else{
                 echo "Error accessing database";
@@ -143,10 +144,7 @@ class live extends optionsPage{
             echo "&iframe=[id] : Return a stream's source code for use in iframe<br />";
         }
     }
-    
-    public static function kpStreamTypes(){
-        return array("hds" => "HDS", "hls" => "HLS", "rtmp" => "RTMP","icecast" => "Radio", "custom" => "Custom embed code" );
-    }
+
     public static function getStream($id, $build){     
         global $connection;
         
@@ -166,7 +164,7 @@ class live extends optionsPage{
             $cover_url = $cover->poster;
             
             /*TODO - get rid of this and build multiple sources into database */
-            $src = new source($url,'rtmp/mp4','720');
+            $src = new source($url,'application/x-mpegURL','720');
             $sources = array($src);
             
             
@@ -263,28 +261,7 @@ class live extends optionsPage{
         }
     }
     
-    /*Individual stream code generators
-     * hdsStream - HDS, requires OSMF
-     */
-    public static function hdsStream($url){
-        return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$cover\" controls autoplay data-setup='{\"techOrder\": [\"flash\",\"html5\"]}'>" . "<source src=\"$url\" type=\"application/adobe-f4m\">" . "Your browser does not support the video tag" . "</video>";
-    }
-    public static function hlsStream($url,$cover){
-        //Designed for videoJS with FlasHLS
-        return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$cover\" controls autoplay data-setup='{\"techOrder\": [\"flash\",\"html5\"]}'>" . "<source src=\"$url\" type=\"application/x-mpegURL\">" . "Your browser does not support the video tag" . "</video>";
-    }
-    public static function rtmpStream($url,$cover){
-        return "<video class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$cover\" controls autoplay>" . "<source src=\"$url\" type=\"rtmp/mp4\">" . "Your browser does not support the video tag" . "</video>";        
-    }
-    public static function shoutStream($url,$cover){
-        //Deprecated
-        return "<video class=\"vidplayer radplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" data-setup='{ \"inactivityTimeout\": 0, \"allowfullscreen\":\"false\" }' poster=\"$cover\" controls autoplay>" . "<source src=\"$url\" type=\"audio/mp3\">" . "</video>";
-    }
-    public static function icecastStream($url,$cover,$nowplaying, $title){
-        //Uses external plugin - do not try to run if radio folder is not installed!
-        require_once('plugins/radio/player.php');
-        return radioPlayer::build($url,$cover,$nowplaying, $title);
-    }
 }
 
+//Disabled cos this is now obsolete!
 $pluginPages[] = new live();

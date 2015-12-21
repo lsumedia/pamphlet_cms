@@ -30,7 +30,9 @@ class source{
     public $src;
     public $type;
     public $res;
-    
+    public $video_id;
+    public $source_id;
+            
     public function __construct($src,$type,$res) {
         $this->src = $src;
         $this->type = $type;
@@ -231,8 +233,8 @@ class manager extends optionsPage{
                 $form->checkBox("visible", $visible, "Visible in controller");
                 $form->inputWithButton("thumbnail", $thumbnail, "Thumbnail image", "browseServer()", "Upload");
                 $form->kpSelector("type", self::kpVideoTypes(), $type, "Content to display");
-                $form->kpSelector("live", live::kpStreams(), $live, "Live stream");
-                $form->kpSelector("vod", videos::kpVideos(), $vod, "On-demand video");
+                $form->kpSelector("live", videos::kpVideos(1), $live, "Live stream");
+                $form->kpSelector("vod", videos::kpVideos(0), $vod, "On-demand video");
                 $form->kpSelector("cover", cover::kpCovers(), $cover, "Holding screen");
                 ajaxForm::startOptionalSection("delsec", "Delete button (don't!)");
                 $form->otherActionButton("deletebutton", "Delete channel", "&delete=$channel");
@@ -251,8 +253,8 @@ class manager extends optionsPage{
             $form->checkBox("visible", "1", "Visible in controller");
             $form->inputWithButton("thumbnail", "", "Thumbnail image", "browseServer()", "Upload");
             $form->kpSelector("type", manager::kpVideoTypes() , "", "Content to display");
-            $form->kpSelector("live", live::kpStreams(), "", "Live stream");
-            $form->kpSelector("vod", videos::kpVideos() , "", "On-demand video");
+            $form->kpSelector("live", videos::kpVideos(1), "", "Live stream");
+            $form->kpSelector("vod", videos::kpVideos(0) , "", "On-demand video");
             $form->kpSelector("cover", cover::kpCovers(), "", "Holding screen");
             $form->submit("Add channel");
             
@@ -412,7 +414,7 @@ class manager extends optionsPage{
             
             switch($type){
                 case "live":
-                    $player_content = live::getStream($live,true);
+                    $player_content = videos::getVideo($live,true);
                     break;
                 case "vod":
                     $player_content = videos::getVideo($vod,true);
@@ -507,8 +509,8 @@ class cover extends optionsPage{
             $editForm->labeledInput("title", "text", $details['title'], "Title");
             $editForm->inputWithButton("url", $details['url'], "Image URL", "browseServer()", "Upload");
             $editForm->largeText("description", $details['description'], "Description");
-            $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream");
-            $editForm->submit("Save changes");
+            $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream", 'plugin_videomanager');
+            $editForm->submit("Save changes",'plugin_videomanager');
         }else{
         
             $form = new ajaxForm("newItemForm", $this->name, "POST");

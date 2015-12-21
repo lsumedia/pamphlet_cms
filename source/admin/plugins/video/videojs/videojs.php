@@ -26,19 +26,21 @@ class videojs{
         
         //html::js("plugins/video/video-js/flashls/videojs.flashls.js");
         
-        /* THE (hopefully) AWESOME FLASH-FREE HLS - WIP */
+        /* MSE AND HLS ( >= v5.0 ) */
         
         //html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
         //html::js('plugins/video/videojs/hls/videojs.hls.min.js');
         
-        /* QUALITY SELECTOR (DOESN'T WORK IN VJS 5.0) */
+        /* QUALITY SELECTOR ( <= v4.9) */
         
         html::css("plugins/video/videojs/qualitysel/video-quality-selector.css");
         html::js("plugins/video/videojs/qualitysel/video-quality-selector.js");
         
         /* ENABLE PLUGINS */
         
+        /* FLASHLS */
         //echo "<script>videojs.flashls({swfUrl: \"plugins/video/video-js/flashls/video-js.swf\"}); videojs.options.flash.swf = \"plugins/video/video-js/flashls/video-js.swf\"; /* videojs.options.techOrder = ['html5', 'flash']; */</script>";
+        
         //html::js("plugins/video/video-js/osmf/videojs-osmf.js");
         //echo "<script>videojs.options.osmf.swf=\"plugins/video/video-js/osmf/videojs-osmf.swf\";</script>";
         //echo "<script>videojs.plugin('resolutionSelector',resolutionSelector);</script>";

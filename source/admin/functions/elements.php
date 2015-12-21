@@ -279,6 +279,14 @@ class multiPageList extends objectList{
     }
 }
 
+class ajaxList extends objectList{
+    public function display($pageName){
+        
+        
+    }
+    
+}
+
 class ajaxForm{
     
     public $id;
@@ -286,7 +294,7 @@ class ajaxForm{
     public $method;
     public $fieldNames = array();
 
-    public function __construct($id,$action,$method){
+    public function __construct($id,$action,$method,$onReloadAction){
         //Starts the form duh
         $this->id = $id;
         $this->action = $action;
@@ -408,7 +416,7 @@ END;
         echo "<div class=\"fieldRow\"><p>$content</p></div>",PHP_EOL;
     }
     
-    function submit($label){
+    function submit($label,$onReloadAction){
         //Puts all the fields together for AJAX request
         $fields = "[";
         foreach($this->fieldNames as $key => $field){
@@ -420,13 +428,13 @@ END;
         $lastId = end($idArray);
         echo "<div class=\"fieldRow\">";
         echo "<p class=\"response\" id=\"$this->id-response\"></p>";
-        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response');\">$label</button>", \PHP_EOL;
+        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
         echo "</div>";
         echo "</div>", PHP_EOL;
         echo "<!-- ajaxForm $this->id ends -->", PHP_EOL;
         
     } 
-    function clipboardSubmit($label,$resultLabel){
+    function clipboardSubmit($label,$resultLabel,$onReloadAction){
         //Puts all the fields together for AJAX request
         $fields = "[";
         foreach($this->fieldNames as $key => $field){
@@ -437,18 +445,21 @@ END;
         $idArray = explode("=", $this->action);
         $lastId = end($idArray);
         echo "<div class=\"fieldRow\">";
-        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response');\">$label</button>", \PHP_EOL;
+        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
         echo "</div>";
         $this->lockedInputJs("$this->id-response",$resultLabel);
         echo "</div>", PHP_EOL;
         echo "<!-- ajaxForm $this->id ends -->", PHP_EOL;
         
     }
-    function otherActionButton($id,$label,$action){
+    function otherActionButton($id,$label,$action,$onReloadAction){
         //A button which performs a custom cp_updateForm action
         $newAction = $this->action . $action;
+        if(!isset($onReloadAction)){
+            $onReloadAction = $action;
+        }
         echo "<div class=\"fieldRow\">";
-        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response');};\">$label</button>";
+        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response','$onReloadAction');};\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     function linkButton($id,$label,$action){
@@ -668,14 +679,16 @@ function cm_loadPage(code){
 }
 </script>
 <script id="updateForm">
-function cm_updateForm(fields,action,method,result){
-           
+function cm_updateForm(fields,action,method,result,onReloadAction){
+    if(!onReloadAction){
+        var onReloadAction = action;
+    }
     var updateRequest = new XMLHttpRequest();
     updateRequest.onreadystatechange = function(){
         if(updateRequest.readyState == 4 && updateRequest.status == 200){
             var response = updateRequest.responseText;
             if(response == "reload"){
-                cm_loadPage(action);
+                cm_loadPage(onReloadAction);
             }else if(response == "refresh"){
                 location.reload();
             }
@@ -725,12 +738,6 @@ class cm_inner_content{
 
 function pl_bar($html){
 	return $html;
-}
-
-class ajaxList{
-    static function runCode(){
-        
-    }
 }
 
 ?>

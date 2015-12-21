@@ -44,7 +44,7 @@ class iframe extends mediaPlayer{
 
 class html5 extends mediaPlayer{
     public $name = 'html5';
-    public $title = 'VideoJS';
+    public $title = 'HTML5';
     
     public $live = true;
     public $ondemand = true;
