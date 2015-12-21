@@ -26,7 +26,7 @@ class videos extends optionsPage{
             $details = self::getVideo($video, false);
             $live = $details->live;
             if($live){
-                backButton('plugin_vod_live');
+                backButton('plugin_live');
             }else{                
                 backButton('plugin_vod');
             }
@@ -48,7 +48,7 @@ class videos extends optionsPage{
             $editForm->largeText("description", $details->description, "Description");
             $editForm->lockedInput(actualLink() . "/public.php?action=$this->name&id=$video", "External embed URL");
             if($live){
-                $editForm->otherActionButton("deleteVideo", "Delete video", "&delete=$video",'plugin_vod_live');
+                $editForm->otherActionButton("deleteVideo", "Delete video", "&delete=$video",'plugin_live');
             }else{                
                 $editForm->otherActionButton("deleteVideo", "Delete video", "&delete=$video",'plugin_vod');
             }
@@ -74,7 +74,7 @@ class videos extends optionsPage{
             $action = "plugin_vod&edit=$source->video_id";
             backButton($action);
             $form = new ajaxForm("sourceForm", "$this->name&edit_source=$source_id", 'POST');
-            $form->formTitle("Editing source $source_id");
+            $form->formTitle("Editing source");
             $form->labeledInput('src', 'text', $source->src, 'Source URL');
             $form->labeledInput('type','text',$source->type,'Source type');
             $form->labeledInput('res', 'number', $source->res, 'Source vertical resolution');
@@ -109,7 +109,7 @@ class videos extends optionsPage{
             $form->labeledInput("poster", "text", "", "Poster URL");
             $form->largeText("description", "", "Description");
             if($live){
-                $form->submit("Add new item",'plugin_vod_live');
+                $form->submit("Add new item",'plugin_live');
             }else{
                 $form->submit("Add new item",'plugin_vod');
             }
@@ -120,7 +120,7 @@ class videos extends optionsPage{
             $list->title("All videos");
             
             if($live){
-                $list->display('plugin_vod_live');
+                $list->display('plugin_live');
             }else{
                $list->display('plugin_vod');
             }
@@ -271,7 +271,7 @@ class videos extends optionsPage{
         }
         
         if(isset($_GET['list'])){
-            echo json_encode(self::listVideos());
+            echo json_encode(self::listVideos($live));
         }else if(isset($_GET['id'])){
             //html::div("player_container","player1");
             $videoid = filter_input(INPUT_GET,"id");
@@ -341,10 +341,11 @@ class videos extends optionsPage{
      * 
      * Returns all video information for a JSON array
      */
-    public static function listVideos(){
+    public static function listVideos($live){
         /* Returns all video information in a multi-dimensional array ordered by date */
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod ORDER BY date desc")){
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE live=? ORDER BY date desc")){
+            $stmt->bind_param('i',$live);
             $stmt->execute();
             $ids = array();
             $videos = array();
@@ -430,10 +431,14 @@ class videos extends optionsPage{
 
             $sources = array();
             while($sstmt->fetch()){
-                $sources[] = new source($source_src,$source_type,$source_res);
+                $tempsource = new source($source_src,$source_type,$source_res);
+                $tempsource->source_id = $source_id;
+                $tempsource->video_id = $id;
+                $sources[] = $tempsource;
             }
             
             if(count($sources) == 0){
+                /* If no sources found, but URL exists, use the obselete URL */
                 $sources[] = new source($url,'video/mp4','720');
             }
 
@@ -493,7 +498,7 @@ $pluginPages[] = new videos();
 
 class videos_live extends optionsPage{
     
-    public $name = 'plugin_vod_live';
+    public $name = 'plugin_live';
     public $title = 'Live streams';
     public function configPage(){
         $videos = new videos();

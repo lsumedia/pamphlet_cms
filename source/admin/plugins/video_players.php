@@ -44,7 +44,7 @@ class iframe extends mediaPlayer{
 
 class html5 extends mediaPlayer{
     public $name = 'html5';
-    public $title = 'HTML5';
+    public $title = 'VideoJS 4.9';
     
     public $live = true;
     public $ondemand = true;
@@ -68,6 +68,42 @@ class html5 extends mediaPlayer{
         echo "Your browser does not support the video tag" . "</video>";
         
         //videojs::run();
+        
+        $video->source =  ob_get_contents();
+        ob_end_clean();
+        
+        return $video;
+    }
+    
+}
+
+class videojs_5 extends mediaPlayer{
+    public $name = 'videojs-5';
+    public $title = 'VideoJS 5.3';
+    
+    public $live = false;
+    public $ondemand = true;
+    
+    public static function build($video,$setup){
+        $poster = $video->poster;
+        
+        ob_start();
+        
+        
+        html::css("plugins/video/videojs/core/video-js-custom-css");
+        html::js("plugins/video/videojs/core/video.min.js");
+        
+        html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
+        html::js('plugins/video/videojs/hls/videojs.hls.min.js');
+        
+        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"], \"plugins\" : { \"resolutionSelector\" : { \"default_res\" : \"720\" } } }'>", PHP_EOL;
+        foreach($video->sources as $source){
+            $src = $source->src;
+            $type = $source->type;
+            $res = $source->res;
+            echo "<source data-res=\"$res\" src=\"$src\" type=\"$type\" >", PHP_EOL;
+        }
+        echo "Your browser does not support the video tag" . "</video>";
         
         $video->source =  ob_get_contents();
         ob_end_clean();
