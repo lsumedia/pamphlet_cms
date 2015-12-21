@@ -264,4 +264,4 @@ class live extends optionsPage{
 }
 
 //Disabled cos this is now obsolete!
-$pluginPages[] = new live();
+//$pluginPages[] = new live();

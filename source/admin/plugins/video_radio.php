@@ -23,6 +23,8 @@ class radio extends mediaPlayer{
         
         $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title);
         
+        $content->poster = null;
+        
         return $content;
         
     }
