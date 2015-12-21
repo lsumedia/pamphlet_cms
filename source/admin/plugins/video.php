@@ -694,4 +694,4 @@ class videojs_embed extends optionsPage{
     }
 }
 
-$pluginPages[] = new videojs_embed();
+//$pluginPages[] = new videojs_embed();
