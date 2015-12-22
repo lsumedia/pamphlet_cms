@@ -46,7 +46,7 @@ class videos extends optionsPage{
             $editForm->labeledInput("date", "date", $details->date, "Date posted");
             $editForm->labeledInput("poster", "text", $details->poster, "Poster URL");
             $editForm->largeText("description", $details->description, "Description");
-            $editForm->lockedInput(actualLink() . "/public.php?action=$this->name&id=$video", "External embed URL");
+            $editForm->lockedInput(actualLink() . "/public.php?action=$this->name&iframe=$video", "External embed URL");
             if($live){
                 $editForm->otherActionButton("deleteVideo", "Delete video", "&delete=$video",'plugin_live');
             }else{                

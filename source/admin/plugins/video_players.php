@@ -18,11 +18,36 @@ class youtube extends mediaPlayer{
         $primarySource = $video->sources[0];
         $id = $primarySource->src;
         
+        //$hash = unserialize(file_get_contents("https://gdata.youtube.com/feeds/api/videos/$id?v=2"));
+
         $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://www.youtube.com/embed/$id?autoplay=1\"></iframe>";
         $video->poster = "http://img.youtube.com/vi/$id/maxresdefault.jpg";
         return $video;
     }
     
+}
+
+class vimeo extends mediaPlayer{
+    public $name = 'vimeo';
+    public $title = 'Vimeo';
+    
+    public $live = false;
+    public $ondemand = true;
+    
+    public static function build($video,$setup){
+        $primarySource = $video->sources[0];
+        $id = $primarySource->src;
+
+        $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/$id.php"));
+
+        $poster_url = $hash[0]['thumbnail_large'];          
+        
+        $video->title = $hash[0]['title'];
+        $video->description = $hash[0]['description'];
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id\"></iframe>";
+        $video->poster = $poster_url;
+        return $video;
+    }
 }
 
 class iframe extends mediaPlayer{
@@ -81,7 +106,7 @@ class videojs_5 extends mediaPlayer{
     public $name = 'videojs-5';
     public $title = 'VideoJS 5.3';
     
-    public $live = false;
+    public $live = true;
     public $ondemand = true;
     
     public static function build($video,$setup){
@@ -112,6 +137,8 @@ class videojs_5 extends mediaPlayer{
     }
     
 }
+
+
 
 
 class custom extends mediaPlayer{
