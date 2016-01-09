@@ -22,8 +22,8 @@ require 'functions/elements.php';
 $html = new htmlStuff();
 $html->htmlStart();			//Start HTML doc
 $html->htmlJquery();//Import JQuery file
-html:css('style.css');		//Import stylesheet
-html:css("https://fonts.googleapis.com/icon?family=Material+Icons");
+html::css('style.css');		//Import stylesheet
+html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
 html::js("ckeditor/ckeditor.js");
 html::lockZoom();

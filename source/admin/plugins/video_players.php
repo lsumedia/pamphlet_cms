@@ -44,7 +44,7 @@ class vimeo extends mediaPlayer{
         
         $video->title = $hash[0]['title'];
         $video->description = $hash[0]['description'];
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id\"></iframe>";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id/?autoplay=1\"></iframe>";
         $video->poster = $poster_url;
         return $video;
     }
@@ -67,8 +67,8 @@ class iframe extends mediaPlayer{
     }
 }
 
-class html5 extends mediaPlayer{
-    public $name = 'html5';
+class videojs_4 extends mediaPlayer{
+    public $name = 'videojs-4.9';
     public $title = 'VideoJS 4.9';
     
     public $live = true;
@@ -103,7 +103,7 @@ class html5 extends mediaPlayer{
 }
 
 class videojs_5 extends mediaPlayer{
-    public $name = 'videojs-5';
+    public $name = 'html5';
     public $title = 'VideoJS 5.3';
     
     public $live = true;
@@ -115,20 +115,30 @@ class videojs_5 extends mediaPlayer{
         ob_start();
         
         
-        html::css("plugins/video/videojs/core/video-js-custom-css");
-        html::js("plugins/video/videojs/core/video.min.js");
+        html::css("plugins/video/videojs/core/video-js-custom.css");
+        //html::js("plugins/video/videojs/core/video.min.js");
         
-        html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
-        html::js('plugins/video/videojs/hls/videojs.hls.min.js');
+        html::js("//vjs.zencdn.net/5.3.0/video.js");	//CDN version
         
-        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"], \"plugins\" : { \"resolutionSelector\" : { \"default_res\" : \"720\" } } }'>", PHP_EOL;
+        //html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
+        //html::js('plugins/video/videojs/hls/videojs.hls.min.js');
+        
+        html::css('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.css');
+        html::js('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.js');
+        
+        echo "<video preload=\"none\" id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } }}' $video->code>", PHP_EOL;
         foreach($video->sources as $source){
             $src = $source->src;
             $type = $source->type;
             $res = $source->res;
-            echo "<source data-res=\"$res\" src=\"$src\" type=\"$type\" >", PHP_EOL;
+            $label = $res . 'p';
+            echo "<source label=\"$label\" res=\"$res\" src=\"$src\" type=\"$type\" >", PHP_EOL;
         }
-        echo "Your browser does not support the video tag" . "</video>";
+        echo "Your browser does not support the video tag";
+                
+        echo "</video>";
+        
+        //echo '<script>videojs(\'#video\').videoJsResolutionSwitcher</script>';
         
         $video->source =  ob_get_contents();
         ob_end_clean();

@@ -240,8 +240,8 @@ class multiPageList extends objectList{
         if($count > 10){
             $ten = $offset + 10;
             $back; $next;
-            $page = floor(($offset / 10) + 1);
-            $numpages = floor($count / 10 ) + 1;
+            $page = floor(($offset-1) / 10) + 1;
+            $numpages = floor(($count-1) / 10 ) + 1;
             if($offset >= 10){ $minus = $offset - 10; $back = "<img onclick=\"cm_loadPage('$pageName&offset=$minus');\" src=\"images/back_black.png\" />"; }
             if($count > $ten){ $next = "<img onclick=\"cm_loadPage('$pageName&offset=$ten');\" src=\"images/next_black.png\" />"; }
             echo "<div class=\"listnav\"><p>Page $page of $numpages</p>$back$next</div>";

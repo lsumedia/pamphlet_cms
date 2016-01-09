@@ -55,6 +55,32 @@ class DB {
     public static function update($table,$id,$columns){
         
     }
+    
+    
+    /**
+     * Turn array into an escaped mysql UPDATE query
+     * Can be used directly with $_POST
+     * 
+     * 
+     * @param string $table_name
+     * @param array $array
+     * @param string $condition
+     * @return string
+     */
+    public static function array_to_update_query($table_name,$array, $condition){
+        
+        $query = "UPDATE $table SET ";
+        $first = true;  //For first run
+        foreach($array as $key->$value){
+            if($first){ $comma == ',';} else{ $comma = ''; }
+            $first = false;
+            $escaped_key = mysql_real_escape_string($key);
+            $escaped_value = mysql_real_escape_string($content);
+            $query .= "$comma $escaped_key'='$escaped_value',";
+        }
+        $query .= $condition;
+        return $query;
+    }
 }
 
 function auth_username($username){

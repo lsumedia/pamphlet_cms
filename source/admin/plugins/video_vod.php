@@ -11,6 +11,27 @@ class videos extends optionsPage{
     public $name = "plugin_vod";
     public $title = "On Demand Videos";
     
+    
+    public static function formArray($live){
+        /* AjaxForm2 options array for future use */
+        if($live){
+                $playerOptions = mediaPlayer::kpLiveTypes();
+            }else{                
+                $playerOptions = mediaPlayer::kpVodTypes();
+            }
+            
+        return [
+            'title' => ['type' => 'text', 'label' => 'Title'],
+            'type' => ['type' => 'dropdown', 'label' => 'Video type', 'options' => $playerOptions],
+            'code' => ['type' => 'plaintext', 'label' => 'Source code/additional parameters'],
+            'tags' => ['type' => 'text', 'label' => 'Tags (space seperated)'],
+            'date' => ['type' => 'date', 'label' => 'Posted date'],
+            'author' => ['type' => 'select', 'label' => 'Author', 'options' => kpFullnames()],
+            'poster' => ['type' => 'image', 'label' => 'Poster'],
+            'description' => ['type' => 'richtext', 'label' => 'Description']
+        ];
+    }
+    
     public function configPage($live){
         global $connection;
         ce::begin("ce-medium;");

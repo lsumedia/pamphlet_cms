@@ -249,7 +249,7 @@ class manager extends optionsPage{
         }else{
             $form = new ajaxForm("videoManagerForm", $this->name, "POST");
             $form->formTitle("New channel");
-            $form->labeledInput("title", "text", "", "Stream name");
+            $form->labeledInput("title", "text", "", "Channel name");
             $form->checkBox("visible", "1", "Visible in controller");
             $form->inputWithButton("thumbnail", "", "Thumbnail image", "browseServer()", "Upload");
             $form->kpSelector("type", manager::kpVideoTypes() , "", "Content to display");
