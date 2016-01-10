@@ -26,7 +26,7 @@ class videos extends optionsPage{
             'code' => ['type' => 'plaintext', 'label' => 'Source code/additional parameters'],
             'tags' => ['type' => 'text', 'label' => 'Tags (space seperated)'],
             'date' => ['type' => 'date', 'label' => 'Posted date'],
-            'author' => ['type' => 'select', 'label' => 'Author', 'options' => kpFullnames()],
+            'author' => ['type' => 'select', 'label' => 'Author', 'options' => kpFullnames(), 'value' => get_username()],
             'poster' => ['type' => 'url', 'label' => 'Poster'],
             'description' => ['type' => 'richtext', 'label' => 'Description']
         ];
@@ -76,10 +76,11 @@ class videos extends optionsPage{
             
             $editForm->submit("Save changes");
             
+            /* New type form - work in progress. Look how tiny it is!*//*
             $form = new customForm(self::formArray($live, false), 'editform', "nothingrightnow", 'POST');
             $form->setTitle('Edit video');
             $form->build('Save changes');
-                    
+                    */
             /* New source form */
             $sourceForm = new ajaxForm('newSourceForm', "plugin_vod&add_source&video_id=$video",'POST');
             $sourceForm->formTitle("Add source");

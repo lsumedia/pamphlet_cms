@@ -867,7 +867,7 @@ class customForm{
         echo "<div class=\"fieldRow\"><p>$label</p>", PHP_EOL;
         echo "<select id=\"$id\" name=\"$id\">", PHP_EOL;
         foreach($options as $key => $choice){
-                if($key == $current){
+                if($key == $value){
                 echo "<option value=\"$key\" selected>$choice</option>", PHP_EOL;
             }else{
                 echo "<option value=\"$key\">$choice</option>", PHP_EOL;

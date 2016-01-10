@@ -17,12 +17,13 @@ class radio extends mediaPlayer{
         $poster = $content->poster;
         $nowplaying = $content->source;
         
+        
         require_once('plugins/radio/player.php');
        
         //$title = radioPlayer::getNowPlaying($nowplaying, $content->title);
         
         $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title);
-        
+        $content->title = radioPlayer::getNowPlaying($nowplaying, $content->title);
         $content->poster = null;
         
         return $content;
