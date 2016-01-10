@@ -45,14 +45,14 @@ if(isset($_SESSION['username'])){
    		//Set leftbar prefix
     $leftbar->addLink("logout", "Sign out");
     $leftbar->printBar();							//Print leftbar
-    $inner->printInner();							//Print inner AJAX section
-    $inner->prepAjax();                                                     //Send AJAX code
+    $inner->printInner();							//Print inner AJAX section                                                    //Send AJAX code
+    uiElement::loadUiElements();
     $leftbar->defaultPage("general");
 }else{
     //$leftbar->addLink("login","Log in");
     $leftbar->printBar();
     $inner->printInner();
-    $inner->prepAjax();
+    uiElement::loadUiElements();
     $leftbar->defaultPage("login");
 }
 //End html doc

@@ -12,7 +12,7 @@ class generalSettings extends optionsPage{
         }
         
 	function configPage(){
-		$ce = new centralElement("ce-medium");
+		ce::begin();
                 $stats = new ajaxForm("stats", "", "");
                 $stats->formTitle("Information");
                 $stats->lockedInput(num_users(), "Number of users");
@@ -26,7 +26,7 @@ class generalSettings extends optionsPage{
                 $gForm->largeText("sdescription", "", "Site description");
                 $gForm->submit("Save changes");
                 
-                $ce->end();
+                ce::end();
 	}
 	function updatePage(){
             block(1);
@@ -44,7 +44,7 @@ class userSettings extends optionsPage{
 	function configPage(){
             global $connection;
                 if($username = filter_input(INPUT_GET,"username")){
-                    $el = new centralElement("ce-medium");
+                    ce::begin();
                     
                     backButton($this->name);
                     $profile = profile($username);
@@ -65,9 +65,9 @@ class userSettings extends optionsPage{
                     $pwordForm->labeledInput("password", "password", "", "New password");
                     $pwordForm->submit("Change password");
                     
-                    $el->end();
+                    ce::end();
                 }else{
-                    $el1 = new centralElement("");
+                    ce::begin();
                     /* New User form section */
                     if(true){
                         //TODO: authentication system
@@ -107,7 +107,7 @@ class userSettings extends optionsPage{
                     $form->submit();
                     $form->end();
                     */
-                    $el1->end();
+                    ce::end();
                 }
 	}
 	
@@ -225,7 +225,7 @@ class profile extends optionsPage{
     public $title = "Profile";
     public function configPage(){
         $profile = profile(get_username());
-        $ce = new centralElement("ce-medium");
+        ce::begin();
         
         //Profile form
         $form = new ajaxForm("profileForm", "user&edit=" . $profile['username'], "POST");
@@ -241,7 +241,7 @@ class profile extends optionsPage{
         $pwordForm->labeledInput("password", "password", "", "New password");
         $pwordForm->submit("Change password");
                     
-        $ce->end();
+        ce::end();
     }
 }
 
@@ -253,7 +253,7 @@ class login extends optionsPage{
     //No title - hidden page
     
     function configPage(){
-        $ce = new centralElement("ce-medium");
+        ce::begin();
         
         
         if(isset($_GET['register'])){
@@ -272,7 +272,7 @@ class login extends optionsPage{
             $loginForm->labeledInput("password","password","","Password");
             $loginForm->linkButton("register", "Register for an account", $this->name . "&register");
             $loginForm->submit("Sign in");
-            $ce->end();
+            ce::end();
         }
     }
     function updatePage(){

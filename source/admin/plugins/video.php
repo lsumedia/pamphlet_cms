@@ -196,6 +196,14 @@ class mediaPlayer {
     
 }
 
+class videoPreview extends uiElement{
+    public $name = 'video_preview';
+    
+    function clientSide(){
+        echo '//work in progress';
+    }
+}
+
 /**
  * Channel manager class
  * 

@@ -49,7 +49,7 @@ class blog extends optionsPage{
     
     function configPage(){
         global $connection;
-        $ce = new centralElement("ce-medium");
+        ce::begin('');
         
         if($post = filter_input(INPUT_GET,'post')){
             /* Single post editor */
@@ -97,7 +97,7 @@ class blog extends optionsPage{
             $blogList->display($this->name);
             $bstmt->close();
         }
-        $ce->end();
+        ce::end();
         
     }
     function updatePage(){

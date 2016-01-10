@@ -4,6 +4,50 @@
 
 $cke_path = "/live/admin/ckeditor/ckeditor.js";
 
+/**
+ * Represents an element type loaded asynchronously that requires
+ * preloaded client-side functions to run. If the clientSide function is set
+ * the 
+ */
+class uiElement{
+    
+    /**
+     * Set name for debugging purposes
+     * @var string
+     */
+    public $name;
+    /**
+     * Echo client side code in here
+     * @return boolean
+     */
+    public function clientSide(){
+        return false;
+    }
+    
+    public static function getDeclaredUiElements(){
+        $elementTypes = array();
+        foreach(get_declared_classes() as $class){
+            if(is_subclass_of($class, 'uiElement')){
+                $elementTypes[] = new $class();
+            }
+        }
+        return $elementTypes;
+    }
+    
+    public static function loadUiElements(){
+        $elements = self::getDeclaredUiElements();
+        echo "<script>", PHP_EOL;
+        $numElements = count($elements);
+        echo "/* $numElements elements to load */";
+        foreach($elements as $element){
+            echo PHP_EOL,"/* Code for $element->name */", PHP_EOL;
+            $element->clientSide();
+        }
+        echo PHP_EOL, "</script>", PHP_EOL;
+    }
+    
+}
+
 class htmlStuff{
 	function htmlStart(){	//Declares headers, opens <head>
 		echo "<!doctype html>". PHP_EOL. "<html>" . PHP_EOL . "<head>". PHP_EOL . "<meta charset=\"UTF-8\">", PHP_EOL;
@@ -91,7 +135,6 @@ class html{
         echo '<meta name="viewport" content="width=device-width, user-scalable=no" />';
     }
 }
-
 
 class div{
     public $id;
@@ -279,7 +322,18 @@ class multiPageList extends objectList{
     }
 }
 
-class ajaxList extends objectList{
+class ajaxList extends uiElement{
+    
+    public $name = 'ajaxList';
+    
+    public function clientSide() {
+        echo <<<END
+        function list_change_page(){
+        }
+        
+END;
+    }
+    
     public function display($pageName){
         
         
@@ -641,8 +695,10 @@ END;
 	
 }
 
-class cm_inner{
+class cm_inner extends uiElement{
 	
+        public $name = 'page loader';
+    
 	//Run this first
 	function printInner(){
 		echo '<div id="central">',PHP_EOL;
@@ -650,9 +706,8 @@ class cm_inner{
 		echo '</div>',PHP_EOL;
 	}
 	//Run this second
-	public function prepAjax(){
+	public function clientSide(){
 		echo <<<END
-<script id="loadPage">
 function cm_loadPage(code){
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
@@ -677,9 +732,30 @@ function cm_loadPage(code){
         
             //show loading animation
 }
-</script>
-<script id="updateForm">
-function cm_updateForm(fields,action,method,result,onReloadAction){
+END;
+echo PHP_EOL;
+		
+	}
+}
+
+
+//Inner (dynamic) components (access from request.php)
+
+class customForm extends uiElement{
+    
+    private $optionsArray = [];
+    public $id; /* ID for each individual form */
+    public $method; /* Method (GET or POST) */
+    private $optionsIDs = [];
+    public $title;
+    public $name = 'customForm';
+    
+    /**
+     * Javascript for loading the form
+     */
+    public function clientSide(){
+        echo <<<END
+       function cm_updateForm(fields,action,method,result,onReloadAction){
     if(!onReloadAction){
         var onReloadAction = action;
     }
@@ -721,25 +797,8 @@ function cm_updateForm(fields,action,method,result,onReloadAction){
     updateRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     updateRequest.send(postRequest);
 }
-
-</script>
 END;
-echo PHP_EOL;
-		
-	}
-}
-
-
-//Inner (dynamic) components (access from request.php)
-
-class customForm{
-    
-    private $optionsArray = [];
-    public $id; /* ID for each individual form */
-    public $method; /* Method (GET or POST) */
-    private $optionsIDs = [];
-    public $title;
-    
+    }
     
     /**
      * 
