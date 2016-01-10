@@ -532,3 +532,61 @@ class videos_live extends optionsPage{
 }
 
 $pluginPages[] = new videos_live;
+
+class video_tags extends optionsPage{
+    
+    public $name = 'plugin_video_tags';
+    public $title = 'Video tags';
+    
+    public static function formArray(){
+        return [
+            'tag' => [ 'type' => 'text', 'label' => 'Tag name'],
+            'title' => ['type' => 'text', 'label' => 'Tag title'],
+            'parent' => ['type' => 'select', 'label' => 'Parent tag', 'options' => self::kvpTags()],
+            'header' => ['type' => 'url', 'label' => 'Header image (12:5)'],
+            'background' => ['type' => 'url', 'label' => 'Background image (1:1)']
+        ];
+    }
+    
+    public function configPage(){
+        ce::begin();
+        
+        $form = new customForm(self::formArray(), 'tagform', $this->name, 'POST');
+        $form->setTitle('New tag');
+        $form->build('Add tag');
+        ce::end();
+    }
+    
+    public function updatePage(){
+        
+        $results = customForm::decodeResult(self::formArray(), $_POST);
+        
+        
+        foreach($results as $key=>$array){
+            $value = $array['value'];
+            echo "$key=$value,";
+        }
+    }
+    
+    /**
+     * Find all tags that are currently in use
+     * for use in drop-down menus
+     */
+    public static function kvpTags(){
+        //get tags from all videos
+        
+        //split tags into array for each video
+        
+        //add tags to tag array which are not yet present
+        
+        //return tag array
+        
+        return [
+            '' => '--',
+            'lsutv' => 'lsutv',
+            'lcr' => 'Loughborough Campus Radio'
+        ];
+    }
+}
+
+$pluginPages[] = new video_tags();
