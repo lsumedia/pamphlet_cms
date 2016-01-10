@@ -12,22 +12,22 @@ class videos extends optionsPage{
     public $title = "On Demand Videos";
     
     
-    public static function formArray($live){
+    public static function formArray($live,$new){
         /* AjaxForm2 options array for future use */
         if($live){
                 $playerOptions = mediaPlayer::kpLiveTypes();
             }else{                
                 $playerOptions = mediaPlayer::kpVodTypes();
-            }
+            }   
             
         return [
             'title' => ['type' => 'text', 'label' => 'Title'],
-            'type' => ['type' => 'dropdown', 'label' => 'Video type', 'options' => $playerOptions],
+            'type' => ['type' => 'select', 'label' => 'Video type', 'options' => $playerOptions],
             'code' => ['type' => 'plaintext', 'label' => 'Source code/additional parameters'],
             'tags' => ['type' => 'text', 'label' => 'Tags (space seperated)'],
             'date' => ['type' => 'date', 'label' => 'Posted date'],
             'author' => ['type' => 'select', 'label' => 'Author', 'options' => kpFullnames()],
-            'poster' => ['type' => 'image', 'label' => 'Poster'],
+            'poster' => ['type' => 'url', 'label' => 'Poster'],
             'description' => ['type' => 'richtext', 'label' => 'Description']
         ];
     }
@@ -75,6 +75,11 @@ class videos extends optionsPage{
             }
             
             $editForm->submit("Save changes");
+            
+            $form = new customForm(self::formArray($live, false), 'editform', "nothingrightnow", 'POST');
+            $form->setTitle('Edit video');
+            $form->build('Save changes');
+                    
             /* New source form */
             $sourceForm = new ajaxForm('newSourceForm', "plugin_vod&add_source&video_id=$video",'POST');
             $sourceForm->formTitle("Add source");
@@ -82,6 +87,7 @@ class videos extends optionsPage{
             $sourceForm->labeledInput('source_type', 'text', 'video/mp4', 'Source type');
             $sourceForm->labeledInput('source_res', 'number', '720', 'Source vertical resolution');
             $sourceForm->submit('Add source',"plugin_vod&edit=$video");
+            
             /* List existing sources */
             $sources = self::sourcesArray($video);
             $list = new objectList($sources,'sourceList');

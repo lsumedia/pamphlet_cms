@@ -760,7 +760,7 @@ class customForm{
         $this->title = $title;
     }
     
-    public function build($submitLabel,$title){
+    public function build($submitLabel){
         //Start form elements
         echo PHP_EOL, "<!-- ajaxForm2 $this->id starts -->", PHP_EOL;
         echo "<div id='$this->id' class='form'>", PHP_EOL;
