@@ -554,17 +554,23 @@ class video_tags extends optionsPage{
         $form = new customForm(self::formArray(), 'tagform', $this->name, 'POST');
         $form->setTitle('New tag');
         $form->build('Add tag');
+        
         ce::end();
     }
     
     public function updatePage(){
         
         $results = customForm::decodeResult(self::formArray(), $_POST);
-        
-        
-        foreach($results as $key=>$array){
-            $value = $array['value'];
-            echo "$key=$value,";
+
+        if($delete = $_GET['delete']){
+            //delete custom tag
+            
+        }else if($id = $_GET['id']){
+            //edit custom tag
+            
+        }else{
+            //new tag
+            
         }
     }
     
