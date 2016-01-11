@@ -114,6 +114,7 @@ body {
   padding: 10px 0px;
   text-align: right;
   clear: both;
+  min-height:300px;
   min-width: 100px; }
   .form h2 {
     width: 100%;

@@ -336,28 +336,75 @@ var convert = function(convert){
     return $("<span />", { html: convert }).text();
 };
 
-        
-function list_change_page(list,values,pagenumber){
+function list_get_data(dataLocation){
+        var string = document.getElementById(dataLocation).innerHTML;
+        return JSON.parse(string);
 }
         
-function list_search(list,values,term){
-}
+function list_change_page(listId,dataLocation,pageNumber){
+        var data = list_get_data(dataLocation);
+        var html = "";
         
-function list_all(listBodyId, data_location){
-        var string = document.getElementById(data_location).innerHTML;
-        //var string = $('#' + data_location).value.html();
-        //console.log(string);
-        var data = JSON.parse(string);
-        var first = data[0];
-        var headers = [];
-        for(var header in first){
-            if(header != 'onclick'){
-                headers.push(header);
-                console.log(header);
-            }
+        var offset = 10 * (pageNumber-1);
+        
+        for(var i=offset; i < 10; i++){
+            var row = data[i];
+            if(row){
+                html += '<tr onclick="' + row['onclick'] + '">';
+                for(var key in row){
+                    if(key != 'onclick'){
+                        html += "<td>" + convert(row[key]) + "</td>";
+                    }
+                }
+                html += "</tr>";
+            }   
         }
         
-        //console.log(data);
+        document.getElementById(listId + '_body').innerHTML = html;
+        document.getElementById(listId + '_pagenumber').innerHTML = pageNumber;
+}
+        
+function list_search(listId,dataLocation,term){
+        
+        if(term.length == 0){
+            list_change_page(listId,dataLocation,0);
+            return;
+        }
+        
+        var data = list_get_data(dataLocation);
+        
+        var html = "";
+
+        for(var i=0; i < data.length; i++){
+            var row = data[i];
+            var match = false;
+
+            for(var key in row){
+                if(key != 'onclick'){
+                    if(row[key].toLowerCase().indexOf(term.toLowerCase()) != -1){
+                       match = true;
+                    }
+                }
+            }
+            if(match == true){
+                html += '<tr onclick="' + row['onclick'] + '">';
+                for(var key in row){
+                    if(key != 'onclick'){
+                        html += "<td>" + convert(row[key]) + "</td>";
+                    }
+                }
+                html += "</tr>";
+            }  
+        }
+        
+        document.getElementById(listId + '_body').innerHTML = html;
+}
+        
+function list_all(listId, dataLocation){ 
+
+        var data = list_get_data(dataLocation);
+        
+        console.log(data);
         var html = "";
         
         
@@ -374,7 +421,7 @@ function list_all(listBodyId, data_location){
             }   
         }
         
-        document.getElementById(listBodyId).innerHTML = html;
+        document.getElementById(listId + '_body').innerHTML = html;
 }
         
 END;
@@ -413,18 +460,19 @@ END;
         echo "<div class='form'>", PHP_EOL;
         $data_id = $this->id . '_data';
         $body_id = $this->id . '_body';
-        self::arrayToCrapJson($data_id, $this->objects);
+        $search_id = $this->id . '_search';
+        $page_number = $this->id . '_pagenumber';
+        self::arrayToJson($data_id, $this->objects);
         
         $count = count($this->objects);
         echo "<div class=\"listtitle\">$this->title</div>", PHP_EOL;
         if($count > 10){
-            $ten = $offset + 10;
             $back; $next;
-            $page = floor(($offset-1) / 10) + 1;
             $numpages = floor(($count-1) / 10 ) + 1;
-            $back = "<img onclick=\"list_all('$body_id','$data_id');\" display='none' src=\"images/back_black.png\" />";
-            if($count > $ten){ $next = "<img onclick=\"cm_loadPage('$pageName&offset=$ten');\" src=\"images/next_black.png\" />"; }
-            echo "<div class=\"listnav\"><p>Page 1 of $numpages</p>$back$next</div>";
+            $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
+            $back = "<img onclick=\"list_all('$this->id','$data_id');\" display='none' src=\"images/back_black.png\" id=''/>";
+            $next = "<img onclick=\"list_change_page('$this->id','$data_id',2);\" src=\"images/next_black.png\" id='' />"; 
+            echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
         echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
@@ -459,7 +507,7 @@ END;
         echo "</div>";
     }
     
-    public static function arrayToCrapJson($id, $objects){
+    public static function arrayToJson($id, $objects){
         echo "<div style='display:none;' id='$id'>" . htmlspecialchars(json_encode($objects)) . "</div>", PHP_EOL;
     }
     

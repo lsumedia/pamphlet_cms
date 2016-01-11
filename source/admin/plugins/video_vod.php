@@ -164,7 +164,11 @@ class videos extends optionsPage{
             }
             */
             $list2 = new ajaxList($videos, 'videoList2');
-            $list2->title('All videos');
+            if($live){
+                $list2->title('All streams');
+            }else{
+                $list2->title('All videos');
+            }
             $list2->display();
             
         }
