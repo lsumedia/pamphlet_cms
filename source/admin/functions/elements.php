@@ -241,6 +241,7 @@ class objectList{
     }
     public function display($pageName){
         echo "<!-- objectList -->", PHP_EOL;
+        echo "<div class='form'>", PHP_EOL;
         if($this->title){ echo "<div class=\"listtitle\">$this->title</div>", PHP_EOL; }
         echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
@@ -270,12 +271,14 @@ class objectList{
             echo "</tr>";
         }
         echo "</tbody></table>";
+        echo "</div>", PHP_EOL;
     }
 }
 
 class multiPageList extends objectList{
     public function display($pageName){
         echo "<!-- multiPageList -->", PHP_EOL;
+        echo "<div class='form'>", PHP_EOL;
         $offset = filter_input(INPUT_GET,"offset");
         if(!$offset){ $offset = 0; }
         $count = count($this->objects);
@@ -319,6 +322,7 @@ class multiPageList extends objectList{
             }
         }
         echo "</tbody></table>";
+        echo "</div>", PHP_EOL;
     }
 }
 
@@ -328,19 +332,143 @@ class ajaxList extends uiElement{
     
     public function clientSide() {
         echo <<<END
-        function list_change_page(){
+var convert = function(convert){
+    return $("<span />", { html: convert }).text();
+};
+
+        
+function list_change_page(list,values,pagenumber){
+}
+        
+function list_search(list,values,term){
+}
+        
+function list_all(listBodyId, data_location){
+        var string = document.getElementById(data_location).innerHTML;
+        //var string = $('#' + data_location).value.html();
+        //console.log(string);
+        var data = JSON.parse(string);
+        var first = data[0];
+        var headers = [];
+        for(var header in first){
+            if(header != 'onclick'){
+                headers.push(header);
+                console.log(header);
+            }
         }
+        
+        //console.log(data);
+        var html = "";
+        
+        
+        for(var i=0; i < data.length; i++){
+            var row = data[i];
+            if(row){
+                html += '<tr onclick="' + row['onclick'] + '">';
+                for(var key in row){
+                    if(key != 'onclick'){
+                        html += "<td>" + convert(row[key]) + "</td>";
+                    }
+                }
+                html += "</tr>";
+            }   
+        }
+        
+        document.getElementById(listBodyId).innerHTML = html;
+}
         
 END;
     }
     
-    public function display($pageName){
+    //Array of arrays containing key-value pairs with friendly names for both
+    //Each entry must have same keys!
+    public $objects = array();
+    //Array of strings containing 
+    public $headers = array();
+    //DOM ID the table will have
+    public $id;
+    public $tags;
+    public $title;
+    
+    public function __construct($objects, $id){
+        $this->objects = $objects;
+        $this->id = $id;
+    }
+    
+    public function addObject($object){
+        $this->objects[] = $object;
+    }
+    
+    public function style($tags){
+        if($tags){ $this->tags = $tags; }
+    }
+    
+    public function title($text){
+        //echo "<div class=\"listtitle\">$text</div>", PHP_EOL;
+        $this->title = $text;
+    }
+    
+    public function display(){
+        echo "<!-- ajaxList $this->id -->", PHP_EOL;
+        echo "<div class='form'>", PHP_EOL;
+        $data_id = $this->id . '_data';
+        $body_id = $this->id . '_body';
+        self::arrayToCrapJson($data_id, $this->objects);
         
+        $count = count($this->objects);
+        echo "<div class=\"listtitle\">$this->title</div>", PHP_EOL;
+        if($count > 10){
+            $ten = $offset + 10;
+            $back; $next;
+            $page = floor(($offset-1) / 10) + 1;
+            $numpages = floor(($count-1) / 10 ) + 1;
+            $back = "<img onclick=\"list_all('$body_id','$data_id');\" display='none' src=\"images/back_black.png\" />";
+            if($count > $ten){ $next = "<img onclick=\"cm_loadPage('$pageName&offset=$ten');\" src=\"images/next_black.png\" />"; }
+            echo "<div class=\"listnav\"><p>Page 1 of $numpages</p>$back$next</div>";
+        }
+        echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
+        $first = $this->objects[0];
+        foreach($first as $key => $value){
+            if($key != "onclick"){
+                $this->headers[] = $key;
+            }
+        }
+        echo "<thead><tr>", \PHP_EOL;
+        foreach($this->headers as $header){
+            echo "<th>". $header . "</th>", \PHP_EOL;
+        }
+        echo "</tr></thead><tbody id='$body_id'>", \PHP_EOL;
+        
+        foreach($this->objects as $index=>$object){
+            if($index >= $offset && $index < $offset + 10){
+                if($onclick = $object['onclick']){
+                    echo "<tr onclick=\"$onclick\">";
+                }else{
+                    echo "<tr>", \PHP_EOL;
+                }
+                foreach($object as $key => $value){
+                    if($key != "onclick"){
+                        echo "<td>".$value."</td>", \PHP_EOL;
+                    }
+                }
+                echo "</tr>";
+            }
+        }
+        echo "</tbody></table>";
+        echo "</div>";
+    }
+    
+    public static function arrayToCrapJson($id, $objects){
+        echo "<div style='display:none;' id='$id'>" . htmlspecialchars(json_encode($objects)) . "</div>", PHP_EOL;
     }
     
 }
 
+/**
+ * Class for making forms
+ * Deprecated, use customFom instead
+ */
 class ajaxForm{
     
     public $id;
@@ -751,7 +879,7 @@ class customForm extends uiElement{
     public $name = 'customForm';
     
     /**
-     * Javascript for loading the form
+     * Javascript for sending form request
      */
     public function clientSide(){
         echo <<<END
@@ -834,8 +962,15 @@ END;
         foreach($this->optionsArray as $optionId => $option){
             /* */
             $fullId = $this->id . '_' . $optionId;
-            $this->optionsIDs[] = $fullId;
-            $this->printOption($fullId, $option);
+            if($option['type'] == 'button'){
+                
+            }else if($option['type'] == 'readonly'){
+               
+            }else{
+                 $this->optionsIDs[] = $fullId;
+                 $this->printOption($fullId, $option);
+            }
+            
         }
         
         $fields = "[";
@@ -912,6 +1047,8 @@ END;
     public static function fetchOneResult($optionsArray,$tablename, $id){
         //Fetch one result from the database and put values in an optionsArray
     }
+    
+    public static function button($id, $action, $label){}
     
     public static function text($id, $value, $label){
         echo "<div class=\"fieldRow\"><p>$label</p><input type=\"text\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;

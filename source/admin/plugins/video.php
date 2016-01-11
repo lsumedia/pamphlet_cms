@@ -13,8 +13,10 @@
  * @param type $code string
  */
 function iframeOutput($title,$code){
-    //require_once('video/videojs/videojs.php'); 
-    html::start();
+    echo "<!doctype html>
+<html data-cast-api-enabled='true'>
+<head>
+<meta charset=\"UTF-8\">";
     html::css("plugins/video/iframe.css");
     html::title($title);
     html::lockZoom();

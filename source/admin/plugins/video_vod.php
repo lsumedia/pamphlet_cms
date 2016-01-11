@@ -20,7 +20,7 @@ class videos extends optionsPage{
                 $playerOptions = mediaPlayer::kpVodTypes();
             }   
             
-        return [
+        $array = [
             'title' => ['type' => 'text', 'label' => 'Title'],
             'type' => ['type' => 'select', 'label' => 'Video type', 'options' => $playerOptions],
             'code' => ['type' => 'plaintext', 'label' => 'Source code/additional parameters'],
@@ -28,8 +28,16 @@ class videos extends optionsPage{
             'date' => ['type' => 'date', 'label' => 'Posted date'],
             'author' => ['type' => 'select', 'label' => 'Author', 'options' => kpFullnames(), 'value' => get_username()],
             'poster' => ['type' => 'url', 'label' => 'Poster'],
+          
             'description' => ['type' => 'richtext', 'label' => 'Description']
         ];
+        
+        if(!$new){ 
+            $array['external_url'] = ['type' => 'readonly', 'label' => 'External URL'];
+            $array['delete'] = ['type' => 'button', 'label' => 'Delete video']; 
+        }
+          
+        return $array;
     }
     
     public function configPage($live){
@@ -95,6 +103,7 @@ class videos extends optionsPage{
             $list->title('Sources');
             $list->display();
             
+            
         }else if($source_id = filter_input(INPUT_GET,'edit_source')){
             /* Editing existing source entry */
             $source = self::getSource($source_id);
@@ -144,15 +153,19 @@ class videos extends optionsPage{
             
             /* */
             $videos = self::allVideos($live);
+            /*
             $list = new multiPageList($videos,"videoList");
             $list->title("All videos");
-            
+
             if($live){
                 $list->display('plugin_live');
             }else{
                $list->display('plugin_vod');
             }
-            
+            */
+            $list2 = new ajaxList($videos, 'videoList2');
+            $list2->title('All videos');
+            $list2->display();
             
         }
         ce::end();
@@ -556,7 +569,7 @@ class video_tags extends optionsPage{
     }
     
     public function configPage(){
-        ce::begin();
+        ce::begin('');
         
         $form = new customForm(self::formArray(), 'tagform', $this->name, 'POST');
         $form->setTitle('New tag');

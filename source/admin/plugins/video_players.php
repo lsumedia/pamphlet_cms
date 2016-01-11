@@ -126,6 +126,11 @@ class videojs_5 extends mediaPlayer{
         html::css('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.css');
         html::js('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.js');
         
+        /* Chromecast (requires app) *//*
+        html::css('plugins/video/videojs/chromecast/videojs.chromecast.min.css');
+        html::js('plugins/video/videojs/chromecast/videojs.chromecast.min.js');
+        */
+        
         echo "<video preload=\"none\" id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } }}' $video->code>", PHP_EOL;
         foreach($video->sources as $source){
             $src = $source->src;

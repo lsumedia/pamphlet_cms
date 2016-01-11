@@ -116,9 +116,7 @@ body{
 
 .objectList{
     width:100%;
-    width:calc(100% + 30px);
     margin:0px;
-    margin:calc(-15px);
     border-spacing:0px;
     clear:both;
     
@@ -258,12 +256,14 @@ body{
 }
 .listtitle{
     margin-top:10px;
+    margin-left:15px;
 }
 .listnav{
     float:right;
     height:40px;
     line-height:40px;
     margin-top:-10px;
+    margin-right:15px;
     p{
         float:left;
         padding:0;
