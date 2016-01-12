@@ -27,7 +27,7 @@ html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
 html::js("ckeditor/ckeditor.js");
 html::lockZoom();
-ajaxForm::opSecScript();
+
 $html->htmlEndHead();		//End head tag, start body tag
 
 //Body section

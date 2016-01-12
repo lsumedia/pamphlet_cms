@@ -509,7 +509,7 @@ class cover extends optionsPage{
     
     public function configPage(){
         global $connection;
-        ce::begin("ce-medium");
+        ce::begin('');
         if($cover = filter_input(INPUT_GET,"edit")){
             
             $details = self::getImage($cover);
@@ -520,7 +520,7 @@ class cover extends optionsPage{
             $editForm->inputWithButton("url", $details['url'], "Image URL", "browseServer()", "Upload");
             $editForm->largeText("description", $details['description'], "Description");
             $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream", 'plugin_videomanager');
-            $editForm->submit("Save changes",'plugin_videomanager');
+            $editForm->submit("Save changes",'plugin_cover');
         }else{
         
             $form = new ajaxForm("newItemForm", $this->name, "POST");
@@ -530,9 +530,9 @@ class cover extends optionsPage{
             $form->largeText("description", "", "Description");
             $form->submit("Add new item");
             
-            $videos = self::allCovers();
-            $list = new multiPageList($videos,"videoList");
-            $list->title("All streams");
+            $covers = self::allCovers();
+            $list = new ajaxList($covers,"videoList");
+            $list->title("All images");
             
             $list->display($this->name);
         }

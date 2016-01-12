@@ -104,6 +104,10 @@ body {
   .objectList th {
     /* border-bottom: 1px solid $weak-border; */
     height: 56px; }
+  
+  .listWrapper{
+      min-height:300px;
+  }
 
 /* Form elements */
 .form {
@@ -114,7 +118,6 @@ body {
   padding: 10px 0px;
   text-align: right;
   clear: both;
-  min-height:300px;
   min-width: 100px; }
   .form h2 {
     width: 100%;

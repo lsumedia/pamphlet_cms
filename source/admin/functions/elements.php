@@ -7,7 +7,7 @@ $cke_path = "/live/admin/ckeditor/ckeditor.js";
 /**
  * Represents an element type loaded asynchronously that requires
  * preloaded client-side functions to run. If the clientSide function is set
- * the 
+ * the function will be run on the primary pageload
  */
 class uiElement{
     
@@ -210,6 +210,8 @@ class ce{
     }
 }
 
+/* Lists */
+
 class objectList{
     
     //Array of arrays containing key-value pairs with friendly names for both
@@ -345,9 +347,9 @@ function list_change_page(listId,dataLocation,pageNumber){
         var data = list_get_data(dataLocation);
         var html = "";
         
-        var offset = 10 * (pageNumber-1);
+        var offset = 10 * (pageNumber);
         
-        for(var i=offset; i < 10; i++){
+        for(var i=offset; i < offset + 10; i++){
             var row = data[i];
             if(row){
                 html += '<tr onclick="' + row['onclick'] + '">';
@@ -361,7 +363,7 @@ function list_change_page(listId,dataLocation,pageNumber){
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
-        document.getElementById(listId + '_pagenumber').innerHTML = pageNumber;
+        document.getElementById(listId + '_pagenumber').innerHTML = pageNumber + 1;
 }
         
 function list_search(listId,dataLocation,term){
@@ -457,7 +459,7 @@ END;
     
     public function display(){
         echo "<!-- ajaxList $this->id -->", PHP_EOL;
-        echo "<div class='form'>", PHP_EOL;
+        echo "<div class='form listWrapper'>", PHP_EOL;
         $data_id = $this->id . '_data';
         $body_id = $this->id . '_body';
         $search_id = $this->id . '_search';
@@ -470,8 +472,8 @@ END;
             $back; $next;
             $numpages = floor(($count-1) / 10 ) + 1;
             $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
-            $back = "<img onclick=\"list_all('$this->id','$data_id');\" display='none' src=\"images/back_black.png\" id=''/>";
-            $next = "<img onclick=\"list_change_page('$this->id','$data_id',2);\" src=\"images/next_black.png\" id='' />"; 
+            $back = "<img onclick=\"list_change_page('$this->id','$data_id',0);\" display='none' src=\"images/back_black.png\" id=''/>";
+            $next = "<img onclick=\"list_change_page('$this->id','$data_id',1);\" src=\"images/next_black.png\" id='' />"; 
             echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
         echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
@@ -508,11 +510,12 @@ END;
     }
     
     public static function arrayToJson($id, $objects){
-        echo "<div style='display:none;' id='$id'>" . htmlspecialchars(json_encode($objects)) . "</div>", PHP_EOL;
+        echo "<script type='application/json' id='$id'>" . json_encode($objects) . "</script>", PHP_EOL;
     }
     
 }
 
+/* Forms */
 /**
  * Class for making forms
  * Deprecated, use customFom instead
@@ -736,187 +739,6 @@ END;
     }
 }
 
-//Global simple components
-
-abstract class optionsPage{	//Class to be used for loading options pages
-	public $name;	//Ugly title (use prefix "plugin_" for plugins
-	public $title;	//
-	
-	function publicPage(){ return false; }	//Code to be run for public display
-	function configPage(){ return false; }	//Code to be run for config mode
-	function updatePage(){ return false; }	//Code to be run for updating databases
-        function orphanage($olduser,$newuser){ return false;  } //Code to be run when deleting users
-}
-
-class standardOptionsPages{
-	public $pageArray = array();	//array of optionsPage objects
-	
-	function importStandardPages(){
-		require 'functions/options_pages.php';
-		 $this->pageArray = array_merge($this->pageArray,$standardPages);
-	}
-	/**
-         * Import all plugin pages from the plugin folder
-         * All files in the plugin folder containing .php will be executed
-         */
-	function importPluginPages(){
-            $pluginPages = array();
-            $plugindir = './plugins';
-            $plugins = array_diff(scandir($plugindir), array('..', '.','_notes'));
-            foreach($plugins as $plugin){
-                if(strpos($plugin,".php") != false){
-                    include $plugindir . '/' . $plugin;
-                }
-            }
-            //print_r($plugins);
-            if(isset($pluginPages)) $this->pageArray = array_merge($this->pageArray,$pluginPages);
-	}
-	
-	function configure(){
-		$this->importStandardPages();
-		$this->importPluginPages();
-	}
-	
-	function returnNavList(){
-		$navList = array();
-		foreach($this->pageArray as $page){
-                        if($page->title){ 
-                            $listItem = (object) array("name"=> $page->name, "title" => $page->title);
-                            $navList[] = $listItem;
-                        }
-		}
-		return $navList;
-	}
-	function returnObjectList(){
-		return $this->pageArray();
-	}
-	function matchObject($name){
-		foreach($this->pageArray as $page){
-			if($page->name == $name){
-				return $page;
-			}
-		}
-		return false;
-	}
-        /* public function orphanage
-         * Takes a username of a user that is being deleted
-         * and a user that is not being deleted
-         * If no new username is provided, the user's posts are deleted
-         */
-        function orphanage($old,$new){
-            $successes = array();
-            foreach($this->pageArray as $page){
-                if($page->orphanage($old,$new)){
-                    $succesese[] = $page->name;
-                }
-            }
-            return successes;
-        }
-	
-}
-
-//Outer (static) components (access from index.php)
-
-class cm_topbar{
-	
-	public $elements = array();
-	
-	function addElement($title,$name){
-		$elements[] = (object) array("title" => $title, "name" => $name);
-	}
-	
-	function printBar(){
-		foreach($elements as $element){
-			
-		}
-	}
-}
-
-class cm_leftbar{
-	
-	public $elements = array();
-	public $prefix;
-	
-	function addLink($name,$title){ $this->elements[] = (object) array("name" => $name, "title" => $title);}
-	
-	function addLabel($title){ $this->elements[] = $title; }
-	
-	function prefixHtml($html){ $this->prefix = $html;}
-	
-	function printBar(){
-		echo '<div id="leftbar">',PHP_EOL;
-		if($this->prefix) echo  "<h3>$this->prefix</h3>", PHP_EOL;
-		echo '<ul class="leftbar_list">',PHP_EOL;
-		foreach($this->elements as $element){
-			if(is_object($element)){	//Echo link item
-					$title = $element-> title;
-					$name = $element-> name;
-					echo "<li class=\"leftbar_item link\" onclick=\"cm_loadPage('$name');\" id=\"leftbar_$name\">$title</li>",PHP_EOL;
-			}
-			else{		//Echo label item
-				echo "<li class=\"leftbar_item label\" id=\"leftbar_$element\">$element</li>",PHP_EOL;
-			}
-		}
-		echo '</ul>';
-		echo '</div>',PHP_EOL;
-	}
-        
-        function defaultPage($name){
-            echo <<<END
-    <script id="defaultPage">
-    cm_loadPage('$name');            
-    </script>
-END;
-        }
-	
-}
-
-class cm_inner extends uiElement{
-	
-        public $name = 'page loader';
-    
-	//Run this first
-	function printInner(){
-		echo '<div id="central">',PHP_EOL;
-		
-		echo '</div>',PHP_EOL;
-	}
-	//Run this second
-	public function clientSide(){
-		echo <<<END
-function cm_loadPage(code){
-	var request = new XMLHttpRequest();
-	request.onreadystatechange = function(){
-		if(request.readyState == 4 && request.status == 200){
-                    //update page
-                    document.getElementById('central').innerHTML = request.responseText;
-                    if(code.indexOf('&') == -1){
-                        $('.leftbar_item').css("background-color","transparent");
-                        $('#leftbar_' + code).css("background-color","rgba(0,0,0,0.2)");
-                    }
-                    eval(document.getElementById('loadScript').innerHTML);
-                    $('central').css('opacity','1');
-                    $('central').css('pointer-events','auto');
-                    //todo - show box
-		}
-	}
-	request.open("GET","request.php?action=" + code,true);
-	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	request.send();
-        $('central').css('pointer-events','none');
-        $('central').css('opacity','0');
-        
-            //show loading animation
-}
-END;
-echo PHP_EOL;
-		
-	}
-}
-
-
-//Inner (dynamic) components (access from request.php)
-
 class customForm extends uiElement{
     
     private $optionsArray = [];
@@ -931,7 +753,7 @@ class customForm extends uiElement{
      */
     public function clientSide(){
         echo <<<END
-       function cm_updateForm(fields,action,method,result,onReloadAction){
+function cm_updateForm(fields,action,method,result,onReloadAction){
     if(!onReloadAction){
         var onReloadAction = action;
     }
@@ -972,6 +794,15 @@ class customForm extends uiElement{
     updateRequest.open(method,"request.php?update&action=" + action,"true");
     updateRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     updateRequest.send(postRequest);
+}
+        
+function expand(id){
+    var thing = document.getElementById(id);
+    if(thing.style.maxHeight != "500px"){
+        thing.style.maxHeight = "500px";
+    }else{
+        thing.style.maxHeight = "0px";
+    }
 }
 END;
     }
@@ -1173,8 +1004,183 @@ END;
     
 }
 
-function pl_bar($html){
-	return $html;
+
+//Global simple components
+
+abstract class optionsPage{	//Class to be used for loading options pages
+	public $name;	//Ugly title (use prefix "plugin_" for plugins
+	public $title;	//
+	
+	function publicPage(){ return false; }	//Code to be run for public display
+	function configPage(){ return false; }	//Code to be run for config mode
+	function updatePage(){ return false; }	//Code to be run for updating databases
+        function orphanage($olduser,$newuser){ return false;  } //Code to be run when deleting users
+}
+
+class standardOptionsPages{
+	public $pageArray = array();	//array of optionsPage objects
+	
+	function importStandardPages(){
+		require 'functions/options_pages.php';
+		 $this->pageArray = array_merge($this->pageArray,$standardPages);
+	}
+	/**
+         * Import all plugin pages from the plugin folder
+         * All files in the plugin folder containing .php will be executed
+         */
+	function importPluginPages(){
+            $pluginPages = array();
+            $plugindir = './plugins';
+            $plugins = array_diff(scandir($plugindir), array('..', '.','_notes'));
+            foreach($plugins as $plugin){
+                if(strpos($plugin,".php") != false){
+                    include $plugindir . '/' . $plugin;
+                }
+            }
+            //print_r($plugins);
+            if(isset($pluginPages)) $this->pageArray = array_merge($this->pageArray,$pluginPages);
+	}
+	
+	function configure(){
+		$this->importStandardPages();
+		$this->importPluginPages();
+	}
+	
+	function returnNavList(){
+		$navList = array();
+		foreach($this->pageArray as $page){
+                        if($page->title){ 
+                            $listItem = (object) array("name"=> $page->name, "title" => $page->title);
+                            $navList[] = $listItem;
+                        }
+		}
+		return $navList;
+	}
+	function returnObjectList(){
+		return $this->pageArray();
+	}
+	function matchObject($name){
+		foreach($this->pageArray as $page){
+			if($page->name == $name){
+				return $page;
+			}
+		}
+		return false;
+	}
+        /* public function orphanage
+         * Takes a username of a user that is being deleted
+         * and a user that is not being deleted
+         * If no new username is provided, the user's posts are deleted
+         */
+        function orphanage($old,$new){
+            $successes = array();
+            foreach($this->pageArray as $page){
+                if($page->orphanage($old,$new)){
+                    $succesese[] = $page->name;
+                }
+            }
+            return successes;
+        }
+	
+}
+
+//Outer (static) components (access from index.php)
+
+class cm_topbar{
+	
+	public $elements = array();
+	
+	function addElement($title,$name){
+		$elements[] = (object) array("title" => $title, "name" => $name);
+	}
+	
+	function printBar(){
+		foreach($elements as $element){
+			
+		}
+	}
+}
+
+class cm_leftbar{
+	
+	public $elements = array();
+	public $prefix;
+	
+	function addLink($name,$title){ $this->elements[] = (object) array("name" => $name, "title" => $title);}
+	
+	function addLabel($title){ $this->elements[] = $title; }
+	
+	function prefixHtml($html){ $this->prefix = $html;}
+	
+	function printBar(){
+		echo '<div id="leftbar">',PHP_EOL;
+		if($this->prefix) echo  "<h3>$this->prefix</h3>", PHP_EOL;
+		echo '<ul class="leftbar_list">',PHP_EOL;
+		foreach($this->elements as $element){
+			if(is_object($element)){	//Echo link item
+					$title = $element-> title;
+					$name = $element-> name;
+					echo "<li class=\"leftbar_item link\" onclick=\"cm_loadPage('$name');\" id=\"leftbar_$name\">$title</li>",PHP_EOL;
+			}
+			else{		//Echo label item
+				echo "<li class=\"leftbar_item label\" id=\"leftbar_$element\">$element</li>",PHP_EOL;
+			}
+		}
+		echo '</ul>';
+		echo '</div>',PHP_EOL;
+	}
+        
+        function defaultPage($name){
+            echo <<<END
+<script id="defaultPage">
+cm_loadPage('$name');            
+</script>
+END;
+        }
+	
+}
+
+class cm_inner extends uiElement{
+	
+        public $name = 'page loader';
+    
+	//Run this first
+	function printInner(){
+		echo '<div id="central">',PHP_EOL;
+		
+		echo '</div>',PHP_EOL;
+	}
+	//Run this second
+	public function clientSide(){
+		echo <<<END
+function cm_loadPage(code){
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(request.readyState == 4 && request.status == 200){
+                    //update page
+                    document.getElementById('central').innerHTML = request.responseText;
+                    if(code.indexOf('&') == -1){
+                        $('.leftbar_item').css("background-color","transparent");
+                        $('#leftbar_' + code).css("background-color","rgba(0,0,0,0.2)");
+                    }
+                    eval(document.getElementById('loadScript').innerHTML);
+                    $('central').css('opacity','1');
+                    $('central').css('pointer-events','auto');
+                    //todo - show box
+		}
+	}
+	request.open("GET","request.php?action=" + code,true);
+	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	request.send();
+        $('central').css('pointer-events','none');
+        $('central').css('opacity','0');
+        
+            //show loading animation
+}
+END;
+echo PHP_EOL;
+		
+	}
 }
 
 ?>

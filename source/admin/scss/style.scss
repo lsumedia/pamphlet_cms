@@ -143,6 +143,9 @@ body{
         height:56px;
     }
 }
+.listWrapper{
+    min-height:300px;
+}
 
 /* Form elements */
 
@@ -155,7 +158,6 @@ body{
     text-align:right;
     clear:both;
     min-width:100px;
-    min-height:300px;
     h2{
         width:100%;
         text-align:center;
