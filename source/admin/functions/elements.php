@@ -134,6 +134,15 @@ class html{
     static function lockZoom(){
         echo '<meta name="viewport" content="width=device-width, user-scalable=no" />';
     }
+    function jquery(){
+        echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>',PHP_EOL;
+        return;
+    }
+    function jqueryUi(){	//Note - this will slow down page loading, only use when needed
+        echo '<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>',PHP_EOL;
+        echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">',PHP_EOL;
+        return;
+    }
 }
 
 class div{
@@ -518,7 +527,7 @@ END;
 /* Forms */
 /**
  * Class for making forms
- * Deprecated, use customFom instead
+ * Deprecated, use customForm instead
  */
 class ajaxForm{
     
@@ -795,7 +804,6 @@ function cm_updateForm(fields,action,method,result,onReloadAction){
     updateRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     updateRequest.send(postRequest);
 }
-        
 function expand(id){
     var thing = document.getElementById(id);
     if(thing.style.maxHeight != "500px"){
@@ -830,8 +838,7 @@ END;
         //Start form elements
         echo PHP_EOL, "<!-- ajaxForm2 $this->id starts -->", PHP_EOL;
         echo "<div id='$this->id' class='form'>", PHP_EOL;
-        
-        
+
         //Echo title if it is set
         if($this->title){
             echo "<div class='formtitle'>$this->title</div>", PHP_EOL;

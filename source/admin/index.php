@@ -19,16 +19,16 @@ session_start();
 
 require 'functions/elements.php';
 
-$html = new htmlStuff();
-$html->htmlStart();			//Start HTML doc
-$html->htmlJquery();//Import JQuery file
+html::start();
+
 html::css('style.css');		//Import stylesheet
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
-html::js("ckeditor/ckeditor.js");
 html::lockZoom();
+$title = 'Pamphlet 3';
+html::title($title);
 
-$html->htmlEndHead();		//End head tag, start body tag
+html::endHead();		//End head tag, start body tag
 
 //Body section
 //Declare objects
@@ -38,7 +38,7 @@ $inner = new cm_inner();
 $pages = new standardOptionsPages();
 
 $pages->configure();
-$leftbar->prefixHtml("Pamphlet 3");		
+$leftbar->prefixHtml($title);		
 if(isset($_SESSION['username'])){
     	//Load page objects
     $leftbar->elements = $pages->returnNavList();	//Import pagelist to array
@@ -46,16 +46,18 @@ if(isset($_SESSION['username'])){
     $leftbar->addLink("logout", "Sign out");
     $leftbar->printBar();							//Print leftbar
     $inner->printInner();							//Print inner AJAX section                                                    //Send AJAX code
-    uiElement::loadUiElements();
-    $leftbar->defaultPage("general");
+    $defaultPage = 'general';
 }else{
     //$leftbar->addLink("login","Log in");
     $leftbar->printBar();
     $inner->printInner();
-    uiElement::loadUiElements();
-    $leftbar->defaultPage("login");
+    $defaultPage = 'login';
 }
-//End html doc
-$html->htmlEnd();
+//More javascript and end document
+html::jquery();
+html::js("ckeditor/ckeditor.js");
+uiElement::loadUiElements();
+$leftbar->defaultPage($defaultPage);
+html::end();
 
 ?>

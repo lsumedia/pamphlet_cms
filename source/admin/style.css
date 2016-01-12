@@ -104,10 +104,9 @@ body {
   .objectList th {
     /* border-bottom: 1px solid $weak-border; */
     height: 56px; }
-  
-  .listWrapper{
-      min-height:300px;
-  }
+
+.listWrapper {
+  min-height: 300px; }
 
 /* Form elements */
 .form {
@@ -187,7 +186,7 @@ body {
 
 .formtitle, .listtitle {
   float: left;
-  margin-left: 0px;
+  margin-left: 15px;
   height: 40px;
   line-height: 100%;
   color: #1976D2;
@@ -198,20 +197,12 @@ body {
     width: auto;
     max-width: 40px; }
 
-.formtitle {
-  margin-left: 15px; }
-
-.listtitle {
-  margin-top: 10px; 
-  margin-left:15px;
-}
-
 .listnav {
   float: right;
   height: 40px;
-  margin-right:15px;
   line-height: 40px;
-  margin-top: -10px; }
+  margin-top: -10px;
+  margin-right: 15px; }
   .listnav p {
     float: left;
     padding: 0;
@@ -305,10 +296,10 @@ body {
 
   .centralelement {
     width: 100% !important;
+    min-width: 200px !important;
     padding: 0;
     padding-top: 15px;
-    margin: 0;
-    min-width: 200px; }
+    margin: 0; }
 
   .form {
     width: 100%;

@@ -1,5 +1,5 @@
 @charset 'UTF-8';
-
+ 
 /* CSS Document */
 
 /* Sass variables */
@@ -241,7 +241,7 @@ body{
 
 .formtitle, .listtitle{
         float:left;
-        margin-left:0px;
+        margin-left:15px;
         height:40px;
         line-height:100%;
         color:$border-color;
@@ -254,13 +254,6 @@ body{
         }
     }
     
-.formtitle{
-    margin-left:15px;
-}
-.listtitle{
-    margin-top:10px;
-    margin-left:15px;
-}
 .listnav{
     float:right;
     height:40px;
@@ -382,10 +375,10 @@ body{
     }
     .centralelement{
         width:100% !important;
+        min-width:200px !important;
         padding:0;
         padding-top:15px;
         margin:0;
-        min-width:200px;
     }
     .form{
         width:100%;
