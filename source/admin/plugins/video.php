@@ -268,7 +268,7 @@ class manager extends optionsPage{
             $form->kpSelector("cover", cover::kpCovers(), "", "Holding screen");
             $form->submit("Add channel");
             
-            $slist = new multiPageList(NULL,"streamlist");
+            $slist = new ajaxList(NULL,"streamlist");
             $slist->title("Active channels");
             
             $query = "SELECT id,title,type,visible FROM $this->name";

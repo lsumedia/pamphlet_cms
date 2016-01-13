@@ -7,7 +7,7 @@ $cke_path = "/live/admin/ckeditor/ckeditor.js";
 /**
  * Represents an element type loaded asynchronously that requires
  * preloaded client-side functions to run. If the clientSide function is set
- * the function will be run on the primary pageload
+ * the function will be run on the primary pageload. Minification coming soon.
  */
 class uiElement{
     
@@ -221,6 +221,7 @@ class ce{
 
 /* Lists */
 
+/* objectList - deprecated, only good for small (>10 items) lists */
 class objectList{
     
     //Array of arrays containing key-value pairs with friendly names for both
@@ -286,6 +287,7 @@ class objectList{
     }
 }
 
+/* multiPageList - deprecated, use ajaxList instead */
 class multiPageList extends objectList{
     public function display($pageName){
         echo "<!-- multiPageList -->", PHP_EOL;
@@ -337,6 +339,7 @@ class multiPageList extends objectList{
     }
 }
 
+/* ajaxList - takes array as input, page changing and search */
 class ajaxList extends uiElement{
     
     public $name = 'ajaxList';
@@ -356,6 +359,9 @@ function list_change_page(listId,dataLocation,pageNumber){
         var data = list_get_data(dataLocation);
         var html = "";
         
+        var next = pageNumber + 1;
+        var prev = pageNumber - 1;
+        
         var offset = 10 * (pageNumber);
         
         for(var i=offset; i < offset + 10; i++){
@@ -373,6 +379,10 @@ function list_change_page(listId,dataLocation,pageNumber){
         
         document.getElementById(listId + '_body').innerHTML = html;
         document.getElementById(listId + '_pagenumber').innerHTML = pageNumber + 1;
+        
+        
+        document.getElementById(listId + '_back').setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
+        document.getElementById(listId + '_next').setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
 }
         
 function list_search(listId,dataLocation,term){
@@ -480,9 +490,11 @@ END;
         if($count > 10){
             $back; $next;
             $numpages = floor(($count-1) / 10 ) + 1;
+            $back_id = $this->id . '_back';
+            $next_id = $this->id . '_next';
             $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
-            $back = "<img onclick=\"list_change_page('$this->id','$data_id',0);\" display='none' src=\"images/back_black.png\" id=''/>";
-            $next = "<img onclick=\"list_change_page('$this->id','$data_id',1);\" src=\"images/next_black.png\" id='' />"; 
+            $back = "<img onclick=\"list_change_page('$this->id','$data_id',0);\" display='none' src=\"images/back_black.png\" id='$back_id'/>";
+            $next = "<img onclick=\"list_change_page('$this->id','$data_id',1);\" src=\"images/next_black.png\" id='$next_id' />"; 
             echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
         echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
