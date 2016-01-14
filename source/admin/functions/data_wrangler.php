@@ -323,7 +323,10 @@ function num_users(){
 	return mysqli_num_rows($result);
 }
 
-
+/**
+ * Destroys user session
+ * Use kill_user instead
+ */
 function auth_failed(){
 	session_start();
 	unset($_SESSION['username']);
@@ -454,5 +457,13 @@ function actualLink(){
     $link_array = explode("/",$full_link);  //Split array into sections
     array_pop($link_array); //Remove request.php bit from array
     return implode("/",$link_array);
+}
+
+function pm_plugins_dir(){
+    return actualLink() . '/plugins/';
+}
+
+function pm_installation_name(){
+    
 }
 ?>

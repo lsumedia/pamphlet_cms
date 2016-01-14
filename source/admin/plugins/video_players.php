@@ -153,8 +153,22 @@ class videojs_5 extends mediaPlayer{
     
 }
 
-
-
+class soundcloud extends mediaPlayer{
+    public $name = 'soundcloud';
+    public $title = 'SoundCloud';
+    
+    public $live = false;
+    public $ondemand = true;
+    
+    public static function build($video, $setup){
+        $primarySource = $video->sources[0];
+        $id = $primarySource->src;
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true\"></iframe>";;
+        
+        return $video;
+    }
+    
+}
 
 class custom extends mediaPlayer{
     public $name = 'custom';

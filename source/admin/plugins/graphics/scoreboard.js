@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 var start = new Date();
 var running = 1;    //Whether timer is running
 var elapsed = 0; //How long the timer has been running for

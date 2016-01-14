@@ -257,16 +257,19 @@ class videos extends optionsPage{
             $type = filter_input(INPUT_POST,'source_type');
             $res = filter_input(INPUT_POST,'source_res');
             
-            $sstmt = $connection->prepare("INSERT INTO plugin_vod_sources SET video_id=?, src=?, type=?, res=?;");
-            $sstmt->bind_param("isss",$video_id,$src,$type,$res);
-            
-            if($sstmt->execute()){
-                    echo 'reload';
-                return;
+            if($src){
+                $sstmt = $connection->prepare("INSERT INTO plugin_vod_sources SET video_id=?, src=?, type=?, res=?;");
+                $sstmt->bind_param("isss",$video_id,$src,$type,$res);
+
+                if($sstmt->execute()){
+                        echo 'reload';
+                    return;
+                }else{
+                    echo "Error adding source: $sstmt->error";
+                }
             }else{
-                echo "Error adding source: $sstmt->error";
+                echo "Please enter a URL";
             }
-            
             
         }
         else{
@@ -564,11 +567,14 @@ class video_tags extends optionsPage{
     
     public static function formArray(){
         return [
-            'tag' => [ 'type' => 'text', 'label' => 'Tag name'],
+            'tag_id' => [ 'type' => 'text', 'label' => 'Tag name'],
             'title' => ['type' => 'text', 'label' => 'Tag title'],
             'parent' => ['type' => 'select', 'label' => 'Parent tag', 'options' => self::kvpTags()],
-            'header' => ['type' => 'url', 'label' => 'Header image (12:5)'],
-            'background' => ['type' => 'url', 'label' => 'Background image (1:1)']
+            'type' => ['type' => 'select', 'label' => 'Type'],
+            'bannerurl' => ['type' => 'url', 'label' => 'Header image (12:5)'],
+            'coverurl' => ['type' => 'url', 'label' => 'Background image (1:1)'],
+            'primarycolor' => ['type' => 'color', 'label' => 'Primary colour'],
+            'description' => ['type' => 'richtext', 'label' => 'Description']
         ];
     }
     

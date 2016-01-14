@@ -14,7 +14,7 @@
  */
 function iframeOutput($title,$code){
     echo "<!doctype html>
-<html data-cast-api-enabled='true'>
+<html>
 <head>
 <meta charset=\"UTF-8\">";
     html::css("plugins/video/iframe.css");
@@ -425,6 +425,7 @@ class manager extends optionsPage{
             switch($type){
                 case "live":
                     $player_content = videos::getVideo($live,true);
+                    /* scheduling section goes HERE */
                     break;
                 case "vod":
                     $player_content = videos::getVideo($vod,true);
@@ -433,6 +434,7 @@ class manager extends optionsPage{
                     $player_content = cover::getImage($cover);
                     break;
             }
+            
             
             $player_content->id = $type . '_' . $player_content->id;
             
