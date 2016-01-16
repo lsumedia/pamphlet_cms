@@ -77,7 +77,7 @@ function playing(){
 
 
 
-function updateNowPlaying(){
+function updateNowPlayingOld(){
     var nowplaying = document.getElementById('nowplaying');
     var request = new XMLHttpRequest();
     request.onreadystatechange = function(){
@@ -96,6 +96,25 @@ function updateNowPlaying(){
     request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     request.send();
     
+}
+
+function updateNowPlaying(){
+    var stringed = JSON.stringify(nowplayinginfo);
+    console.log(stringed);
+    $.ajax({
+        url: 'plugins/radio/nowplaying.php',
+        type: 'POST',
+        contentType: 'application/json',
+        data: stringed,
+        success: function(data){
+            document.getElementById('nowplaying').innerHTML = "Now Playing: "  + data;
+            document.title = title + ": " + data;
+        },
+        error: function(xhr, ajaxOptions, thrownError){
+            document.getElementById('nowplaying').innerHTML = 'Error fetching song data: ' + thrownError;
+            console.log('Song fetch error: ' + thrownError + ', ' + ajaxOptions);
+        }
+    });
 }
 
 

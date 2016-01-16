@@ -85,13 +85,13 @@ class userSettings extends optionsPage{
                         //$addDiv->close();
                     }
                     
-                    $ustmt = $connection->prepare("SELECT username,fullname,email FROM users ORDER BY reg_date DESC");
+                    $ustmt = $connection->prepare("SELECT username,fullname,email,privilege FROM users ORDER BY reg_date DESC");
                     $ustmt->execute();
-                    $ustmt->bind_result($username,$fullname,$email);
-                    $usersList = new multiPageList(null,"usersList");
+                    $ustmt->bind_result($username,$fullname,$email,$priv);
+                    $usersList = new ajaxList(null,"usersList");
                     $usersList->style("style=\"min-width:500px;\"");
                     while($ustmt->fetch()){
-                        $userArray = array("Username" => $username, "Display name" => $fullname, "Email address" => $email, "onclick" => "cm_loadPage('user&username=$username');");
+                        $userArray = array("Username" => $username, "Display name" => $fullname, "Email address" => $email, 'Permissions' => kpPermissionLevels()[$priv], "onclick" => "cm_loadPage('user&username=$username');");
                         $usersList->addObject($userArray);
                     }
                     

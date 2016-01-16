@@ -7,5 +7,6 @@
  */
 
 require('player.php');
-$url = filter_input(INPUT_GET,'url');
+//$url = $_POST['data'];
+$url = $HTTP_RAW_POST_DATA;
 echo radioPlayer::getNowPlaying($url, "");

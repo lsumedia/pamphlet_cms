@@ -11,6 +11,9 @@ if(0){	//Error reporting - disable for production
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 error_reporting(-1);
+}else{
+    ini_set('display_errors', '0');     # don't show any errors...
+    error_reporting(E_ALL | E_STRICT);  # ...but do log them
 }
 
 $session_expiration = time() + 3600 * 24 * 2; // +2 days

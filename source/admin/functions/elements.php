@@ -134,11 +134,11 @@ class html{
     static function lockZoom(){
         echo '<meta name="viewport" content="width=device-width, user-scalable=no" />';
     }
-    function jquery(){
+    static function jquery(){
         echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>',PHP_EOL;
         return;
     }
-    function jqueryUi(){	//Note - this will slow down page loading, only use when needed
+    static function jqueryUi(){	//Note - this will slow down page loading, only use when needed
         echo '<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>',PHP_EOL;
         echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">',PHP_EOL;
         return;
@@ -359,6 +359,8 @@ function list_change_page(listId,dataLocation,pageNumber){
         var data = list_get_data(dataLocation);
         var html = "";
         
+        var numberOfPages = Math.ceil((data.length)/10);
+        
         var next = pageNumber + 1;
         var prev = pageNumber - 1;
         
@@ -380,9 +382,24 @@ function list_change_page(listId,dataLocation,pageNumber){
         document.getElementById(listId + '_body').innerHTML = html;
         document.getElementById(listId + '_pagenumber').innerHTML = pageNumber + 1;
         
+        //Load buttons
+        var backbtn = document.getElementById(listId + '_back');
+        var nextbtn = document.getElementById(listId + '_next');
+        //Change button targets
+        backbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
+        nextbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
+        //Change button visibility depending on list length
+        if(pageNumber == 0){
+            backbtn.style.display = 'none';
+        }else{
+            backbtn.style.display = 'inline';
+        }
+        if(pageNumber >= (numberOfPages -1) ){
+            nextbtn.style.display = 'none';
+        }else{
+            nextbtn.style.display = 'inline';
+        }
         
-        document.getElementById(listId + '_back').setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
-        document.getElementById(listId + '_next').setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
 }
         
 function list_search(listId,dataLocation,term){
@@ -493,7 +510,7 @@ END;
             $back_id = $this->id . '_back';
             $next_id = $this->id . '_next';
             $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
-            $back = "<img onclick=\"list_change_page('$this->id','$data_id',0);\" display='none' src=\"images/back_black.png\" id='$back_id'/>";
+            $back = "<img onclick=\"list_change_page('$this->id','$data_id',0);\" style='display:none;' src=\"images/back_black.png\" id='$back_id'/>";
             $next = "<img onclick=\"list_change_page('$this->id','$data_id',1);\" src=\"images/next_black.png\" id='$next_id' />"; 
             echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
@@ -1201,5 +1218,161 @@ echo PHP_EOL;
 		
 	}
 }
+
+/* Video source class */
+class source{
+    public $src;
+    public $type;
+    public $res;
+    public $video_id;
+    public $source_id;
+            
+    public function __construct($src,$type,$res) {
+        $this->src = $src;
+        $this->type = $type;
+        $this->res = $res;
+    }
+}
+
+class video{
+    /* Video ID code */
+    public $id;
+
+    /* TECH DATA */
+    
+    /* Array of source objects only */
+    public $sources = array();
+    /* Video type to determine which mediaPlayer to use */
+    public $type;
+    /* Generated source code for the video */
+    public $source;
+    /* Poster image URL for video */
+    public $poster;
+
+    /* OTHER METADATA */
+    
+    /* Video title */
+    public $title;
+    /* Video description */
+    public $description;
+    /* Publish date */
+    public $date;
+    /* Video tags for easier searching */
+    public $tags;
+    
+    /**
+     * 
+     * @param int $id
+     * @param string $type
+     * @param array $sources
+     * @param string $source
+     * @param string $poster
+     * @param string $title
+     * @param string $description
+     * @param date $date
+     * @param string $tags
+     */
+    public function __construct($id,$type,$sources,$source,$poster,$title,$description,$date,$tags){
+        $this->id = $id;
+        
+        $this->type = $type;
+        $this->sources = $sources;
+        $this->source = $source;
+        $this->poster = $poster;
+        
+        $this->title = $title;
+        $this->description = $description;
+        $this->date = $date;
+        $this->tags = $tags;
+        
+    }
+    
+}
+/**
+ * Extendable class for defining media player modules
+ * 
+ * New media players MUST be an extension of this class or they will not be detected
+ */
+class mediaPlayer {
+    
+    /* $name: unique and machine-friendly (lowercase, no spaces) name for the player module */
+    public $name;
+    /* $title: human-friendly title for the player module */
+    public $title;
+    /* $supported: video player supported sources, array of MIME types as strings */
+    public $supported = array();
+    /* $properties: defines a set of text properties in key/pair format which may be used by the player */
+    public $properties = array();
+    /* bool $live: whether the player supports live playback */
+    public $live = true;
+    /* bool $ondemand: whether the player supports on-demand playback */
+    public $ondemand = true;
+    /**
+     * build
+     * Generates HTML source code for the player for use in an iframe.
+     * Return as a string.
+     * Return false for invalid input.
+     * 
+     * @param type $video
+     * -Video object to generate a player from
+     * @param type $setup
+     * - Any further setup conditions, may be player-specific
+     */
+    public static function build($video,$setup){
+        return false;
+    }
+    
+    public static function getPlayerTypes(){
+        $players = array();
+        foreach(get_declared_classes() as $class){
+            if(is_subclass_of($class, 'mediaPlayer')){
+                $players[] = new $class();
+            }
+        }
+        return $players;
+    }
+    
+    public static function kpTypes(){
+        $players = self::getPlayerTypes();
+        $types = array();
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
+            $types[$name] = $title;
+        }
+        return $types;
+    }
+    
+    public static function kpLiveTypes(){
+        $players = self::getPlayerTypes();
+        $types = array();
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
+            if($player->live){
+                $types[$name] = $title;
+            }
+        }
+        return $types;
+    }
+    
+    public static function kpVodTypes(){
+        $players = self::getPlayerTypes();
+        $types = array();
+        //$types['--'] = var_dump($players) . ' modules found';
+        foreach($players as $player){
+            $name = $player->name;
+            $title = $player->title;
+            if($player->ondemand){
+                $types[$name] = $title;
+            }
+        }
+        return $types;
+    }
+    
+}
+
 
 ?>

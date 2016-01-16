@@ -20,7 +20,7 @@ class radioPlayer{
     public static function build($url,$poster,$nowplaying, $title){
         ob_start();
         $dir_location = "plugins/radio";     //Change this if using outside of Pamphlet
-        
+        js('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
         echo <<<END
   
 <div width="100%" height="100%" class="radplayer" style="background-image:url('$poster');">
@@ -36,9 +36,9 @@ class radioPlayer{
 <p class="label" id="title">$title</p>
 </div>
 </div>
-<script>var nowplayinginfo = "$nowplaying"; var title = "$title";</script>
+<script>var nowplayinginfo = $nowplaying; var title = "$title";</script>
 END;
-        
+       
         css($dir_location."/radio.css");
         js($dir_location."/radio.js");
         
@@ -48,10 +48,70 @@ END;
         
     }
     
-    public static function getNowPlaying($url,$cname){
+    /**
+     * 
+     * @param json_string $info - JSON nowplaying info
+     * @param string $cname - Channel title
+     * @return string
+     * 
+     * Provide a valid JSON string matching the following model:
+     * {"nowplaying":{"type":"[icecast/shoutcast]","url":"nowplayingurl"}}
+     * Function will fetch the info from the provided URL and concatenate it with the
+     * channel title as such
+     * Channel: Artist - Song
+     * If $cname is left blank, only the song info will be returned
+     */
+    public static function getNowPlaying($info,$cname){
+        
+        $source = json_decode($info);
+        $infoarray = $source->nowplaying;
+        $type = $infoarray->type;
+        $url = $infoarray->url;
+        
+        
+        switch($type){
+            case 'icecast':
+                $string = file_get_contents($url);
+
+                $array = json_decode($string);
+                $stats = $array->icestats;
+                $info = $stats->source;
+        
+                $nowplaying = $info->title;
+        
+
+                break;
+            case 'shoutcast':
+                /*
+                $response = file_get_contents($url);
+                $nowplaying = $response;
+                break;
+                $start = stripos($response, "<body");
+                $end = stripos($response, "</body");
+
+                $body = substr($response,$start,$end-$start);
+                if($body){
+                    $array = explode(',',$body);
+                    $nowplaying = array_pop($array);
+                }else{
+                    "Error - response failed or took too long";
+                }*/
+                $nowplaying = self::shoutCastData($url);
+                break;
+        }
+        
+        if(strlen($cname) > 0){
+            return $cname . ': ' . $nowplaying;
+        }else{
+            return $nowplaying;
+        }
+        
+        
+    }   
+    
+    static function shoutCastData($url){
         //ShoutCast
         $header = array();
-        $header[] = 'Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5';
         $header[] = 'Cache-Control: max-age=0';
         $header[] = 'Connection: keep-alive';
         $header[] = 'Keep-Alive: 300';
@@ -78,15 +138,11 @@ END;
         if($body != "false"){
             $array = explode(',',$body);
             $last = array_pop($array);
-            if(strlen($cname) > 0){
-                return $cname . ": " . $last;
-            }else{
-                return $last;
-            }
         }else{
             "Error - response failed or took too long";
         }
-        return $cname;
-    }   
+        return $last;
+    }
 }
+
 
