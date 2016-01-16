@@ -20,11 +20,8 @@ function iframeOutput($title,$code){
     html::css("plugins/video/iframe.css");
     html::title($title);
     html::lockZoom();
-    echo "<style>body{ margin:0; padding:0; width:100%; height:100%; overflow:hidden;} .html5vid, iframe{ width: 100%; width:100vw !important; height:100%; height:100vh !important; min-width: 300px; min-height:200px;}</style>";
-    //videojs::init();
     html::endHead();
     echo $code;
-    //videojs::run();
     html::end();
 }
 
