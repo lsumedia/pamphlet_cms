@@ -419,8 +419,11 @@ function list_search(listId,dataLocation,term){
 
             for(var key in row){
                 if(key != 'onclick'){
-                    if(row[key].toLowerCase().indexOf(term.toLowerCase()) != -1){
-                       match = true;
+                    if(row[key]){
+                        var content = row[key].toLowerCase();
+                        if(content.indexOf(term.toLowerCase()) != -1){
+                           match = true;
+                        }
                     }
                 }
             }
