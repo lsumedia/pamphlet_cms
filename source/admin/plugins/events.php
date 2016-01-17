@@ -71,7 +71,7 @@ class events extends optionsPage{
             $bstmt = $connection->prepare("SELECT e.id,e.title,e.author,e.date,e.enddate,e.type,u.fullname FROM events e, users u WHERE e.author = u.username ORDER BY e.date DESC");
             $bstmt->execute();
             $bstmt->bind_result($id,$title,$author,$date,$enddate,$type,$fullname);
-            $blogList = new multiPageList(null, "bloglist");
+            $blogList = new ajaxList(null, "bloglist");
             while($bstmt->fetch()){
                 //$nicedate = date("jS F Y",strtotime($date));
                 $combodate = combodate($date,$enddate);
@@ -81,7 +81,7 @@ class events extends optionsPage{
 
 
             $blogList->title("Recent and upcoming events");
-            $blogList->display($this->name);
+            $blogList->display();
             $bstmt->close();
         }
         $ce->end();

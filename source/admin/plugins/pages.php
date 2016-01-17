@@ -40,7 +40,7 @@ class pages extends optionsPage{
                 $pForm->largeText("content", "", "Content");            //Content area
                 $pForm->submit("Add page");                             //Submit button
                 //Existing page liist
-                $pList = new multiPageList(null, "pageList");
+                $pList = new ajaxList(null, "pageList");
                 $pList->title("All pages");
                 $pstmt = $connection->prepare("SELECT id,title,content,parent,visible FROM pages");
                 $pstmt->execute();
@@ -53,7 +53,7 @@ class pages extends optionsPage{
                     $onclick = "cm_loadPage('$this->name"."&edit=$id')";
                     $pList->addObject(array("Title" => $title, "Visible" => $visible, "Parent" => $parent, "onclick" => $onclick ));
                 }
-                $pList->display($this->name);
+                $pList->display();
             }
             $ce->end();
     }

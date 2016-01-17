@@ -84,7 +84,7 @@ class blog extends optionsPage{
             $bstmt = $connection->prepare("SELECT b.id,b.title,b.author,b.timestamp,b.tags,u.fullname FROM blog b, users u WHERE b.author = u.username ORDER BY b.timestamp DESC");
             $bstmt->execute();
             $bstmt->bind_result($id,$title,$author,$postdate,$tags,$fullname);
-            $blogList = new multiPageList(null, "bloglist");
+            $blogList = new ajaxList(null, "bloglist");
             while($bstmt->fetch()){
                 $nicedate = date("jS F Y",strtotime($postdate));
                 $tagString = tagsToString($tags);
@@ -94,7 +94,7 @@ class blog extends optionsPage{
 
 
             $blogList->title("Current posts");
-            $blogList->display($this->name);
+            $blogList->display();
             $bstmt->close();
         }
         ce::end();
