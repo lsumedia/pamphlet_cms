@@ -61,11 +61,14 @@ class videos extends optionsPage{
             }
             
             $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $video, "POST");
-            $editForm->formTitle("Edit video");
-            $editForm->labeledInput("title", "text", $details->title, "Title");
+            
             if($live){
+                $editForm->formTitle("Edit stream");
+                $editForm->labeledInput("title", "text", $details->title, "Title");
                 $editForm->kpSelector("type", mediaPlayer::kpLiveTypes(), $details->type, "Stream type");
-            }else{                
+            }else{
+                $editForm->formTitle("Edit video");
+                $editForm->labeledInput("title", "text", $details->title, "Title");
                 $editForm->kpSelector("type", mediaPlayer::kpVodTypes(), $details->type, "Video type");  
             }
             ajaxForm::startOptionalSection("embed","Embed code/Additional parameters");
@@ -73,7 +76,11 @@ class videos extends optionsPage{
             ajaxForm::endOptionalSection();
             $editForm->labeledInput("tags", "text", $details->tags, "Tags (space seperated)");
             $editForm->labeledInput("date", "date", $details->date, "Date posted");
-            $editForm->labeledInput("poster", "text", $details->poster, "Poster URL");
+            if($live){
+                $editForm->kpSelector("poster", cover::kpCoverURLs(), $details->poster, "Poster URL");
+            }else{
+                $editForm->labeledInput("poster", "text", $details->poster, "Poster URL");
+            }
             $editForm->largeText("description", $details->description, "Description");
             $editForm->lockedInput(actualLink() . "/public.php?action=$this->name&iframe=$video", "External embed URL");
             if($live){
@@ -143,7 +150,11 @@ class videos extends optionsPage{
             $form->labeledInput("tags", "text", "", "Tags (space seperated)");
             $nowdate = date("Y-m-d");
             $form->labeledInput("date", "date", $nowdate, "Date posted");
-            $form->labeledInput("poster", "text", "", "Poster URL");
+            if($live){
+                $form->kpSelector("poster", cover::kpCoverURLs(), '', "Poster URL");
+            }else{
+                $form->labeledInput("poster", "text", '', "Poster URL");
+            }
             $form->largeText("description", "", "Description");
             if($live){
                 $form->submit("Add new item",'plugin_live');

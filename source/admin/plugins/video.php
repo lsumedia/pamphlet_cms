@@ -356,15 +356,22 @@ class cover extends optionsPage{
     public function configPage(){
         global $connection;
         ce::begin('');
-        if($cover = filter_input(INPUT_GET,"edit")){
+        if($cover_id = filter_input(INPUT_GET,"edit")){
             
-            $details = self::getImage($cover);
+            
+            $stmt = $connection->prepare("SELECT title,description,url FROM plugin_cover WHERE id=?");
+            $stmt->bind_param("i",$cover_id);
+            $stmt->execute();
+            $stmt->bind_result($title,$description,$url);
+            $stmt->fetch();
+            $stmt->close();
+            
             backButton($this->name);
-            $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $cover, "POST");
+            $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $cover_id, "POST");
             $editForm->formTitle("Edit holding screen");
-            $editForm->labeledInput("title", "text", $details['title'], "Title");
-            $editForm->inputWithButton("url", $details['url'], "Image URL", "browseServer()", "Upload");
-            $editForm->largeText("description", $details['description'], "Description");
+            $editForm->labeledInput("title", "text", $title, "Title");
+            $editForm->inputWithButton("url", $url, "Image URL", "browseServer()", "Upload");
+            $editForm->largeText("description", $description, "Description");
             $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream", 'plugin_videomanager');
             $editForm->submit("Save changes",'plugin_cover');
         }else{
@@ -472,6 +479,21 @@ class cover extends optionsPage{
             $covers['null'] = "--";
             while($stmt->fetch()){
                 $covers[$id] = $title;
+            }
+            return $covers;
+        }else{
+            return false;
+        }
+    }
+    public static function kpCoverURLs(){
+        global $connection;
+        if($stmt = $connection->prepare("SELECT title,url FROM plugin_cover")){
+            $stmt->execute();
+            $stmt->bind_result($title,$url);
+            $covers = array();
+            $covers['null'] = "--";
+            while($stmt->fetch()){
+                $covers[$url] = $title;
             }
             return $covers;
         }else{
