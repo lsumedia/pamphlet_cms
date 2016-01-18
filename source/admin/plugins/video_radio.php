@@ -15,16 +15,22 @@ class radio extends mediaPlayer{
         $url= $primarySource->src;
         
         $poster = $content->poster;
-        $nowplaying = $content->source;
+        $nowplaying_url = $content->source;
         
+        $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
         
         require_once('plugins/radio/player.php');
        
         //$title = radioPlayer::getNowPlaying($nowplaying, $content->title);
         
-        $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title);
-        $content->title = radioPlayer::getNowPlaying($nowplaying, $content->title);
-        $content->poster = null;
+        $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title, $json);
+        $info = radioPlayer::getNowPlaying($nowplaying_url);
+        
+        $content->server_info = $info['raw'];
+        $content->nowplaying = $info['title'];
+        $content->plaintitle = $content->title;
+        $content->title = $content->title . ': ' . $info['title'];
+        //$content->poster = null;
         
         return $content;
         

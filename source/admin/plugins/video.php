@@ -268,6 +268,7 @@ class manager extends optionsPage{
             switch($type){
                 case "live":
                     $player_content = videos::getVideo($live,true);
+                    $player_content->poster = null;
                     /* scheduling section goes HERE */
                     break;
                 case "vod":

@@ -10,7 +10,10 @@ var button = document.getElementById('stopstartbtn');
 var status = document.getElementById('status');
 var volume = document.getElementById('volume');
 var mutebtn = document.getElementById('mutebtn');
+var title = document.getElementById('title');
 var nowplaying = document.getElementById('nowplaying');
+var wrapper = document.getElementById('player_wrapper');
+var dataArray;
 
 
 function updatePlayerStatus(){   
@@ -99,20 +102,15 @@ function updateNowPlayingOld(){
 }
 
 function updateNowPlaying(){
-    var stringed = JSON.stringify(nowplayinginfo);
-    console.log(stringed);
     $.ajax({
-        url: 'plugins/radio/nowplaying.php',
-        type: 'POST',
+        url: json_url,
+        type : 'GET',
         contentType: 'application/json',
-        data: stringed,
         success: function(data){
-            document.getElementById('nowplaying').innerHTML = "Now Playing: "  + data;
-            document.title = title + ": " + data;
-        },
-        error: function(xhr, ajaxOptions, thrownError){
-            document.getElementById('nowplaying').innerHTML = 'Error fetching song data: ' + thrownError;
-            console.log('Song fetch error: ' + thrownError + ', ' + ajaxOptions);
+            dataArray = JSON.parse(data);
+            nowplaying.innerHTML = 'Now Playing: ' + dataArray['nowplaying'];
+            title.innerHTML = dataArray['plaintitle'];
+            $('#player_outer_wrapper').css('background-image:url:(\'' + dataArray['poster'] + '\');');
         }
     });
 }

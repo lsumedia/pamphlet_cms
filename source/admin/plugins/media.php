@@ -6,6 +6,13 @@
  * and open the template in the editor.
  */
 
+class kcFinder extends uiElement{
+    public $name = 'KCFinder';
+    static function clientSide(){
+        
+    }
+}
+
 class media extends optionsPage{
     public $name = "plugin_media";
     //public $title = "Media";

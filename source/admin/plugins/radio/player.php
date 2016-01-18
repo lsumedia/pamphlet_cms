@@ -17,13 +17,13 @@ function js($url){
 
 class radioPlayer{
     
-    public static function build($url,$poster,$nowplaying, $title){
+    public static function build($url,$poster,$nowplaying, $title, $ajaxInfo){
         ob_start();
         $dir_location = "plugins/radio";     //Change this if using outside of Pamphlet
         js('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
         echo <<<END
   
-<div width="100%" height="100%" class="radplayer" style="background-image:url('$poster');">
+<div width="100%" height="100%" class="radplayer" id='player_outer_wrapper' style="background-image:url('$poster');">
 <audio id="radio1" src="$url" type="audio/mp3" autoplay controls style="display:none;"></audio>
 <p class="label" id="nowplaying"></p>
 <div id="radiocontrol1" class="radcontrol">
@@ -36,7 +36,7 @@ class radioPlayer{
 <p class="label" id="title">$title</p>
 </div>
 </div>
-<script>var nowplayinginfo = $nowplaying; var title = "$title";</script>
+<script>var json_url='$ajaxInfo'; var title = "$title";</script>
 END;
        
         css($dir_location."/radio.css");
@@ -61,52 +61,38 @@ END;
      * Channel: Artist - Song
      * If $cname is left blank, only the song info will be returned
      */
-    public static function getNowPlaying($info,$cname){
+    public static function getNowPlaying($info){
         
         $source = json_decode($info);
         $infoarray = $source->nowplaying;
         $type = $infoarray->type;
         $url = $infoarray->url;
         
+        $info = [];
         
         switch($type){
             case 'icecast':
                 $string = file_get_contents($url);
 
-                $array = json_decode($string);
-                $stats = $array->icestats;
-                $info = $stats->source;
-        
-                $nowplaying = $info->title;
-        
+                $info['raw'] = json_decode($string);
+                $stats = $info['raw']->icestats;
+                $sourceinfo = $stats->source;
+                
+                $info['title'] = $sourceinfo->title;
+                $info['description'] = $sourceinfo->server_description;
+                $info['bitrate'] = $sourceinfo->audio_info;
+                $info['genre'] = $sourceinfo->genre;
 
                 break;
             case 'shoutcast':
-                /*
-                $response = file_get_contents($url);
-                $nowplaying = $response;
+                $raw = self::shoutCastData($url);
+                $info['raw'] = $raw;
+                $info['title'] = end($info['raw']);
                 break;
-                $start = stripos($response, "<body");
-                $end = stripos($response, "</body");
+        }
+        
+        return $info;
 
-                $body = substr($response,$start,$end-$start);
-                if($body){
-                    $array = explode(',',$body);
-                    $nowplaying = array_pop($array);
-                }else{
-                    "Error - response failed or took too long";
-                }*/
-                $nowplaying = self::shoutCastData($url);
-                break;
-        }
-        
-        if(strlen($cname) > 0){
-            return $cname . ': ' . $nowplaying;
-        }else{
-            return $nowplaying;
-        }
-        
-        
     }   
     
     static function shoutCastData($url){
@@ -137,11 +123,10 @@ END;
         curl_close($ch);
         if($body != "false"){
             $array = explode(',',$body);
-            $last = array_pop($array);
         }else{
             "Error - response failed or took too long";
         }
-        return $last;
+        return $array;
     }
 }
 
