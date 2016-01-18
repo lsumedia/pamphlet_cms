@@ -22,8 +22,7 @@ class radioPlayer{
         $dir_location = "plugins/radio";     //Change this if using outside of Pamphlet
         js('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
         echo <<<END
-  
-<div width="100%" height="100%" class="radplayer" id='player_outer_wrapper' style="background-image:url('$poster');">
+<div width="100%" height="100%" class="radplayer" id='player_outer_wrapper' style="background-image:url('$poster');" >
 <audio id="radio1" src="$url" type="audio/mp3" autoplay controls style="display:none;"></audio>
 <p class="label" id="nowplaying"></p>
 <div id="radiocontrol1" class="radcontrol">

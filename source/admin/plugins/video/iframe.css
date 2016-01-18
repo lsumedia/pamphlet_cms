@@ -31,6 +31,6 @@ body{
 }
 
 .cover{
-    height:auto;
+    background-size:cover;
 }
 

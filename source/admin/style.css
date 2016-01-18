@@ -6,7 +6,8 @@
   src: url("fonts/Roboto-Regular.ttf"); }
 /* Section 1a: Body & Tags */
 html {
-  min-width: 200px; }
+  min-width: 200px;
+  overflow-y: scroll; }
 
 body {
   margin: 0;
@@ -275,22 +276,20 @@ body {
   overflow: hidden;
   min-height: 50px; }
 
-@media (max-width:1146px){
-    #central{
-        margin-left:200px;
-        margin-top:0px;
-        margin-right:0px;
-        margin-bottom:0px;
-    }
-    .centralelement{
-        width:auto;
-        min-width:600px !important;
-        width:calc(100vw - 247px);
-        margin-right:0px;
-        margin-bottom:0px;
-    }
-}
+/* Medium width media query */
+@media (max-width: 1146px) {
+  #central {
+    margin-left: 200px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px; }
 
+  .centralelement {
+    width: auto;
+    min-width: 600px !important;
+    width: calc(100vw - 247px);
+    margin-right: 0px;
+    margin-bottom: 0px; } }
 @media (max-width: 800px) {
   #leftbar {
     position: static;

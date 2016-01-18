@@ -780,6 +780,9 @@ END;
     }
 }
 
+/** New array-based form system
+ * Recommended system for new forms
+ */
 class customForm extends uiElement{
     
     private $optionsArray = [];
@@ -882,8 +885,10 @@ END;
             $fullId = $this->id . '_' . $optionId;
             if($option['type'] == 'button'){
                 
+            }else if($option['type'] == 'index'){
+                
             }else if($option['type'] == 'readonly'){
-               
+                 $this->printOption($fullId,$option);
             }else{
                  $this->optionsIDs[] = $fullId;
                  $this->printOption($fullId, $option);
@@ -1035,8 +1040,8 @@ END;
         echo "</div>";
     }
     
-    public static function lockedinput($id,$value,$label){
-        echo "<div class=\"fieldRow\"><p>$label</p><input onClick=\"this.select();\" readonly value=\"$value\"></div>";
+    public static function readonly($id,$value,$label){
+        echo "<div class=\"fieldRow\" ><p>$label</p><input id=\"$id\" onClick=\"this.select();\" readonly value=\"$value\" ></div>";
 
     }
     

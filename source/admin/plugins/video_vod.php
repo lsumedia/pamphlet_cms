@@ -28,6 +28,7 @@ class videos extends optionsPage{
             'date' => ['type' => 'date', 'label' => 'Posted date'],
             'author' => ['type' => 'select', 'label' => 'Author', 'options' => kpFullnames(), 'value' => get_username()],
             'poster' => ['type' => 'url', 'label' => 'Poster'],
+            
           
             'description' => ['type' => 'richtext', 'label' => 'Description']
         ];
@@ -581,7 +582,7 @@ class video_tags extends optionsPage{
             'tag_id' => [ 'type' => 'text', 'label' => 'Tag name'],
             'title' => ['type' => 'text', 'label' => 'Tag title'],
             'parent' => ['type' => 'select', 'label' => 'Parent tag', 'options' => self::kvpTags()],
-            'type' => ['type' => 'select', 'label' => 'Type'],
+            'type' => ['type' => 'select', 'label' => 'Type', 'options' => self::kvpTagTypes(), 'value' => 'other'],
             'bannerurl' => ['type' => 'url', 'label' => 'Header image (12:5)'],
             'coverurl' => ['type' => 'url', 'label' => 'Background image (1:1)'],
             'primarycolor' => ['type' => 'color', 'label' => 'Primary colour'],
@@ -632,6 +633,15 @@ class video_tags extends optionsPage{
             '' => '--',
             'lsutv' => 'lsutv',
             'lcr' => 'Loughborough Campus Radio'
+        ];
+    }
+    
+    public static function kvpTagTypes(){
+        return [
+            'channel' => 'Channel',
+            'program' => 'Programme',
+            'event' => 'Event',
+            'other' => 'Other'
         ];
     }
 }

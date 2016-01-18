@@ -12,8 +12,9 @@ html{
     min-height:100px;
 }
 
+
 .radplayer{
-        background-image:url('$cover');
+        background-color:black;
         background-size:cover;
         background-repeat:none; 
         position:relative;

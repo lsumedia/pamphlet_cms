@@ -47,6 +47,10 @@ class videoPreview extends uiElement{
     function clientSide(){
         echo '//work in progress';
     }
+    
+    function build($url){
+        
+    }
 }
 
 /**
@@ -460,7 +464,7 @@ class cover extends optionsPage{
             $stmt->close();
             
             $id = "cover_" . $cover_id;
-            $source = "<img class=\"vidplayer cover\" src=\"$url\" alt=\"$title\">";
+            $source = "<div class=\"vidplayer cover\" style=\"background-image:url('$url'); height:100vh; width:100vw;\" ></div>";
             
             //$array = array("id" => $id, "title" => $title, "description" => $description, "url" => $url, "source" => $source);
             $array = new video($cover_id, "", "", $source, $url, $title, $description, "", "");

@@ -110,7 +110,8 @@ function updateNowPlaying(){
             dataArray = JSON.parse(data);
             nowplaying.innerHTML = 'Now Playing: ' + dataArray['nowplaying'];
             title.innerHTML = dataArray['plaintitle'];
-            $('#player_outer_wrapper').css('background-image:url:(\'' + dataArray['poster'] + '\');');
+            document.title = dataArray['plaintitle'] + ': ' + dataArray['nowplaying'];
+            document.getElementById('player_outer_wrapper').style.backgroundImage = 'url(\'' + dataArray['poster'] + '\')';
         }
     });
 }
