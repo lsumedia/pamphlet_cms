@@ -341,12 +341,16 @@ class videos extends optionsPage{
             $videoid = filter_input(INPUT_GET,"iframe");
             $video = self::getVideo($videoid,true);
             iframeOutput($video->title, $video->source);
+        }else if(isset($_GET['tag'])){
+            $tags = $_GET['tag'];
+            echo json_encode(self::searchByTag($live, $tags));
         }else{
             echo "VOD iFrame generator<br />", PHP_EOL;
             echo "Valid requests:<br />";
             echo "&list : Returns list of videos in JSON format<br />";
             echo "&id=[id] : Returns a particular video's source code<br />";
             echo "&iframe=[id] : Return a video's source code for use in iframe<br />";
+            echo "&tag=[tag] : Returns a list of all videos with a specified tag<br />";
         }
     }
 
@@ -406,6 +410,30 @@ class videos extends optionsPage{
         global $connection;
         if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE live=? ORDER BY date desc")){
             $stmt->bind_param('i',$live);
+            $stmt->execute();
+            $ids = array();
+            $videos = array();
+            $stmt->bind_result($id,$vtitle,$url,$type,$tags,$date);
+            while($stmt->fetch()){
+                $ids[] = $id;
+            }
+            foreach($ids as $id){
+                //Writes other videos to array
+                $video = self::getVideo($id,true);
+                $video->video_id = $id;
+                $videos[] = $video;
+            }
+            return $videos;
+        }else{
+            return false;
+        }
+    }
+    
+    public static function searchByTag($live,$searchtags){
+        global $connection;
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE tags LIKE ? ORDER BY date desc")){
+            $searchtags = '%' . $searchtags . '%';
+            $stmt->bind_param('s',$searchtags);
             $stmt->execute();
             $ids = array();
             $videos = array();
