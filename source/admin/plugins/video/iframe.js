@@ -11,10 +11,10 @@ if(channelURL){
 		if(request.readyState == 4 && request.status == 200){
                     var string = request.responseText;
                     var array = JSON.parse(string);
-                    console.log('Old:' + nowPlayingId + ' New:' + array['id']);
+                    //console.log('Old:' + nowPlayingId + ' New:' + array['id']);
                     //update page
                     if(nowPlayingId != array['id']){
-                        console.log('Content has changed, reloading frame');
+                        //console.log('Content has changed, reloading frame');
                         document.location.reload(true);   
                     }
                     nowPlayingId = array['id'];
