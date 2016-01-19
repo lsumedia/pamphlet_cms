@@ -303,20 +303,20 @@ class videos extends optionsPage{
                 return;
             }else{
                 $nbstmt = $connection->prepare("INSERT INTO plugin_vod (title,tags,date,description,type,source,poster,live) VALUES (?,?,?,?,?,?,?,?);");
-                $nbstmt->bind_param("sssssssi",$title,$tags,$date,$description,$type,$source,$poster,$live);
+                $nbstmt->bind_param("sssssssi",$title,$tags,$date,$description,$type,$code,$poster,$live);
                 
                 if($nbstmt->execute()){
   
                     $nbstmt->close();
-                    $last = $connection->insert_id;
-                    $sstmt = $connection->prepare("INSERT INTO plugin_vod_sources SET video_id=?, src=?, type=?, res=?;");
-                    $sstmt->bind_param("isss",$last,$source_src,$source_type,$source_res);
-                    if($sstmt->execute()){
-                        echo "reload";
-                        return;
+                    if(strlen($source_src) > 0){
+                        $last = $connection->insert_id;
+                        $sstmt = $connection->prepare("INSERT INTO plugin_vod_sources SET video_id=?, src=?, type=?, res=?;");
+                        $sstmt->bind_param("isss",$last,$source_src,$source_type,$source_res);
+                        $sstmt->execute();
                     }
-                    echo "Error adding source: $sstmt->error. Other metadata remains in the database.";
-                    echo $connection->insert_id;
+                   
+                    echo "reload";
+                    return;
                 }else{
                     echo "Error adding video: $nbstmt->error";
                 }
@@ -431,9 +431,9 @@ class videos extends optionsPage{
     
     public static function searchByTag($live,$searchtags){
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE tags LIKE ? ORDER BY date desc")){
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE tags LIKE ? AND live=? ORDER BY date desc")){
             $searchtags = '%' . $searchtags . '%';
-            $stmt->bind_param('s',$searchtags);
+            $stmt->bind_param('si',$searchtags,$live);
             $stmt->execute();
             $ids = array();
             $videos = array();

@@ -178,7 +178,7 @@ class custom extends mediaPlayer{
     public $ondemand = true;
     
     public static function build($video,$setup){
-        $video->source = $video->code;
+        //$video->source = $video->code;
         return $video;
     }
     
