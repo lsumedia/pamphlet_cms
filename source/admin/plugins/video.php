@@ -22,6 +22,7 @@ function iframeOutput($title,$code){
     html::lockZoom();
     html::endHead();
     echo $code;
+    html::js('plugins/video/iframe.js');
     html::end();
 }
 
@@ -159,6 +160,9 @@ class manager extends optionsPage{
         else if(isset($_GET['iframe'])){
             $iframeid = filter_input(INPUT_GET,"iframe");
             $video = self::kpChannel($iframeid);
+            $channelURL = actualLink() . '/public.php?action=plugin_videomanager&id=' . $iframeid;
+            //Inject list
+            $video->source .= "<script type=\"text/javascript\"> var nowPlayingId = '$video->id'; var channelURL = '$channelURL'; </script>";
             iframeOutput($video->title, $video->source);
         }else{
   
@@ -344,6 +348,7 @@ class manager extends optionsPage{
         return $channels;
         
     }
+    
     
 }
 
