@@ -266,17 +266,17 @@ class manager extends optionsPage{
     public static function kpChannel($playerid){
         global $connection;
         
-         if($stmt = $connection->prepare("SELECT id,type,live,vod,cover FROM plugin_videomanager WHERE id=?")){
+         if($stmt = $connection->prepare("SELECT id,type,live,vod,cover,thumbnail FROM plugin_videomanager WHERE id=?")){
             $stmt->bind_param("s", $playerid);
             $stmt->execute();
-            $stmt->bind_result($id,$type,$live,$vod,$cover);
+            $stmt->bind_result($id,$type,$live,$vod,$cover,$thumbnail);
             $stmt->fetch();
             $stmt->close();
             
             switch($type){
                 case "live":
                     $player_content = videos::getVideo($live,true);
-                    $player_content->poster = null;
+                    $player_content->poster = $thumbnail;
                     /* scheduling section goes HERE */
                     break;
                 case "vod":
