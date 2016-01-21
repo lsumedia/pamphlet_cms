@@ -276,7 +276,8 @@ class manager extends optionsPage{
             switch($type){
                 case "live":
                     $player_content = videos::getVideo($live,true);
-                    $player_content->poster = $thumbnail;
+                    //Replace poster if thumbnail is specified
+                    if(strlen($thumbnail) > 0){ $player_content->poster = $thumbnail; }
                     /* scheduling section goes HERE */
                     break;
                 case "vod":
