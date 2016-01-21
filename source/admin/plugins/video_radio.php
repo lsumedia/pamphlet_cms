@@ -77,8 +77,8 @@ class visual_radio extends mediaPlayer{
         html::css('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.css');
         html::js('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.js');
        
-        
-        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } }}' $video->code>", PHP_EOL;
+        if($content->live){ $autoplay = 'autoplay'; }else{ $autoplay = ''; }
+        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls $autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } }}' $video->code>", PHP_EOL;
         foreach($content->sources as $source){
             $src = $source->src;
             $type = $source->type;
