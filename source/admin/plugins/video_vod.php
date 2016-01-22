@@ -78,7 +78,7 @@ class videos extends optionsPage{
             $editForm->labeledInput("tags", "text", $details->tags, "Tags (space seperated)");
             $editForm->labeledInput("date", "date", $details->date, "Date posted");
             if($live){
-                $editForm->kpSelector("poster", cover::kpCoverURLs(), $details->poster, "Poster URL");
+                $editForm->kpSelector("poster", cover::kpCovers(), $details->poster, "Poster URL");
             }else{
                 $editForm->labeledInput("poster", "text", $details->poster, "Poster URL");
             }
@@ -532,7 +532,12 @@ class videos extends optionsPage{
 
             //$source1 = new source($url,'video/mp4','720');
             //$sources[] = $source1;
-
+            
+            if(is_numeric($poster)){
+                //$poster = cover::getImage($poster);
+                $poster = cover::getImageUrl($poster);
+            }
+            
             $video = new video($id, $type, $sources, $source, $poster, $title, $desc, $date, $tags);
 
             $video->video_id = $id;
@@ -555,26 +560,7 @@ class videos extends optionsPage{
             }
             return $video;
            
-            /*
-            switch($type){
-                case "iframe":
-                    $video['source'] = self::iframeCode($url);
-                    break;
-                case "html5":
-                    $video['source'] = self::htmlCode($url,$poster);
-                    break;
-                case "youtube":
-                    $video['source'] = self::ytCode($url);
-                    if(!$poster){ 
-                        $video['poster'] = "http://img.youtube.com/vi/$url/maxresdefault.jpg";
-                    }
-                    break;
-                default:
-                    $video['source'] = $source;
-                    break;
-            }
-            */
-            //return $video;
+            
         }else{
             echo "Error - VOD database request failed!";
         }

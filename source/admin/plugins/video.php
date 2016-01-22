@@ -458,7 +458,19 @@ class cover extends optionsPage{
         }
     }
 
-    
+    public static function getImageUrl($cover_id){
+         global $connection;
+        
+        if($stmt = $connection->prepare("SELECT url FROM plugin_cover WHERE id=?")){
+            $stmt->bind_param("i",$cover_id);
+            $stmt->execute();
+            $stmt->bind_result($url);
+            $stmt->fetch();
+            $stmt->close();
+            
+            return $url;
+        }
+    }
     public static function getImage($cover_id){
         global $connection;
         

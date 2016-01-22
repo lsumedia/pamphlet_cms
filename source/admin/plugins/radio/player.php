@@ -75,7 +75,11 @@ END;
 
                 $info['raw'] = json_decode($string);
                 $stats = $info['raw']->icestats;
-                $sourceinfo = $stats->source;
+                if(is_array($stats->source)){
+                    $sourceinfo = $stats->source[0];
+                }else{
+                    $sourceinfo = $stats->source;
+                }
                 
                 $info['title'] = $sourceinfo->title;
                 $info['description'] = $sourceinfo->server_description;
