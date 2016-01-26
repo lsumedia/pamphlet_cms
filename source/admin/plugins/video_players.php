@@ -111,17 +111,34 @@ class videojs_5 extends mediaPlayer{
     
     public static function build($video,$setup){
         $poster = $video->poster;
+        $data = json_decode($video->source,1);
+        $css = false;   //Whether a primary CSS file has been included yet
         
         ob_start();
         
-        
-        html::css("plugins/video/videojs/core/video-js-custom.css");
+        if($data['css']){
+            $css = true;
+            html::css($data['css']);
+        }
         //html::js("plugins/video/videojs/core/video.min.js");
+        if($data['version']){
+            $version = $data['version'];
+            if(!$css){ html::css("//vjs.zencdn.net/$version/video-js.css"); $css = true;}
+            html::js("//vjs.zencdn.net/$version/video.js");	//CDN version
+        }else{
+            //html::css("plugins/video/videojs/core/video-js-custom.css");
+            if(!$css){ html::css("//vjs.zencdn.net/5.3.0/video-js.min.css"); $css = true;}
+            html::js("//vjs.zencdn.net/5.3.0/video.min.js");	//CDN version
+        }
         
-        html::js("//vjs.zencdn.net/5.3.0/video.js");	//CDN version
+        if($data['hls'] == 1){
+            html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
+            html::js('plugins/video/videojs/hls/videojs.hls.min.js');
+        }
         
-        //html::js('plugins/video/videojs/media-sources/videojs-media-sources.min.js');
-        //html::js('plugins/video/videojs/hls/videojs.hls.min.js');
+        foreach($data['plugins'] as $plugin){
+            echo $plugin, PHP_EOL;
+        }
         
         html::css('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.css');
         html::js('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.js');
@@ -131,7 +148,13 @@ class videojs_5 extends mediaPlayer{
         html::js('plugins/video/videojs/chromecast/videojs.chromecast.min.js');
         */
         
-        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } }}' $video->code>", PHP_EOL;
+        if($video->live == 1 || $data['autoplay'] == 1){
+            $autoplay = 'autoplay';
+        }else{
+            $autoplay = '';
+        }
+        
+        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls $autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } }}' $video->code>", PHP_EOL;
         foreach($video->sources as $source){
             $src = $source->src;
             $type = $source->type;

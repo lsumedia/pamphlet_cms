@@ -8,7 +8,7 @@
 
 class kcFinder extends uiElement{
     public $name = 'KCFinder';
-    static function clientSide(){
+    public function clientSide(){
         
     }
 }

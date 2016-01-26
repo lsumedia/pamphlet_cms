@@ -533,7 +533,7 @@ class videos extends optionsPage{
             //$source1 = new source($url,'video/mp4','720');
             //$sources[] = $source1;
             
-            if(is_numeric($poster)){
+            if(is_numeric($poster) && $build){
                 //$poster = cover::getImage($poster);
                 $poster = cover::getImageUrl($poster);
             }
