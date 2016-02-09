@@ -12,6 +12,11 @@ html{
     min-height:100px;
 }
 
+.material-icons{
+    color:white;
+    line-height:inherit;
+}
+
 
 .radplayer{
         background-color:black;
@@ -40,6 +45,7 @@ html{
         margin:0;
         white-space:nowrap;
         overflow:hidden;
+        color:white;
     }
     .radcontrol img, .label, input{
         height:100%;
@@ -50,6 +56,19 @@ html{
         background:none;
         display:inline;
     }
+    #radcontrol_left, #radcontrol_right{
+        display:inline-block;
+        margin:0;
+        padding:0;
+        height:100%;
+        overflow:hidden;
+    }
+    #radcontrol_left{
+        float:left;
+    }
+    #radcontrol_right{
+        float:right;
+    }
     #nowplaying{
         margin-left:10px;
         position:absolute;
@@ -59,7 +78,6 @@ html{
         overflow:hidden;
     }
     #title{
-        float:right;
         margin-right:5px;
         white-space:nowrap;
     }
@@ -67,23 +85,23 @@ html{
         margin-bottom:-0.4em;
     }
     .radcontrol input{
-        height:2.2em;
-    }
-    .radcontrol .ident{
-        float:right;
+        height:100%
     }
     .radcontrol p{
-        font-size:1.65em;
     }
     .control{
         cursor:pointer;
+        font-size:2em;
+    }
+    .label{
+        font-size:1.8em;
     }
     
+
     
 /* Volume control styling */
 input[type=range] {
   -webkit-appearance: none;
-  height:2em;
   margin:0;
 }
 input[type=range]:focus {
@@ -159,6 +177,8 @@ input[type=range]:focus::-ms-fill-upper {
   background: #FFF;
 }
     
+
+
 @media (max-width: 400px){
 
 }

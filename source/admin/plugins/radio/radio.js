@@ -19,11 +19,11 @@ var dataArray;
 function updatePlayerStatus(){   
     var status = document.getElementById('status');
     if(player.paused){
-        button.src = "plugins/radio/images/play.svg"; 
-        status.innerHTML = "";
+        button.innerHTML = "play_arrow"; 
+        status.innerHTML = '';
     }
     else{
-        button.src = "plugins/radio/images/pause.svg";
+        button.innerHTML = 'pause';
         if(player.duration == "Infinity" || player.duration == "0"){
             status.innerHTML = "LIVE";
         }else{
@@ -31,12 +31,12 @@ function updatePlayerStatus(){
         }
     }
     if(player.muted || volume.value == 0){
-        mutebtn.src = "plugins/radio/images/mute.svg";
+        mutebtn.innerHTML = 'volume_mute';
     }else{
         if(volume.value > 50){
-            mutebtn.src = "plugins/radio/images/volume_up.svg";
+            mutebtn.innerHTML = 'volume_up';
         }else{
-            mutebtn.src = "plugins/radio/images/volume_down.svg";
+            mutebtn.innerHTML = 'volume_down';
         }
     }
    

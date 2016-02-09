@@ -21,18 +21,23 @@ class radioPlayer{
         ob_start();
         $dir_location = "plugins/radio";     //Change this if using outside of Pamphlet
         js('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
+        html::css('https://fonts.googleapis.com/icon?family=Material+Icons');
         echo <<<END
 <div width="100%" height="100%" class="radplayer" id='player_outer_wrapper' style="background-image:url('$poster');" >
 <audio id="radio1" src="$url" type="audio/mp3" autoplay controls style="display:none;"></audio>
 <p class="label" id="nowplaying"></p>
 <div id="radiocontrol1" class="radcontrol">
 <div class="radcontrol_inner">
-<img src="$dir_location/images/play.svg" id="stopstartbtn" onclick="stopstart();" class="control">
-<img src="$dir_location/images/volume_up.svg" id="mutebtn" onclick="mutetog();" class="control">
-<input type="range" id="volume" value="100">
-<p class="label" id="status"></p>
-<img src="$dir_location/images/LCR_white.svg" class="ident">
-<p class="label" id="title">$title</p>
+    <div id="radcontrol_left">
+        <i id="stopstartbtn" onclick="stopstart();" class="material-icons control">play_arrow</i>
+        <i id="mutebtn" onclick="mutetog();" class="material-icons control">volume_up</i>
+        <input type="range" id="volume" value="100">
+        <span class="label" id="status"></span>
+    </div>
+    <div id="radcontrol_right">
+        <span class="label" id="title">$title</span>
+        <img src="$dir_location/images/LCR_white.svg" class="ident">
+    </div>
 </div>
 </div>
 <script>var json_url='$ajaxInfo'; var title = "$title";</script>

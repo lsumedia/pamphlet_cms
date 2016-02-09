@@ -942,6 +942,23 @@ END;
     }
     
     /**
+     * Convert an array without form names to 
+     * 
+     * @param type $optionsArray
+     * @param type $result
+     * @return type
+     */
+    public static function getEditForm($optionsArray,$result){
+        //Pop form ID off each element of the POST request
+ 
+        //Set value for each element in optionsarray
+        foreach($optionsArray as $key=>$option){
+            $optionsArray[$key]['value'] = $option;
+        }
+        
+        return $optionsArray;
+    }
+    /**
      * Convert array of key-pair values (eg. the $_POST array)
      * into a usable optionsArray ensuring compatibility with the
      * corresponding SQL tables

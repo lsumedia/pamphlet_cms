@@ -72,6 +72,7 @@ class visual_radio extends mediaPlayer{
         //html::js("plugins/video/videojs/core/video.min.js");
         
         html::js("//vjs.zencdn.net/5.3.0/video.js");	//CDN version
+        html::jquery();
        
         
         html::css('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.css');
@@ -86,19 +87,20 @@ class visual_radio extends mediaPlayer{
             $label = $res . 'p';
             echo "<source label=\"$label\" res=\"$res\" src=\"$src\" type=\"$type\" >", PHP_EOL;
         }
-        echo "Your browser does not support the video tag";
+        echo "Your browser does not support the video tag", PHP_EOL;
                 
-        echo "</video>";
+        echo "</video>", PHP_EOL;
         
         //echo '<script>videojs(\'#video\').videoJsResolutionSwitcher</script>';
-        
-        $content->source =  ob_get_contents();
-        ob_end_clean();
 
         $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
 
-        
+        echo  "<script> var json_url = '$json'; </script>", PHP_EOL;
+        html::js('plugins/radio/vjs-update.js');
 
+        $content->source =  ob_get_contents();
+        ob_end_clean();
+        
         return $content;
     }
 }
