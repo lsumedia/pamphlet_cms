@@ -967,6 +967,15 @@ END;
         return $optionsArray;
     }
     
+    public static function simpleArray($optionsArray, $result){
+        $results = self::decodeResult($optionsArray,$result);
+        $newresult = array();
+        foreach($results as $key => $array){
+            $newresult[$key] = $array['value'];
+        }
+        return $newresult;
+    }
+    
     public static function fetchOneResult($optionsArray,$tablename, $id){
         //Fetch one result from the database and put values in an optionsArray
     }
