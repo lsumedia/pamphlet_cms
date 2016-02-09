@@ -41,18 +41,18 @@ class channel{
         $this->content_id = $content_id;
     }
 }
-
+/*
 class videoPreview extends uiElement{
     public $name = 'video_preview';
     
-    function clientSide(){
+    static function clientSide(){
         echo '//work in progress';
     }
     
     function build($url){
         
     }
-}
+}*/
 
 /**
  * Channel manager class
@@ -377,12 +377,12 @@ class cover extends optionsPage{
             $stmt->close();
             
             backButton($this->name);
-            $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $cover_id, "POST");
+            $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $cover_id, "POST", $this->name);
             $editForm->formTitle("Edit holding screen");
             $editForm->labeledInput("title", "text", $title, "Title");
             $editForm->inputWithButton("url", $url, "Image URL", "browseServer()", "Upload");
             $editForm->largeText("description", $description, "Description");
-            $editForm->otherActionButton("deleteVideo", "Delete stream", "&delete=$stream", 'plugin_videomanager');
+            $editForm->otherActionButton("deleteVideo", "Delete", "&delete=$cover_id", $this->name);
             $editForm->submit("Save changes",'plugin_cover');
         }else{
         
