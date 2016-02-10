@@ -6,7 +6,7 @@
 
 
 
-function updatePoster(){
+function updateDetails(){
     $.ajax({
         url: json_url,
         type : 'GET',
@@ -18,6 +18,7 @@ function updatePoster(){
             console.log(poster);
             player.setAttribute('poster',poster);
             $('.vjs_poster').css({'background-image' : 'url(' + poster + ');'});
+            document.title = dataArray['title'];
             /*
             nowplaying.innerHTML = 'Now Playing: ' + dataArray['nowplaying'];
             title.innerHTML = dataArray['plaintitle'];
@@ -28,4 +29,4 @@ function updatePoster(){
     });
 }
 
-var poster_timer = window.setInterval(function(){ updatePoster(); }, 10000);
+var poster_timer = window.setInterval(function(){ updateDetails(); }, 10000);

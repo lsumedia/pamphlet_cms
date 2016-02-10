@@ -791,6 +791,7 @@ class customForm extends uiElement{
     private $optionsIDs = [];
     public $title;
     public $name = 'customForm';
+    private $onReloadAction;
     
     /**
      * Javascript for sending form request
@@ -847,6 +848,7 @@ function expand(id){
         thing.style.maxHeight = "0px";
     }
 }
+        
 END;
     }
     
@@ -856,13 +858,15 @@ END;
      * @param string $id - ID for the form. MUST NOT contain underscores
      * @param string $action - URL parameters
      * @param string $method - GET or POST
+     * @param string $onReloadAction - page to return to if reload request is received
      * 
      */
-    public function __construct($optionsArray,$id, $action, $method){
+    public function __construct($optionsArray,$id, $action, $method, $onReloadAction){
         $this->optionsArray = $optionsArray;
         $this->id = $id;
         $this->method = $method;
         $this->action = $action;
+        $this->onReloadAction = $onReloadAction;
     }
     
     public function setTitle($title){
@@ -906,7 +910,7 @@ END;
         $lastId = end($idArray);
         echo "<div class=\"fieldRow\">";
         echo "<p class=\"response\" id=\"$this->id-response\"></p>";
-        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response');\">$submitLabel</button>", \PHP_EOL;
+        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$this->onReloadAction');\">$submitLabel</button>", \PHP_EOL;
         echo "</div>";
         echo "</div>", PHP_EOL;
         echo "<!-- ajaxForm2 $this->id ends -->", PHP_EOL;
@@ -942,18 +946,18 @@ END;
     }
     
     /**
-     * Convert an array without form names to 
+     * Convert an array without form names to a usable form array
      * 
      * @param type $optionsArray
      * @param type $result
      * @return type
      */
-    public static function getEditForm($optionsArray,$result){
-        //Pop form ID off each element of the POST request
- 
+    public static function getEditForm($optionsArray,$plainarray){
         //Set value for each element in optionsarray
         foreach($optionsArray as $key=>$option){
-            $optionsArray[$key]['value'] = $option;
+            if(isset($plainarray[$key])){ 
+                $optionsArray[$key]['value'] = $plainarray[$key];
+            }
         }
         
         return $optionsArray;
@@ -992,6 +996,38 @@ END;
         }
         return $newresult;
     }
+
+    public static function insertSQL($optionsArray,$result, $tablename){
+        global $connection;
+        
+        $results = self::decodeResult($optionsArray,$result);
+        $query = "INSERT INTO $tablename SET ";
+        $first = true;
+        foreach($results as $key => $array){
+            if(!$first){ $query .= ','; }
+            $value = $connection->real_escape_string($array['value']);
+            $query .= "$key='$value'";
+            $first = false;
+        }
+        $query .= ';';
+        return $query;
+    }
+    
+    public static function updateSQL($optionsArray, $result, $tablename, $condition){
+        global $connection;
+        
+        $results = self::decodeResult($optionsArray,$result);
+        $query = "UPDATE $tablename SET ";
+        $first = true;
+        foreach($results as $key => $array){
+            if(!$first){ $query .= ', '; }
+            $value = $connection->real_escape_string($array['value']);
+            $query .= "$key='$value'";
+            $first = false;
+        }
+        $query .= " WHERE $condition;";
+        return $query;
+    }
     
     public static function fetchOneResult($optionsArray,$tablename, $id){
         //Fetch one result from the database and put values in an optionsArray
@@ -1006,6 +1042,33 @@ END;
     public static function input($id, $value, $type, $label){
         echo "<div class=\"fieldRow\"><p>$label</p><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
     }
+    
+    public static function richtext($id, $value, $label){
+       //textarea with CKEditor - one per page as this takes over the loadScript
+        //TODO - upgrade loadScript for multiple elements
+        echo "<div class=\"fieldRow\"><p>$label</p></div>", \PHP_EOL;
+        echo "<textarea class=\"richtext\" id=\"$id\" id=\"$id\" rows=\"5\">";
+        echo $value;
+        echo "</textarea>";
+        $editor = $id . "editor";
+        echo <<<END
+        <script id="loadScript">
+            var $editor = CKEDITOR.replace('$id');
+            $editor.on( 'change', function( evt ) {
+                $editor.updateElement();
+            });
+            $editor.on( 'loaded', function(evt){
+                    $('.cke').css('border','none');
+                    $('.cke').css('box-shadow','none');
+                    $('.cke_bottom').css('background-color','#2196F3');
+                });
+                //CKFinder Setup (TODO: replace with free alternative)
+            CKFinder.setupCKEditor($editor, '/cms/ckfinder/');
+        </script>
+END;
+    }
+    
+    
     
     public static function select($id, $value, $options, $label){
          //Select field with key-pair elements ("value"=>"label")

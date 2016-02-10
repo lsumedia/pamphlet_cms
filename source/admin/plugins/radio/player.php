@@ -21,7 +21,8 @@ class radioPlayer{
         ob_start();
         $dir_location = "plugins/radio";     //Change this if using outside of Pamphlet
         js('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
-        html::css('https://fonts.googleapis.com/icon?family=Material+Icons');
+        css('https://fonts.googleapis.com/icon?family=Material+Icons');
+        css($dir_location."/radio.css");
         echo <<<END
 <div width="100%" height="100%" class="radplayer" id='player_outer_wrapper' style="background-image:url('$poster');" >
 <audio id="radio1" src="$url" type="audio/mp3" autoplay controls style="display:none;"></audio>
@@ -42,8 +43,8 @@ class radioPlayer{
 </div>
 <script>var json_url='$ajaxInfo'; var title = "$title";</script>
 END;
-       
-        css($dir_location."/radio.css");
+        echo PHP_EOL;
+
         js($dir_location."/radio.js");
         
         $code =  ob_get_contents();

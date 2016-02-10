@@ -226,3 +226,7 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#Other
+source/admin/plugins/wordpress_relay.php
+source/admin/plugins/wtwitter/TwitterAPIExchange.php
