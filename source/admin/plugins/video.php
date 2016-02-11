@@ -78,10 +78,10 @@ class manager extends optionsPage{
             
             backButton($this->name);
             
-            if($mstmt = $connection->prepare("SELECT title,type,live,vod,cover,visible,thumbnail FROM plugin_videomanager WHERE id=?")){
+            if($mstmt = $connection->prepare("SELECT title,type,live,vod,cover,visible,thumbnail,schedule_id FROM plugin_videomanager WHERE id=?")){
                 $mstmt->bind_param("i",$channel);
                 $mstmt->execute();
-                $mstmt->bind_result($title,$type,$live,$vod,$cover,$visible,$thumbnail);
+                $mstmt->bind_result($title,$type,$live,$vod,$cover,$visible,$thumbnail,$schedule_id);
                 $mstmt->fetch();
                 $mstmt->close();
                 
@@ -94,6 +94,7 @@ class manager extends optionsPage{
                 $form->kpSelector("live", videos::kpVideos(1), $live, "Live stream");
                 $form->kpSelector("vod", videos::kpVideos(0), $vod, "On-demand video");
                 $form->kpSelector("cover", cover::kpCovers(), $cover, "Holding screen");
+                $form->kpSelector('schedule_id', schedule::kvpSchedules(), $schedule_id, 'Schedule');
                 ajaxForm::startOptionalSection("delsec", "Delete button (don't!)");
                 $form->otherActionButton("deletebutton", "Delete channel", "&delete=$channel");
                 ajaxForm::endOptionalSection();
@@ -114,6 +115,7 @@ class manager extends optionsPage{
             $form->kpSelector("live", videos::kpVideos(1), "", "Live stream");
             $form->kpSelector("vod", videos::kpVideos(0) , "", "On-demand video");
             $form->kpSelector("cover", cover::kpCovers(), "", "Holding screen");
+            $form->kpSelector('schedule_id', schedule::kvpSchedules(), '', 'Schedule');
             $form->submit("Add channel");
             
             $slist = new ajaxList(NULL,"streamlist");
@@ -199,6 +201,7 @@ class manager extends optionsPage{
         $cover = filter_input(INPUT_POST,"cover");
         $visible = filter_input(INPUT_POST,"visible");
         $thumbnail = filter_input(INPUT_POST,"thumbnail");
+        $schedule_id = filter_input(INPUT_POST,'schedule_id');
         
         
         if(isset($_GET['delete'])){
@@ -219,8 +222,8 @@ class manager extends optionsPage{
             block(2);
             $edit = filter_input(INPUT_GET,"edit");
             //Editing existing post
-            $bstmt = $connection->prepare("UPDATE $this->name SET title=?, type=?, live=?, vod=?, cover=?, visible=?, thumbnail=? WHERE id=?");
-            $bstmt->bind_param("sssssisi",$title,$type,$live,$vod,$cover,$visible,$thumbnail,$edit);
+            $bstmt = $connection->prepare("UPDATE $this->name SET title=?, type=?, live=?, vod=?, cover=?, visible=?, thumbnail=?, schedule_id=? WHERE id=?");
+            $bstmt->bind_param("sssssisii",$title,$type,$live,$vod,$cover,$visible,$thumbnail,$schedule_id,$edit);
             if($bstmt->execute()){
                 echo "Saved changes";
                 return;
@@ -236,8 +239,8 @@ class manager extends optionsPage{
                 echo "Please enter a title";
                 return;
             }else{
-                $nbstmt = $connection->prepare("INSERT INTO $this->name (title,type,live,vod,cover,visible,thumbnail) VALUES (?,?,?,?,?,?,?);");
-                $nbstmt->bind_param("sssssis",$title,$type,$live,$vod,$cover,$visible,$thumbnail);
+                $nbstmt = $connection->prepare("INSERT INTO $this->name (title,type,live,vod,cover,visible,thumbnail,schedule_id) VALUES (?,?,?,?,?,?,?,?);");
+                $nbstmt->bind_param("sssssisi",$title,$type,$live,$vod,$cover,$visible,$thumbnail,$schedule_id);
                 if($nbstmt->execute()){
                     echo "reload";
                     return;
@@ -266,10 +269,10 @@ class manager extends optionsPage{
     public static function kpChannel($playerid){
         global $connection;
         
-         if($stmt = $connection->prepare("SELECT id,type,live,vod,cover,thumbnail FROM plugin_videomanager WHERE id=?")){
+         if($stmt = $connection->prepare("SELECT id,type,live,vod,cover,thumbnail,schedule_id FROM plugin_videomanager WHERE id=?")){
             $stmt->bind_param("s", $playerid);
             $stmt->execute();
-            $stmt->bind_result($id,$type,$live,$vod,$cover,$thumbnail);
+            $stmt->bind_result($id,$type,$live,$vod,$cover,$thumbnail,$schedule_id);
             $stmt->fetch();
             $stmt->close();
             
@@ -279,6 +282,9 @@ class manager extends optionsPage{
                     //Replace poster if thumbnail is specified
                     if(strlen($thumbnail) > 0){ $player_content->poster = $thumbnail; }
                     /* scheduling section goes HERE */
+                    if($schedule_id > 0){
+                        $player_content = schedule::processVideo($player_content, $schedule_id);
+                    }
                     break;
                 case "vod":
                     $player_content = videos::getVideo($vod,true);
@@ -288,7 +294,7 @@ class manager extends optionsPage{
                     break;
             }
             
-            
+            $player_content->schedule_id = $schedule_id;
             $player_content->id = $type . '_' . $player_content->id;
             
             return $player_content;
@@ -331,9 +337,9 @@ class manager extends optionsPage{
     static function activeChannels(){
         global $connection;
         
-        $stmt = $connection->prepare("SELECT id,title,type,live,vod,cover,thumbnail FROM plugin_videomanager WHERE visible=1;");
+        $stmt = $connection->prepare("SELECT id,title,type,live,vod,cover,thumbnail,schedule_id FROM plugin_videomanager WHERE visible=1;");
         $stmt->execute();
-        $stmt->bind_result($id,$title,$type,$live,$vod,$cover,$thumbnail);
+        $stmt->bind_result($id,$title,$type,$live,$vod,$cover,$thumbnail,$schedule_id);
         $channels = array();
         while($stmt->fetch()){
             $channels[] = new channel($id, $title, "", $thumbnail, "");
@@ -345,6 +351,7 @@ class manager extends optionsPage{
             if($data->poster){
                 $channels[$key]->thumbnail = $data->poster;
             }
+            $channels[$key]->schedule_id = $data->$schedule_id;
         }
         return $channels;
         
