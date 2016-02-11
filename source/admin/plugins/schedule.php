@@ -20,13 +20,13 @@ class shows extends optionsPage{
             backButton($this->name);
             $id = $_GET['edit'];
             $array = self::getShowById($id);
-            $eform = new customForm(self::getShowById($id), 'editShowForm', $this->name . '&request=edit&id=' . $id, 'POST', $this->name . "&edit=$id");
+            $array['delete'] = ['type' => 'button', 'label' => 'Delete', 'action' => 'shows&request=delete&id=' . $id];
+            $eform = new customForm($array, 'editShowForm', $this->name . '&request=edit&id=' . $id, 'POST', $this->name);
             $eform->setTitle('Edit show');
             $eform->build('Save changes');
             
             $instanceFormArray = self::instanceFormArray();
             $instanceFormArray['show_id']['value'] = $id;
-            $instanceFormArray['delete'] = ['type' => 'button', 'label' => 'Nothing']; 
             $iform = new customForm($instanceFormArray, 'newInstanceForm', $this->name . '&request=newinstance', 'POST', $this->name . "&edit=$id");
             $iform->setTitle('New instance');
             $iform->build('New instance');
@@ -39,7 +39,8 @@ class shows extends optionsPage{
             $data = self::getInstanceById($id);
             $show_id = $data['show_id']['value'];
             backButton('shows&edit=' . $show_id);
-            $iform = new customForm($data, 'instanceEditFom', $this->name . '&request=editinstance&id=' . $id, 'POST', $this->name . '&edit=' . $show_id);
+            $data['delete'] = ['type' => 'button', 'label' => 'Delete', 'action' => 'shows&request=deleteinstance&id=' . $id]; 
+            $iform = new customForm($data, 'instanceEditFom', $this->name . '&request=editinstance&id=' . $id, 'POST', 'shows&edit=' . $show_id);
             $iform->setTitle('Edit instance');
             $iform->build('Save changes');
         }else{
@@ -76,18 +77,23 @@ class shows extends optionsPage{
                 if($connection->query($query)){
                     echo 'Saved changes';
                 }else{
-                    //echo $query;
                     echo 'Error saving changes';
                 }
                 break;
             case 'deleteinstance':
+                $id = intval($_GET['id']);
+                $query = "DELETE FROM schedule_instance WHERE instance_id=$id;";
+                if($connection->query($query)){
+                    echo 'reload';
+                }else{
+                    echo 'Error deleting instance';
+                }
                 break;
             case 'new':
                 $query = customForm::insertSQL(self::showFormArray(), $_POST, 'schedule_shows');
                 if($connection->query($query)){
                     echo 'reload';
                 }else{
-                    //echo $query;
                     echo 'Error adding show';
                 }
                 break;
@@ -102,6 +108,13 @@ class shows extends optionsPage{
                 }
                 break;
             case 'delete':
+                $id = intval($_GET['id']);
+                $query = "DELETE FROM schedule_shows WHERE id=$id;";
+                if($connection->query($query)){
+                    echo 'reload';
+                }else{
+                    echo 'Error deleting show';
+                }
                 break;
             default:
                 echo 'Error - request not specified';

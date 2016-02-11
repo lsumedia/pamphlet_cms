@@ -888,7 +888,7 @@ END;
             /* */
             $fullId = $this->id . '_' . $optionId;
             if($option['type'] == 'button'){
-                
+                self::button($optionId,$option['action'],$option['label'],$this->onReloadAction,$this->id);
             }else if($option['type'] == 'index'){
                 
             }else if($option['type'] == 'readonly'){
@@ -1033,11 +1033,9 @@ END;
         //Fetch one result from the database and put values in an optionsArray
     }
     
-    public static function button($id, $action, $label){
-        $newAction = $this->action . $action;
-
+    public static function button($id, $action, $label, $onReloadAction, $formID){
         echo "<div class=\"fieldRow\">";
-        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response','$this->onReloadAction');};\">$label</button>";
+        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$action','GET','$formID-response','$onReloadAction');};\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     
