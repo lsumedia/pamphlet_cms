@@ -1033,7 +1033,13 @@ END;
         //Fetch one result from the database and put values in an optionsArray
     }
     
-    public static function button($id, $action, $label){}
+    public static function button($id, $action, $label){
+        $newAction = $this->action . $action;
+
+        echo "<div class=\"fieldRow\">";
+        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response','$this->onReloadAction');};\">$label</button>";
+        echo "</div>", PHP_EOL;
+    }
     
     public static function text($id, $value, $label){
         echo "<div class=\"fieldRow\"><p>$label</p><input type=\"text\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
