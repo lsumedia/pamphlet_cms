@@ -137,7 +137,7 @@ class shows extends optionsPage{
     
     public static function instanceFormArray(){
         return [
-            'show_id' => ['type' => 'hidden', 'label' => 'Show ID'],
+            'show_id' => ['type' => 'hidden','options' => self::kvpGetShows(), 'label' => 'Show ID'],
             'schedule_id' => ['type' => 'select', 'options' => schedule::kvpSchedules(), 'label' => 'Schedule', 'value' => '0'],
             'first' => ['type' => 'date', 'label' => 'Start date', 'value' => date('Y-m-d')],
             'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency'],
@@ -232,7 +232,11 @@ class shows extends optionsPage{
         foreach($raw as $instance){
             $id = $instance['instance_id'];
             $onclick = "cm_loadPage('shows&editinstance=$id');";
-            $iclean = ['Show ID' => $instance['show_id'], 'Start date' => $instance['first'], 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'onclick' => $onclick];
+            $showname = self::kvpGetShows()[$instance['show_id']];
+            $frequency = self::intervals()[$instance['frequency']];
+            $timestamp = strtotime($instance['first']);
+            $date = date('D, jS M Y',$timestamp);
+            $iclean = ['Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
             $schedule = schedule::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
@@ -272,10 +276,17 @@ class schedule extends optionsPage{
     public function displayPage(){
         
     }
+    
     public function configPage() {
         ce::begin();
         if(isset($_GET['edit'])){
+            backButton($this->name);
+            $sid = $_GET['edit'];
+            $events = self::cleanGetInstancesBySchedule($sid);
             
+            $list = new ajaxList($events,'eventList');
+            $list->title('Shows occuring in this schedule');
+            $list->display();
         }else{
             $form = new customForm(self::formArray(), 'newScheduleForm', $this->name, 'POST', $this->name);
             $form->setTitle('New schedule');
@@ -303,10 +314,10 @@ class schedule extends optionsPage{
     public static function formArray(){
         return [
             'title' => ['type' => 'text', 'label' => 'Title', 'value' => ''],
+            'timezone' => ['type' => 'number', 'label' => 'Time zone', 'value' => 0],
             'replace_title' => ['type' => 'checkbox', 'label' => 'Replace title', 'value' => 0],
             'replace_nowplaying' => ['type' => 'checkbox', 'label' => 'Replace nowplaying', 'value' => 0],
-            'replace_description' => ['type' => 'checkbox', 'label' => 'Replace description', 'value' => 0],
-            'timezone' => ['type' => 'number', 'label' => 'Timezone offset', 'value' => 0]
+            'replace_description' => ['type' => 'checkbox', 'label' => 'Replace description', 'value' => 0]
         ];
     }
     
@@ -348,7 +359,36 @@ class schedule extends optionsPage{
     }
     
     public static function getInstancesBySchedule($schedule_id){
-        
+        global $connection;
+        $schedule_id = intval($schedule_id);
+        $array = array();
+        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id';")){
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $array[] = $row;
+            }
+            $result->close();
+            return $array;
+
+        }else{
+            return false;
+        }
+    }
+    
+    public static function cleanGetInstancesBySchedule($sid){
+        $raw = self::getInstancesBySchedule($sid);
+        $clean = [];
+        foreach($raw as $instance){
+            $id = $instance['instance_id'];
+            $onclick = "cm_loadPage('schedule&editinstance=$id');";
+            $showname = shows::kvpGetShows()[$instance['show_id']];
+            $frequency = shows::intervals()[$instance['frequency']];
+            $timestamp = strtotime($instance['first']);
+            $date = date('D, jS M Y',$timestamp);
+            $iclean = ['Show name' => $showname, 'Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
+            $schedule = self::kvpSchedules()[$instance['schedule_id']];
+            $clean[] = $iclean;
+        }
+        return $clean;
     }
 }
 
