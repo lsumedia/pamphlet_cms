@@ -458,7 +458,7 @@ class schedule extends optionsPage{
                     }
                     break;
                 case 7:
-                    if($day == date('N', $sts)){
+                    if($day == date('N', $sts) && time() >= $sts){
                         if($sstart <= $nowminutes && $nowminutes < $send){
                             $matching[] = $event;
                         }
@@ -466,7 +466,13 @@ class schedule extends optionsPage{
                     break;
                 case 14:
                     //If number of days since the first date % 14 = 0
-                    
+                    $nowdays = floor(time() / 86400);
+                    $showdays = floor($sts / 86400);
+                    if((($nowdays-$showdays) % 14 == 0)|| $nowdays == $showdays){
+                        if($sstart <= $nowminutes && $nowminutes < $send){
+                            $matching[] = $event;
+                        }
+                    }
                 default:
                     return;
             }
