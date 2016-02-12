@@ -15,7 +15,7 @@ class shows extends optionsPage{
     }
     public function configPage() {
         global $connection;
-        ce::begin();
+        ce::begin("style=\"max-width:800px;\"");
         if(isset($_GET['edit'])){
             backButton($this->name);
             $id = $_GET['edit'];
@@ -376,12 +376,45 @@ class schedule extends optionsPage{
 
     
     public static function processVideo($video,$schedule_id){
+        $events = self::getCurrentEvents($schedule_id);
+        $showID = $events[0]['show_id'];
+        $cshow = shows::getShowById($showID);
+        $video->description = $shows[0]['show_id'];
         return $video;
     }
     
-    public static function getCurrentShow($schedule_id){
+    /**
+     * Convert a string representing a time to a value representing
+     * minutes since midnight
+     * @param type $string
+     * @return type
+     */
+    public static function timeToMinutes($time){
+        $timestamp = strtotime($time);
+        return (intval(date('G',$timestamp)) * 60) + intval(date('i',$timestamp));      
+    }
+    
+    public static function getCurrentEvents($schedule_id){
+        $events = self::getInstancesBySchedule($schedule_id);
+        $matching = array();
+
+        //Day - the current day of the week
+        $day = intval(date('N'));
+        //Minutes since midnight
+        $nowminutes = (intval(date('G')) * 60) + intval(date('i'));      
         
-        return false;
+        foreach($events as $event){
+            //Timestamp of first occurence of show
+            $sts = strtotime($event['first']);
+            $sstart = self::timeToMinutes($event['start_time']);
+            $send = self::timeToMinutes($event['end_time']);
+            //If nowtime is between the show start and end time
+            if($sstart <= $nowminutes && $nowminutes < $send){
+                $matching[] = $event;
+            }
+            //$matching[] = array($sstart,$send,$nowminutes);
+        }
+        return $matching;
     }
     
     public static function formArray(){

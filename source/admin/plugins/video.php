@@ -41,18 +41,6 @@ class channel{
         $this->content_id = $content_id;
     }
 }
-/*
-class videoPreview extends uiElement{
-    public $name = 'video_preview';
-    
-    static function clientSide(){
-        echo '//work in progress';
-    }
-    
-    function build($url){
-        
-    }
-}*/
 
 /**
  * Channel manager class
