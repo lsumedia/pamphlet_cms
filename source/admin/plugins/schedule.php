@@ -197,17 +197,22 @@ class shows extends optionsPage{
         return $clean;
     }
     
-    /* Get edit form show data for one show */
-    public static function getShowById($id){
+    public static function rawGetShowById($id){
         global $connection;
-        
         if($result = $connection->query("SELECT * FROM schedule_shows WHERE id=$id;")){
             $row = $result->fetch_array(MYSQLI_ASSOC);
-            $formarray = customForm::getEditForm(self::showFormArray(), $row);
-            return $formarray;
+            return $row;
         }else{
             return false;
         }
+    }
+    /* Get edit form show data for one show */
+    public static function getShowById($id){
+        global $connection;
+        if($raw = self::rawGetShowById($id)){
+            return customForm::getEditForm(self::showFormArray(), $raw);
+        }
+        return false;
     }
     
     /* Get show IDs and names in a key-value pair array */
@@ -377,9 +382,14 @@ class schedule extends optionsPage{
     
     public static function processVideo($video,$schedule_id){
         $events = self::getCurrentEvents($schedule_id);
-        $showID = $events[0]['show_id'];
-        $cshow = shows::getShowById($showID);
-        $video->description = $shows[0]['show_id'];
+        if($showID = $events[0]['show_id']){
+            $show = shows::rawGetShowById($showID);
+
+            //$video->title = $show['title'];
+            $video->poster = $show['poster_url'];
+            $video->nowplaying = $show['title'];    
+            $video->description = $show['description'];
+        }
         return $video;
     }
     
@@ -393,7 +403,7 @@ class schedule extends optionsPage{
         $timestamp = strtotime($time);
         return (intval(date('G',$timestamp)) * 60) + intval(date('i',$timestamp));      
     }
-    
+    /** Return array of currently running events */
     public static function getCurrentEvents($schedule_id){
         $events = self::getInstancesBySchedule($schedule_id);
         $matching = array();

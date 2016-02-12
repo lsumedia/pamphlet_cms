@@ -17,7 +17,11 @@ class radio extends mediaPlayer{
         $poster = $content->poster;
         $nowplaying_url = $content->source;
         
-        $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
+        if($content->channelID){
+            $json = actualLink() . "/public.php?action=plugin_videomanager&id=$content->channelID";
+        }else{
+            $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
+        }
         
         require_once('plugins/radio/player.php');
        
@@ -93,7 +97,11 @@ class visual_radio extends mediaPlayer{
         
         //echo '<script>videojs(\'#video\').videoJsResolutionSwitcher</script>';
 
-        $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
+        if($content->channelID){
+            $json = actualLink() . "/public.php?action=plugin_videomanager&id=$content->channelID";
+        }else{
+            $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
+        }
 
         echo  "<script> var json_url = '$json'; </script>", PHP_EOL;
         html::js('plugins/radio/vjs-update.js');

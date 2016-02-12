@@ -566,6 +566,26 @@ class videos extends optionsPage{
         }
     }
     
+    public static function buildRawVideo($video){
+        
+        if(is_numeric($video->poster)){
+                //$poster = cover::getImage($poster);
+                $video->poster = cover::getImageUrl($video->poster);
+        }
+            
+        $players = mediaPlayer::getPlayerTypes();
+        $type = $video->type;
+            $built = false;
+            foreach($players as $player){
+                if($player->name == $type){
+                    //TODO - add setup 
+                    $video = $player->build($video,"");
+                    $built = true;
+                    return $video;
+                }
+            }
+        return false;
+    }
 }
 
 $pluginPages[] = new videos();

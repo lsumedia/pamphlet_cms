@@ -266,13 +266,18 @@ class manager extends optionsPage{
             
             switch($type){
                 case "live":
-                    $player_content = videos::getVideo($live,true);
-                    //Replace poster if thumbnail is specified
-                    if(strlen($thumbnail) > 0){ $player_content->poster = $thumbnail; }
+                    $player_content = videos::getVideo($live,false);
+                    
                     /* scheduling section goes HERE */
                     if($schedule_id > 0){
                         $player_content = schedule::processVideo($player_content, $schedule_id);
+                        $player_content->channelID = $id;
                     }
+                    //Build player with new info
+                    $player_content = videos::buildRawVideo($player_content);
+                    
+                    //Replace poster if thumbnail is specified
+                    if(strlen($thumbnail) > 0){ $player_content->poster = $thumbnail; }
                     break;
                 case "vod":
                     $player_content = videos::getVideo($vod,true);
