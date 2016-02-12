@@ -69,6 +69,10 @@ class shows extends optionsPage{
                     echo 'Please select a show';
                     break;
                 }
+                if($validate['start_time'] > $validate['end_time']){
+                    echo 'Start time cannot be after end time';
+                    break;
+                }
                 $query = customForm::insertSQL(shows::instanceFormArray(), $_POST, 'schedule_instance');
                 if($connection->query($query)){
                     echo 'reload';
@@ -78,6 +82,15 @@ class shows extends optionsPage{
                 }
                 break;
             case 'editinstance':
+                $validate = customForm::simpleArray(self::instanceFormArray(), $_POST);
+                if($validate['show_id'] ==  0 ){
+                    echo 'Please select a show';
+                    break;
+                }
+                if($validate['start_time'] > $validate['end_time']){
+                    echo 'Start time cannot be after end time';
+                    break;
+                }
                 $id = $_GET['id'];
                 $query = customForm::updateSQL(shows::instanceFormArray(), $_POST, 'schedule_instance', "instance_id='$id'");
                 //echo $query; break;
@@ -452,6 +465,8 @@ class schedule extends optionsPage{
                     }
                     break;
                 case 14:
+                    //If number of days since the first date % 14 = 0
+                    
                 default:
                     return;
             }
