@@ -780,15 +780,16 @@ END;
     }
 }
 
+
 /** New array-based form system
  * Recommended system for new forms
  */
 class customForm extends uiElement{
     
-    private $optionsArray = [];
+    private $optionsArray = array();
     public $id; /* ID for each individual form */
     public $method; /* Method (GET or POST) */
-    private $optionsIDs = [];
+    private $optionsIDs = array();
     public $title;
     public $name = 'customForm';
     private $onReloadAction;
@@ -973,7 +974,7 @@ END;
      */
     public static function decodeResult($optionsArray,$result){
         //Pop form ID off each element of the POST request
-        $plainIDs = [];
+        $plainIDs = array();
         foreach($result as $key=>$value){
             $array = explode('_', $key);
             unset($array[0]);

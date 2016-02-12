@@ -150,7 +150,7 @@ class shows extends optionsPage{
             'show_id' => ['type' => 'hidden','options' => self::kvpGetShows(), 'label' => 'Show'],
             'schedule_id' => ['type' => 'select', 'options' => schedule::kvpSchedules(), 'label' => 'Schedule', 'value' => '0'],
             'first' => ['type' => 'date', 'label' => 'Start date', 'value' => date('Y-m-d')],
-            'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency'],
+            'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency', 'value' => 7],
             'start_time' => ['type' => 'time', 'label' => 'Start time'],
             'end_time' => ['type' => 'time', 'label' => 'End time'],
             'description' => ['type' => 'richtext', 'label' => 'Description (optional)', 'value' => '']
@@ -250,7 +250,7 @@ class shows extends optionsPage{
             $showname = self::kvpGetShows()[$instance['show_id']];
             $frequency = self::intervals()[$instance['frequency']];
             $timestamp = strtotime($instance['first']);
-            $date = date('D, jS M Y',$timestamp);
+            $date = schedule::freqToDate($timestamp, $instance['frequency']);
             $iclean = ['Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
             $schedule = schedule::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
@@ -382,13 +382,30 @@ class schedule extends optionsPage{
     
     public static function processVideo($video,$schedule_id){
         $events = self::getCurrentEvents($schedule_id);
-        if($showID = $events[0]['show_id']){
+        
+        if(count($events) > 0){
+            
+            $preferredEvent;
+            foreach($events as $event){
+                if(intval($event['frequency']) == 0){   //One-time events take priority
+                    $preferredEvent = $event;
+                }
+            }
+            
+            if($preferredEvent){
+                /* Set show ID to prioritised event if there is one */
+                $showID = $preferredEvent['show_id'];
+            }else{
+                /* Otherwise pick the first one */
+                $showID = $events[0]['show_id'];
+            }
+            /* Convert showID to show object */
             $show = shows::rawGetShowById($showID);
 
-            //$video->title = $show['title'];
-            $video->poster = $show['poster_url'];
-            $video->nowplaying = $show['title'];    
-            $video->description = $show['description'];
+            $video->title = $video->title . ': ' . $show['title'];
+            if($show['poster_url']){ $video->poster = $show['poster_url']; }
+            $video->nowplaying = $show['title'];
+            if($show['description']){ $video->description = $show['description']; }
         }
         return $video;
     }
@@ -415,13 +432,31 @@ class schedule extends optionsPage{
         
         foreach($events as $event){
             //Timestamp of first occurence of show
+            $frequency = $event['frequency'];
             $sts = strtotime($event['first']);
             $sstart = self::timeToMinutes($event['start_time']);
             $send = self::timeToMinutes($event['end_time']);
-            //If nowtime is between the show start and end time
-            if($sstart <= $nowminutes && $nowminutes < $send){
-                $matching[] = $event;
+            switch($frequency){
+                case 0:
+                    if(date('Y-m-d',$sts) != date('Y-m-d')){ break; } //stop if date != showdate
+                case 1:
+                    if($sstart <= $nowminutes && $nowminutes < $send){
+                        $matching[] = $event;
+                    }
+                    break;
+                case 7:
+                    if($day == date('N', $sts)){
+                        if($sstart <= $nowminutes && $nowminutes < $send){
+                            $matching[] = $event;
+                        }
+                    }
+                    break;
+                case 14:
+                default:
+                    return;
             }
+            //If nowtime is between the show start and end time
+            
             //$matching[] = array($sstart,$send,$nowminutes);
         }
         return $matching;
@@ -466,7 +501,7 @@ class schedule extends optionsPage{
     }
     
     public static function kvpSchedules(){
-        $array = ['null' => 'Inactive'];
+        $array = ['null' => 'Unlinked'];
         foreach(self::rawGetSchedules() as $schedule){
             $id = $schedule['id'];
             $array[$id] = $schedule['title'];
@@ -478,7 +513,7 @@ class schedule extends optionsPage{
         global $connection;
         $schedule_id = intval($schedule_id);
         $array = array();
-        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id';")){
+        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY frequency ASC;")){
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $array[] = $row;
             }
@@ -487,6 +522,20 @@ class schedule extends optionsPage{
 
         }else{
             return false;
+        }
+    }
+    
+    public static function freqToDate($timestamp,$frequency){
+        switch($frequency){
+            case 1:
+                return 'Daily';
+            case 7:
+                return date('l\s', $timestamp);
+            case 14:
+                return 'Every other ' . date('l', $timestamp);
+            case 0:
+            default:
+                return date('D, jS M Y',$timestamp);
         }
     }
     
@@ -499,8 +548,8 @@ class schedule extends optionsPage{
             $showname = shows::kvpGetShows()[$instance['show_id']];
             $frequency = shows::intervals()[$instance['frequency']];
             $timestamp = strtotime($instance['first']);
-            $date = date('D, jS M Y',$timestamp);
-            $iclean = ['Show name' => $showname, 'Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
+            $date = self::freqToDate($timestamp, $instance['frequency']);
+            $iclean = ['Show name' => $showname, 'Date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
             $schedule = self::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
