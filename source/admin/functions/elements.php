@@ -1047,6 +1047,10 @@ END;
         echo "<div class=\"fieldRow\"><p>$label</p><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
     }
     
+    public static function hidden($id, $value, $type, $label){
+        echo "<div class=\"fieldRow\" style=\"display:none;\"><p>$label</p><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
+    }
+    
     public static function richtext($id, $value, $label){
        //textarea with CKEditor - one per page as this takes over the loadScript
         //TODO - upgrade loadScript for multiple elements
