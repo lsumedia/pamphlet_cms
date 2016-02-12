@@ -38,10 +38,12 @@ class shows extends optionsPage{
             $id = $_GET['editinstance'];
             $data = self::getInstanceById($id);
             $show_id = $data['show_id']['value'];
+            $show_data = self::getShowById($show_id);
+            $show_title = $show_data['title']['value'];
             backButton('shows&edit=' . $show_id);
             $data['delete'] = ['type' => 'button', 'label' => 'Delete', 'action' => 'shows&request=deleteinstance&id=' . $id]; 
             $iform = new customForm($data, 'instanceEditFom', $this->name . '&request=editinstance&id=' . $id, 'POST', 'shows&edit=' . $show_id);
-            $iform->setTitle('Edit instance');
+            $iform->setTitle('Editing instance of ' . $show_title);
             $iform->build('Save changes');
         }else{
 
@@ -137,9 +139,20 @@ class shows extends optionsPage{
         return [
             'show_id' => ['type' => 'hidden', 'label' => 'Show ID'],
             'schedule_id' => ['type' => 'select', 'options' => schedule::kvpSchedules(), 'label' => 'Schedule', 'value' => '0'],
-            'day' => ['type' => 'select', 'options' => days(), 'label' => 'Day', 'value' => '0'],
-            'start' => ['type' => 'time', 'label' => 'Start time', 'value' => '60'],
-            'end' => ['type' => 'time', 'label' => 'End time']
+            'first' => ['type' => 'date', 'label' => 'Start date', 'value' => date('Y-m-d')],
+            'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency'],
+            'start_time' => ['type' => 'time', 'label' => 'Start time'],
+            'end_time' => ['type' => 'time', 'label' => 'End time'],
+            'description' => ['type' => 'richtext', 'label' => 'Description (optional)', 'value' => '']
+        ];
+    }
+    
+    public static function intervals(){
+        return[
+            0 => 'One-time',
+            1 => 'Daily',
+            7 => 'Weekly',
+            14 => 'Fortnightly',
         ];
     }
     
@@ -219,7 +232,7 @@ class shows extends optionsPage{
         foreach($raw as $instance){
             $id = $instance['instance_id'];
             $onclick = "cm_loadPage('shows&editinstance=$id');";
-            $iclean = ['Show ID' => $instance['show_id'], 'Start' => $instance['start'], 'End' => $instance['end'], 'onclick' => $onclick];
+            $iclean = ['Show ID' => $instance['show_id'], 'Start date' => $instance['first'], 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'onclick' => $onclick];
             $schedule = schedule::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
