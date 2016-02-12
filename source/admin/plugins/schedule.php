@@ -64,7 +64,12 @@ class shows extends optionsPage{
         block(3);
         switch($_GET['request']){
             case 'newinstance':
-                $query = customForm::insertSQL(self::instanceFormArray(), $_POST, 'schedule_instance');
+                $validate = customForm::simpleArray(self::instanceFormArray(), $_POST);
+                if($validate['show_id'] ==  0 ){
+                    echo 'Please select a show';
+                    break;
+                }
+                $query = customForm::insertSQL(shows::instanceFormArray(), $_POST, 'schedule_instance');
                 if($connection->query($query)){
                     echo 'reload';
                 }else{
@@ -74,7 +79,7 @@ class shows extends optionsPage{
                 break;
             case 'editinstance':
                 $id = $_GET['id'];
-                $query = customForm::updateSQL(self::instanceFormArray(), $_POST, 'schedule_instance', "instance_id='$id'");
+                $query = customForm::updateSQL(shows::instanceFormArray(), $_POST, 'schedule_instance', "instance_id='$id'");
                 //echo $query; break;
                 if($connection->query($query)){
                     echo 'Saved changes';
@@ -92,6 +97,11 @@ class shows extends optionsPage{
                 }
                 break;
             case 'new':
+                $validate = customForm::simpleArray(self::showFormArray(), $_POST);
+                if(strlen($validate['title']) < 1 ){
+                    echo 'Please enter a title';
+                    break;
+                }
                 $query = customForm::insertSQL(self::showFormArray(), $_POST, 'schedule_shows');
                 if($connection->query($query)){
                     echo 'reload';
@@ -137,7 +147,7 @@ class shows extends optionsPage{
     
     public static function instanceFormArray(){
         return [
-            'show_id' => ['type' => 'hidden','options' => self::kvpGetShows(), 'label' => 'Show ID'],
+            'show_id' => ['type' => 'hidden','options' => self::kvpGetShows(), 'label' => 'Show'],
             'schedule_id' => ['type' => 'select', 'options' => schedule::kvpSchedules(), 'label' => 'Schedule', 'value' => '0'],
             'first' => ['type' => 'date', 'label' => 'Start date', 'value' => date('Y-m-d')],
             'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency'],
@@ -161,7 +171,7 @@ class shows extends optionsPage{
         global $connection;
         
         $array = array();
-        if($result = $connection->query('SELECT * FROM schedule_shows;')){
+        if($result = $connection->query('SELECT * FROM schedule_shows ORDER BY title ASC;')){
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $array[] = $row;
             }
@@ -284,11 +294,33 @@ class schedule extends optionsPage{
             $sid = $_GET['edit'];
             $events = self::cleanGetInstancesBySchedule($sid);
             
+            
+            $edata = shows::instanceFormArray();
+            $edata['show_id']['type'] = 'select';
+            $edata['schedule_id']['type'] = 'hidden';
+            $edata['schedule_id']['value'] = $sid;
+            
+            $eform = new customForm($edata, 'newEventForm', 'shows&request=newinstance', 'POST', $this->name . '&edit=' . $sid);
+            $eform->setTitle('New event');
+            $eform->build('Add event');
+            
             $list = new ajaxList($events,'eventList');
             $list->title('Shows occuring in this schedule');
             $list->display();
+        }elseif(isset($_GET['editinstance'])){
+            $id = $_GET['editinstance'];
+            $data = shows::getInstanceById($id);
+            $show_id = $data['show_id']['value'];
+            $schedule_id = $data['schedule_id']['value'];
+            $show_data = shows::getShowById($show_id);
+            $show_title = $show_data['title']['value'];
+            backButton('schedule&edit=' . $schedule_id);
+            $data['delete'] = ['type' => 'button', 'label' => 'Delete', 'action' => 'shows&request=deleteinstance&id=' . $id]; 
+            $iform = new customForm($data, 'instanceEditFom', 'shows&request=editinstance&id=' . $id, 'POST', 'schedule&edit=' . $schedule_id);
+            $iform->setTitle('Editing instance of ' . $show_title);
+            $iform->build('Save changes');
         }else{
-            $form = new customForm(self::formArray(), 'newScheduleForm', $this->name, 'POST', $this->name);
+            $form = new customForm(self::formArray(), 'newScheduleForm', $this->name . '&request=new', 'POST', $this->name);
             $form->setTitle('New schedule');
             $form->build('Add new schedule');
             
@@ -300,7 +332,48 @@ class schedule extends optionsPage{
     }
     
     public function updatePage() {
+        global $connection;
+        block(3);
+        switch($_GET['request']){
+            case 'new':
+                $validate = customForm::simpleArray(self::formArray(), $_POST);
+                if(strlen($validate['title']) < 1 ){
+                    echo 'Please enter a title';
+                    break;
+                }
+                $query = customForm::insertSQL(self::formArray(), $_POST, 'schedule');
+                if($connection->query($query)){
+                    echo 'reload';
+                }else{
+                    echo 'Error adding schedule';
+                }
+                break;
+            case 'edit':
+                $id = $_GET['id'];
+                $query = customForm::updateSQL(self::formArray(),$_POST,'schedule', "id=$id");
+                if($connection->query($query)){
+                    echo 'Saved changes';
+                }else{
+                    echo $query;
+                    echo 'Error saving changes';
+                }
+                break;
+            case 'delete':
+                $id = intval($_GET['id']);
+                $query = "DELETE FROM schedule WHERE id=$id;";
+                if($connection->query($query)){
+                    echo 'reload';
+                }else{
+                    echo 'Error deleting show';
+                }
+                break;
+            default:
+                echo 'Error - request not specified';
+        }
+        
+        
     }
+
     
     public static function processVideo($video,$schedule_id){
         return $video;
