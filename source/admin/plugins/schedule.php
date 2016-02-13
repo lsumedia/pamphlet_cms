@@ -6,6 +6,9 @@
  * and open the template in the editor.
  */
 
+/**
+ * Show management class
+ */
 class shows extends optionsPage{
     public $name = 'shows';
     public $title = 'Shows';
@@ -166,6 +169,7 @@ class shows extends optionsPage{
             'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency', 'value' => 7],
             'start_time' => ['type' => 'time', 'label' => 'Start time'],
             'end_time' => ['type' => 'time', 'label' => 'End time'],
+            'priority' => ['type' => 'number', 'label' => 'Priority', 'value' => 50, 'max' => '100'],
             'description' => ['type' => 'richtext', 'label' => 'Description (optional)', 'value' => '']
         ];
     }
@@ -264,7 +268,7 @@ class shows extends optionsPage{
             $frequency = self::intervals()[$instance['frequency']];
             $timestamp = strtotime($instance['first']);
             $date = schedule::freqToDate($timestamp, $instance['frequency']);
-            $iclean = ['Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
+            $iclean = ['Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'Priority' => $instance['priority'], 'onclick' => $onclick];
             $schedule = schedule::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
@@ -306,12 +310,19 @@ class schedule extends optionsPage{
     }
     
     public function configPage() {
-        ce::begin();
+        ce::begin("style=\"width:800px;\"");
         if(isset($_GET['edit'])){
             backButton($this->name);
             $sid = $_GET['edit'];
-            $events = self::cleanGetInstancesBySchedule($sid);
             
+            $data = self::getScheduleById($sid);
+            $editArray = customForm::getEditForm(self::formArray(), $data);
+            $editArray['delete'] = ['type' => 'button', 'label' => 'Delete', 'action' => 'schedule&request=delete&id=' . $sid]; 
+            $form = new customForm($editArray, 'editScheduleForm', 'schedule&request=edit&id=' . $sid, 'POST', 'schedule');
+            $form->setTitle('Edit schedule');
+            $form->build('Save changes');
+            
+            $events = self::cleanGetInstancesBySchedule($sid);
             
             $edata = shows::instanceFormArray();
             $edata['show_id']['type'] = 'select';
@@ -394,7 +405,7 @@ class schedule extends optionsPage{
 
     
     public static function processVideo($video,$schedule_id){
-        $events = self::getCurrentEvents($schedule_id);
+        $events = self::getEventsByTime($schedule_id, time());
         //echo "(" . count($events) . ")";
         if(count($events) > 0){
             
@@ -435,14 +446,14 @@ class schedule extends optionsPage{
         return (intval(date('G',$timestamp)) * 60) + intval(date('i',$timestamp));      
     }
     /** Return array of currently running events */
-    public static function getCurrentEvents($schedule_id){
+    public static function getEventsByTime($schedule_id, $time){
         $events = self::getInstancesBySchedule($schedule_id);
         $matching = array();
 
         //Day - the current day of the week
-        $day = intval(date('N'));
+        $day = intval(date('N', $time));
         //Minutes since midnight
-        $nowminutes = (intval(date('G')) * 60) + intval(date('i'));      
+        $nowminutes = (intval(date('G', $time)) * 60) + intval(date('i', $time));      
         
         foreach($events as $event){
             //Timestamp of first occurence of show
@@ -452,7 +463,7 @@ class schedule extends optionsPage{
             $send = self::timeToMinutes($event['end_time']);
             switch($frequency){
                 case 0:
-                    if(date('Y-m-d',$sts) != date('Y-m-d')){ break; } //stop if date != showdate
+                    if(date('Y-m-d',$sts) != date('Y-m-d',$time)){ break; } //stop if date != showdate
                 case 1:
                     //echo $event['instance_id'] . ": $sstart < $nowminutes < $send , (". ($sstart <= $nowminutes && $nowminutes < $send) .")";
                     if($sstart <= $nowminutes && $nowminutes < $send){
@@ -460,7 +471,7 @@ class schedule extends optionsPage{
                     }
                     break;
                 case 7:
-                    if($day == date('N', $sts) && time() >= $sts){
+                    if($day == date('N', $sts) && $time >= $sts){
                         if($sstart <= $nowminutes && $nowminutes < $send){
                             $matching[] = $event;
                         }
@@ -468,7 +479,7 @@ class schedule extends optionsPage{
                     break;
                 case 14:
                     //If number of days since the first date % 14 = 0
-                    $nowdays = floor(time() / 86400);
+                    $nowdays = floor($time / 86400);
                     $showdays = floor($sts / 86400);
                     if((($nowdays-$showdays) % 14 == 0)|| $nowdays == $showdays){
                         if($sstart <= $nowminutes && $nowminutes < $send){
@@ -509,6 +520,22 @@ class schedule extends optionsPage{
         }
     }
     
+    public static function getScheduleById($id){
+        global $connection;
+        
+        $schedule;
+        if($result = $connection->query("SELECT * FROM schedule WHERE id = $id ;")){
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $schedule = $row;
+            }
+            $result->close();
+            return $schedule;
+
+        }else{
+            return false;
+        }
+    }
+    
     public static function getAllSchedules(){
         $raw = self::rawGetSchedules();
         $clean = [];
@@ -534,7 +561,7 @@ class schedule extends optionsPage{
         global $connection;
         $schedule_id = intval($schedule_id);
         $array = array();
-        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY frequency ASC;")){
+        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY priority DESC;")){
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $array[] = $row;
             }
@@ -570,7 +597,7 @@ class schedule extends optionsPage{
             $frequency = shows::intervals()[$instance['frequency']];
             $timestamp = strtotime($instance['first']);
             $date = self::freqToDate($timestamp, $instance['frequency']);
-            $iclean = ['Show name' => $showname, 'Date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'onclick' => $onclick];
+            $iclean = ['Show name' => $showname, 'Date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'Priority' => $instance['priority'], 'onclick' => $onclick];
             $schedule = self::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
