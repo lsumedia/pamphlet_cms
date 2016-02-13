@@ -395,7 +395,7 @@ class schedule extends optionsPage{
     
     public static function processVideo($video,$schedule_id){
         $events = self::getCurrentEvents($schedule_id);
-        
+        //echo "(" . count($events) . ")";
         if(count($events) > 0){
             
             $preferredEvent;
@@ -419,6 +419,7 @@ class schedule extends optionsPage{
             if($show['poster_url']){ $video->poster = $show['poster_url']; }
             $video->nowplaying = $show['title'];
             if($show['description']){ $video->description = $show['description']; }
+            $video->theme_colour = $show['theme_colour'];
         }
         return $video;
     }
@@ -453,6 +454,7 @@ class schedule extends optionsPage{
                 case 0:
                     if(date('Y-m-d',$sts) != date('Y-m-d')){ break; } //stop if date != showdate
                 case 1:
+                    //echo $event['instance_id'] . ": $sstart < $nowminutes < $send , (". ($sstart <= $nowminutes && $nowminutes < $send) .")";
                     if($sstart <= $nowminutes && $nowminutes < $send){
                         $matching[] = $event;
                     }
@@ -473,8 +475,6 @@ class schedule extends optionsPage{
                             $matching[] = $event;
                         }
                     }
-                default:
-                    return;
             }
             //If nowtime is between the show start and end time
             
