@@ -306,7 +306,15 @@ class schedule extends optionsPage{
     public $title = 'Scheduling';
     
     public function displayPage(){
-        
+        if(isset($_GET['events'])){
+            $sid = $_GET['events'];
+            if(isset($_GET['time'])){
+                $time = $_GET['time'];
+                echo json_encode(self::getEventsByTime($sid, $time));
+            }else{
+                echo json_encode(self::getEventsByTime($sid, time()));
+            }
+        }
     }
     
     public function configPage() {
