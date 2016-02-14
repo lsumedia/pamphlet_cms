@@ -4,7 +4,27 @@
  * and open the template in the editor.
  */
 
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
 
+function rgba(hex, a){
+    rgb = hexToRgb(hex);
+    return "rgba(" + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + a + ')';
+}
+
+function isWhite(hex){
+    hex = hexToRgb(hex);
+    if(hex.r == 255 && hex.g == 255 && hex.b == 255){
+        return true;
+    }
+    return false;
+}
 
 function updateDetails(){
     $.ajax({
@@ -15,10 +35,18 @@ function updateDetails(){
             var player = document.getElementsByTagName('video')[0];
             dataArray = JSON.parse(data);
             var poster = dataArray['poster'];
-            console.log(poster);
+            //console.log(poster);
             player.setAttribute('poster',poster);
             $('.vjs_poster').css({'background-image' : 'url(' + poster + ');'});
             document.title = dataArray['title'];
+            var hex = dataArray['theme_colour'];
+            var colour = rgba(hex, 0.5);
+            if(colour.length > 0 && !isWhite(hex)){
+                $('.vjs-control-bar').css("background-color",colour);
+            }else{
+                $('.vjs-control-bar').css("background-color","");
+            }
+            console.log('VJS Updated Info');
             /*
             nowplaying.innerHTML = 'Now Playing: ' + dataArray['nowplaying'];
             title.innerHTML = dataArray['plaintitle'];
@@ -29,4 +57,5 @@ function updateDetails(){
     });
 }
 
+updateDetails();
 var poster_timer = window.setInterval(function(){ updateDetails(); }, 10000);

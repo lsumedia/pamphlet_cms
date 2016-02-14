@@ -471,15 +471,19 @@ class schedule extends optionsPage{
             $send = self::timeToMinutes($event['end_time']);
             switch($frequency){
                 case 0:
+                    //Check if current date equals event date
                     if(date('Y-m-d',$sts) != date('Y-m-d',$time)){ break; } //stop if date != showdate
                 case 1:
                     //echo $event['instance_id'] . ": $sstart < $nowminutes < $send , (". ($sstart <= $nowminutes && $nowminutes < $send) .")";
                     if($sstart <= $nowminutes && $nowminutes < $send){
+                        //Check if current time falls within time period
                         $matching[] = $event;
                     }
                     break;
                 case 7:
+                    //Check if the current day of the week is the same as the show's
                     if($day == date('N', $sts) && $time >= $sts){
+                        //Check if current time falls within time period
                         if($sstart <= $nowminutes && $nowminutes < $send){
                             $matching[] = $event;
                         }
@@ -489,8 +493,10 @@ class schedule extends optionsPage{
                     //If number of days since the first date % 14 = 0
                     $nowdays = floor($time / 86400);
                     $showdays = floor($sts / 86400);
+                    //Check if the number of days since the start date is a multiple of 14
                     if((($nowdays-$showdays) % 14 == 0)|| $nowdays == $showdays){
-                        if($sstart <= $nowminutes && $nowminutes < $send){
+                        //Check if current time falls within time period
+                        if($sstart <= $nowminutes && $nowminutes <= $send){
                             $matching[] = $event;
                         }
                     }
@@ -512,6 +518,11 @@ class schedule extends optionsPage{
         ];
     }
     
+    /** 
+     * Get list of raw schedule data
+     * @global type $connection
+     * @return boolean
+     */
     public static function rawGetSchedules(){
         global $connection;
         
@@ -528,6 +539,13 @@ class schedule extends optionsPage{
         }
     }
     
+    /**
+     * Get raw schedule data based on ID
+     * 
+     * @global type $connection
+     * @param type $id
+     * @return booleang
+     */
     public static function getScheduleById($id){
         global $connection;
         
@@ -544,6 +562,10 @@ class schedule extends optionsPage{
         }
     }
     
+   /**
+    * Get all schedule data in a clean list format
+    * @return type
+    */
     public static function getAllSchedules(){
         $raw = self::rawGetSchedules();
         $clean = [];
@@ -556,6 +578,10 @@ class schedule extends optionsPage{
         return $clean;
     }
     
+    /**
+     * Get all schedules in kvp format for select menu
+     * @return type
+     */
     public static function kvpSchedules(){
         $array = ['null' => 'Unlinked'];
         foreach(self::rawGetSchedules() as $schedule){
@@ -565,6 +591,13 @@ class schedule extends optionsPage{
         return $array;
     }
     
+    /** 
+     * Get all instance events for a schedule based on the schedule ID
+     * 
+     * @global type $connection
+     * @param type $schedule_id
+     * @return boolean
+     */
     public static function getInstancesBySchedule($schedule_id){
         global $connection;
         $schedule_id = intval($schedule_id);
@@ -581,6 +614,13 @@ class schedule extends optionsPage{
         }
     }
     
+    /**
+     * Convert a frequency value to a friendly string representation
+     * 
+     * @param type $timestamp
+     * @param type $frequency
+     * @return string
+     */
     public static function freqToDate($timestamp,$frequency){
         switch($frequency){
             case 1:
@@ -595,6 +635,12 @@ class schedule extends optionsPage{
         }
     }
     
+    /**
+     * Get list of event instances for a schedule in clean list format
+     * 
+     * @param type $sid
+     * @return type
+     */
     public static function cleanGetInstancesBySchedule($sid){
         $raw = self::getInstancesBySchedule($sid);
         $clean = [];
