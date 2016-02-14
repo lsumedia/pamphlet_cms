@@ -39,13 +39,16 @@ function updateDetails(){
             player.setAttribute('poster',poster);
             $('.vjs_poster').css({'background-image' : 'url(' + poster + ');'});
             document.title = dataArray['title'];
-            var hex = dataArray['theme_colour'];
-            var colour = rgba(hex, 0.5);
-            if(dataArray['theme_colour'].length > 0 && !isWhite(hex)){
-                $('.vjs-control-bar').css("background-color",colour);
-            }else{
-                $('.vjs-control-bar').css("background-color","");
+            //Control bar colour change section
+            $('.vjs-control-bar').css("background-color","");
+            if(dataArray['theme_colour'] != null){
+                var hex = dataArray['theme_colour'];
+                var colour = rgba(hex, 0.5);
+                if(!isWhite(hex)){
+                    $('.vjs-control-bar').css("background-color",colour);
+                }
             }
+            
             console.log('VJS Updated Info');
             /*
             nowplaying.innerHTML = 'Now Playing: ' + dataArray['nowplaying'];
