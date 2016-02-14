@@ -602,7 +602,7 @@ class schedule extends optionsPage{
         global $connection;
         $schedule_id = intval($schedule_id);
         $array = array();
-        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY priority DESC;")){
+        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY first DESC;")){
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $array[] = $row;
             }
