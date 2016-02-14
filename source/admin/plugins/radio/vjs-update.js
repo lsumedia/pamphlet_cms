@@ -41,7 +41,7 @@ function updateDetails(){
             document.title = dataArray['title'];
             var hex = dataArray['theme_colour'];
             var colour = rgba(hex, 0.5);
-            if(colour.length > 0 && !isWhite(hex)){
+            if(dataArray['theme_colour'].length > 0 && !isWhite(hex)){
                 $('.vjs-control-bar').css("background-color",colour);
             }else{
                 $('.vjs-control-bar').css("background-color","");
