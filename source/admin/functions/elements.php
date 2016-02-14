@@ -4,6 +4,7 @@
 
 $cke_path = "/live/admin/ckeditor/ckeditor.js";
 
+
 /**
  * Represents an element type loaded asynchronously that requires
  * preloaded client-side functions to run. If the clientSide function is set
@@ -20,7 +21,7 @@ class uiElement{
      * Echo client side code in here
      * @return boolean
      */
-    public function clientSide(){
+    public static function clientSide(){
         return false;
     }
     
@@ -35,17 +36,17 @@ class uiElement{
     }
     
     public static function loadUiElements(){
-        $elements = self::getDeclaredUiElements();
-        echo "<script>", PHP_EOL;
-        $numElements = count($elements);
-        echo "/* $numElements elements to load */";
-        foreach($elements as $element){
-            echo PHP_EOL,"/* Code for $element->name */", PHP_EOL;
-            $element->clientSide();
+        $elementTypes = array();
+        foreach(get_declared_classes() as $class){
+            if(is_subclass_of($class, 'uiElement')){
+                echo PHP_EOL,"<!-- Code for $class -->", PHP_EOL;
+                echo "<script id='$class-script'>", PHP_EOL;
+                $class::clientSide();
+                echo "</script>", PHP_EOL;
+            }
         }
-        echo PHP_EOL, "</script>", PHP_EOL;
+        return $elementTypes;
     }
-    
 }
 
 class htmlStuff{
@@ -344,7 +345,7 @@ class ajaxList extends uiElement{
     
     public $name = 'ajaxList';
     
-    public function clientSide() {
+    public static function clientSide() {
         echo <<<END
 var convert = function(convert){
     return $("<span />", { html: convert }).text();
@@ -797,7 +798,7 @@ class customForm extends uiElement{
     /**
      * Javascript for sending form request
      */
-    public function clientSide(){
+    public static function clientSide(){
         echo <<<END
 function cm_updateForm(fields,action,method,result,onReloadAction){
     if(!onReloadAction){
@@ -829,10 +830,11 @@ function cm_updateForm(fields,action,method,result,onReloadAction){
     var postRequest = "";
             
     for(var i = 0; i < fields.length; i++){
+        value = $('#' + fields[i]).val();
         if(i == 0){
-            postRequest = fields[i] + "=" + encodeURIComponent(document.getElementById(fields[i]).value);
+            postRequest = fields[i] + "=" + encodeURIComponent(value);
         }else{
-            postRequest = postRequest + "&" + fields[i] + "=" + encodeURIComponent(document.getElementById(fields[i]).value);
+            postRequest = postRequest + "&" + fields[i] + "=" + encodeURIComponent(value);
         }
     }   
             
@@ -1293,7 +1295,7 @@ class cm_inner extends uiElement{
 		echo '</div>',PHP_EOL;
 	}
 	//Run this second
-	public function clientSide(){
+	public static function clientSide(){
 		echo <<<END
 function cm_loadPage(code){
 	var request = new XMLHttpRequest();
