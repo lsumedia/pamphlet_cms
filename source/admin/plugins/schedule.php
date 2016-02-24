@@ -190,11 +190,11 @@ class shows extends optionsPage{
     }
     
     /* Get raw data for all shows */
-    public static function rawGetShows(){
+    public static function rawGetShows($order = 'title ASC'){
         global $connection;
         
         $array = array();
-        if($result = $connection->query('SELECT * FROM schedule_shows ORDER BY title ASC;')){
+        if($result = $connection->query("SELECT * FROM schedule_shows ORDER BY $order;")){
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $array[] = $row;
             }
@@ -241,7 +241,7 @@ class shows extends optionsPage{
     /* Get show IDs and names in a key-value pair array */
     public static function kvpGetShows(){
         $array = [0 => '--'];
-        foreach(self::rawGetShows() as $show){
+        foreach(self::rawGetShows('id DESC') as $show){
             $array[$show['id']] = $show['title'];
         }
         return $array;
