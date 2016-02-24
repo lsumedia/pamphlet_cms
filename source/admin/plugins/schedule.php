@@ -137,11 +137,16 @@ class shows extends optionsPage{
                 break;
             case 'delete':
                 $id = intval($_GET['id']);
+                $iquery = "DELETE FROM schedule_instance WHERE show_id=$id";
                 $query = "DELETE FROM schedule_shows WHERE id=$id;";
-                if($connection->query($query)){
-                    echo 'reload';
+                if($connection->query($iquery)){
+                    if($connection->query($query)){
+                        echo 'reload';
+                    }else{
+                        echo 'Error deleting show';
+                    }
                 }else{
-                    echo 'Error deleting show';
+                    echo 'Error deleting show instances';
                 }
                 break;
             default:
@@ -164,12 +169,13 @@ class shows extends optionsPage{
     public static function instanceFormArray(){
         return [
             'show_id' => ['type' => 'hidden','options' => self::kvpGetShows(), 'label' => 'Show'],
+            'title' => ['type' => 'text', 'label' => 'Title (optional)', 'value' => ''],
             'schedule_id' => ['type' => 'select', 'options' => schedule::kvpSchedules(), 'label' => 'Schedule', 'value' => '0'],
             'first' => ['type' => 'date', 'label' => 'Start date', 'value' => date('Y-m-d')],
             'frequency' => ['type' => 'select', 'options' => self::intervals(), 'label' => 'Frequency', 'value' => 7],
             'start_time' => ['type' => 'time', 'label' => 'Start time'],
             'end_time' => ['type' => 'time', 'label' => 'End time'],
-            'priority' => ['type' => 'number', 'label' => 'Priority', 'value' => 50, 'max' => '100'],
+            'priority' => ['type' => 'number', 'label' => 'Priority', 'value' => 50, 'max' => 100],
             'description' => ['type' => 'richtext', 'label' => 'Description (optional)', 'value' => '']
         ];
     }
@@ -475,7 +481,7 @@ class schedule extends optionsPage{
                     if(date('Y-m-d',$sts) != date('Y-m-d',$time)){ break; } //stop if date != showdate
                 case 1:
                     //echo $event['instance_id'] . ": $sstart < $nowminutes < $send , (". ($sstart <= $nowminutes && $nowminutes < $send) .")";
-                    if($sstart <= $nowminutes && $nowminutes < $send){
+                    if($sstart <= $nowminutes && $nowminutes <= $send){
                         //Check if current time falls within time period
                         $matching[] = $event;
                     }
@@ -484,7 +490,7 @@ class schedule extends optionsPage{
                     //Check if the current day of the week is the same as the show's
                     if($day == date('N', $sts) && $time >= $sts){
                         //Check if current time falls within time period
-                        if($sstart <= $nowminutes && $nowminutes < $send){
+                        if($sstart <= $nowminutes && $nowminutes <= $send){
                             $matching[] = $event;
                         }
                     }
@@ -506,6 +512,9 @@ class schedule extends optionsPage{
             //$matching[] = array($sstart,$send,$nowminutes);
         }
         return $matching;
+    }
+    public static function getUpcomingEvents($schedule_id){
+        
     }
     
     public static function formArray(){
