@@ -176,6 +176,7 @@ class shows extends optionsPage{
             'start_time' => ['type' => 'time', 'label' => 'Start time'],
             'end_time' => ['type' => 'time', 'label' => 'End time'],
             'priority' => ['type' => 'number', 'label' => 'Priority', 'value' => 50, 'max' => 100],
+            'pullsongs' => ['type' => 'checkbox', 'label' => 'Pull current songs', 'value' => 1],
             'description' => ['type' => 'richtext', 'label' => 'Description (optional)', 'value' => '']
         ];
     }
@@ -423,28 +424,22 @@ class schedule extends optionsPage{
         //echo "(" . count($events) . ")";
         if(count($events) > 0){
             
-            $preferredEvent;
-            foreach($events as $event){
-                if(intval($event['frequency']) == 0){   //One-time events take priority
-                    $preferredEvent = $event;
-                }
-            }
+            /* Otherwise pick the first one */
+            $preferredEvent = $events[0];
+            $showID = $preferredEvent['show_id'];
             
-            if($preferredEvent){
-                /* Set show ID to prioritised event if there is one */
-                $showID = $preferredEvent['show_id'];
-            }else{
-                /* Otherwise pick the first one */
-                $showID = $events[0]['show_id'];
-            }
             /* Convert showID to show object */
             $show = shows::rawGetShowById($showID);
 
-            $video->title = $video->title . ': ' . $show['title'];
+            
             if($show['poster_url']){ $video->poster = $show['poster_url']; }
             $video->nowplaying = $show['title'];
             if($show['description']){ $video->description = $show['description']; }
             $video->theme_colour = $show['theme_colour'];
+            $video->pullsongs = $preferredEvent['pullsongs'];
+            if($video->pullsongs){
+                $video->title = $video->title . ': ' . $show['title'];
+            }
         }
         return $video;
     }
@@ -461,7 +456,7 @@ class schedule extends optionsPage{
     }
     /** Return array of currently running events */
     public static function getEventsByTime($schedule_id, $time){
-        $events = self::getInstancesBySchedule($schedule_id);
+        $events = self::getInstancesBySchedule($schedule_id, 'priority DESC');
         $matching = array();
 
         //Day - the current day of the week
@@ -607,11 +602,11 @@ class schedule extends optionsPage{
      * @param type $schedule_id
      * @return boolean
      */
-    public static function getInstancesBySchedule($schedule_id){
+    public static function getInstancesBySchedule($schedule_id, $order = 'first DESC'){
         global $connection;
         $schedule_id = intval($schedule_id);
         $array = array();
-        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY first DESC;")){
+        if($result = $connection->query("SELECT * FROM schedule_instance WHERE schedule_id='$schedule_id' ORDER BY $order;")){
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $array[] = $row;
             }

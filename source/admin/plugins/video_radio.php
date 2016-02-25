@@ -26,14 +26,15 @@ class radio extends mediaPlayer{
         require_once('plugins/radio/player.php');
        
         //$title = radioPlayer::getNowPlaying($nowplaying, $content->title);
-        
+        $content->plaintitle = $content->title;
         $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title, $json);
         $info = radioPlayer::getNowPlaying($nowplaying_url);
-        
         $content->server_info = $info['raw'];
-        $content->nowplaying = $info['title'];
-        $content->plaintitle = $content->title;
-        $content->title = $content->title . ': ' . $info['title'];
+        
+        if($content->pullsongs != false){
+            $content->nowplaying = $info['title'];
+            $content->title = $content->title . ': ' . $info['title'];
+        }
         //$content->poster = null;
         
         return $content;
@@ -60,13 +61,15 @@ class visual_radio extends mediaPlayer{
         require_once('plugins/radio/player.php');
 
         //$title = radioPlayer::getNowPlaying($nowplaying, $content->title);
-
+        $content->plaintitle = $content->title;
         $info = radioPlayer::getNowPlaying($nowplaying_url);
         if(strlen($info['title']) > 0){
             $content->server_info = $info['raw'];
-            $content->nowplaying = $info['title'];
-            $content->plaintitle = $content->title;
-            $content->title = $content->title . ': ' . $info['title'];
+            if($content->pullsongs != false){
+                $content->nowplaying = $info['title'];
+                $content->title = $content->title . ': ' . $info['title'];
+            }
+           
         }
         //$content->poster = null;
         
