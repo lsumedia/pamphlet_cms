@@ -32,17 +32,39 @@ class twitter extends optionsPage{
         
         ce::begin('style="width:60vw;"');
         
+        $currentString = file_get_contents('plugins/twitter/current.json');
+        $current = json_decode($currentString,1);
+        
+        $clean = [];
+        $user = $current['user'];
+        $author = $user['name'];
+        $screen_name = '@' . $user['screen_name'];
+        $dpurl = $user['profile_image_url_https'];
+        $dp = "<img src=\"$dpurl\" />";
+        $text = $current['text'];
+        $posted = $current['created_at'];
+        $new = ['' => $dp, 'Author' => $author, 'Handle' => $screen_name, 'Text' => $text, 'Date' => $posted];
+        $clean[] = $new;
+        
+        $currentIL = new ajaxList($clean, 'currenttweet');
+        $currentIL->title('Current live tweet');
+        $currentIL->display();
+        
         $term = $_GET['term'];
         //echo "<form>";
         echo "<div class=\"form\">";
         echo "<div class=\"fieldRow\">";
         echo "<p>Search term</p>";
-        echo "<input id=\"term_input\" value=\"$term\"></input>";
+        echo "<input id=\"term_input\" placeholder=\"Search term\" value=\"$term\"></input>";
         echo "</div>";
         echo "<div class=\"fieldRow\">";
         echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value);\" >Search</button>";
         echo "</div>";
         echo "</div>";
+        
+        
+        
+        $current = file_get_contents('plugins/twitter/current.json');
 
         //echo "</form>";
         if(isset($_GET['term'])){

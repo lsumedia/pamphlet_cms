@@ -1,0 +1,9 @@
+{
+    "text":"Some tweet text",
+    "user":{
+        "name":"Aaron A. Anderson",
+        "screen_name":"a_anderson"
+    },
+    "created_at":"Earlier"
+    
+}

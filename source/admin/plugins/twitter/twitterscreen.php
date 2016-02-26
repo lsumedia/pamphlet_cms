@@ -77,20 +77,15 @@ class twitterList{
         require_once('TwitterAPIExchange.php');
 
         /* This bit is secret so DON'T put it on GitHub! */
-        $settings = array(
-            'oauth_access_token' => "807535267-P4cDp5WvNjHqAYmhDo3iK4uXyXFKliNWjhF15DbF",
-            'oauth_access_token_secret' => "EkhCINaKnakrZY0O9E87eq3nycVLvme6TOTsuNeVIiGNj",
-            'consumer_key' => "C7u15mc3C96uoCaiEc1EZGiLs",
-            'consumer_secret' => "zTNXQzjrVwLNY0bkIogNEG0PiARVpgaNmITM6WDjZSoWFxM1Hf"
-        );
+        require('twitter_keys.php');
 
         $url = 'https://api.twitter.com/1.1/search/tweets.json';
         $getfield = "?q=$term-filter:retweets&result_type=recent&count=100";
         $requestMethod = 'GET';
 
         $twitter = new TwitterAPIExchange($settings);
-        $twitter->setGetfield($getfield)      ->buildOauth($url, $requestMethod);
-        
+        $twitter->setGetfield($getfield)      
+                ->buildOauth($url, $requestMethod);
         $datastring = $twitter->performRequest();
         $data = json_decode($datastring,1);
         $statuses = $data['statuses'];
@@ -112,5 +107,8 @@ class twitterList{
             $clean[] = $new;
         }
         return $clean;
+    }
+    
+    public static function getOne($tweetid){
     }
 }
