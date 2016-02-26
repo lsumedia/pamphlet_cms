@@ -76,8 +76,7 @@ class twitterList{
     public static function getList($term){
         require_once('TwitterAPIExchange.php');
 
-        /* This bit is secret so DON'T put it on GitHub! */
-        require('twitter_keys.php');
+        require_once('twitter_keys.php');
 
         $url = 'https://api.twitter.com/1.1/search/tweets.json';
         $getfield = "?q=$term-filter:retweets&result_type=recent&count=100";
@@ -110,5 +109,20 @@ class twitterList{
     }
     
     public static function getOne($tweetid){
-    }
+        require_once('TwitterAPIExchange.php');
+
+        /* This bit is secret so DON'T put it on GitHub! */
+        require_once('twitter_keys.php');
+
+        $url = 'https://api.twitter.com/1.1/statuses/show.json';
+        $getfield = "?id=$tweetid";
+        $requestMethod = 'GET';
+
+        $twitter = new TwitterAPIExchange($settings);
+        $twitter->setGetfield($getfield)      
+                ->buildOauth($url, $requestMethod);
+        $datastring = $twitter->performRequest();
+        $status = json_decode($datastring,1);
+        return $status;
+    }   
 }

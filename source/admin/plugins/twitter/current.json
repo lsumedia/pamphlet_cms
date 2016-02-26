@@ -2,7 +2,8 @@
     "text":"Some tweet text",
     "user":{
         "name":"Aaron A. Anderson",
-        "screen_name":"a_anderson"
+        "screen_name":"a_anderson",
+        "profile_image_url_https":"https://pbs.twimg.com/profile_images/636999886148378624/aDUgz8fO_normal.jpg"
     },
     "created_at":"Earlier"
     
