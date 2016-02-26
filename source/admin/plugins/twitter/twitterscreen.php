@@ -70,3 +70,47 @@ class twitterscroller{
           html::end();
     }
 }
+
+class twitterList{
+    
+    public static function getList($term){
+        require_once('TwitterAPIExchange.php');
+
+        /* This bit is secret so DON'T put it on GitHub! */
+        $settings = array(
+            'oauth_access_token' => "807535267-P4cDp5WvNjHqAYmhDo3iK4uXyXFKliNWjhF15DbF",
+            'oauth_access_token_secret' => "EkhCINaKnakrZY0O9E87eq3nycVLvme6TOTsuNeVIiGNj",
+            'consumer_key' => "C7u15mc3C96uoCaiEc1EZGiLs",
+            'consumer_secret' => "zTNXQzjrVwLNY0bkIogNEG0PiARVpgaNmITM6WDjZSoWFxM1Hf"
+        );
+
+        $url = 'https://api.twitter.com/1.1/search/tweets.json';
+        $getfield = "?q=$term-filter:retweets&result_type=recent&count=100";
+        $requestMethod = 'GET';
+
+        $twitter = new TwitterAPIExchange($settings);
+        $twitter->setGetfield($getfield)      ->buildOauth($url, $requestMethod);
+        
+        $datastring = $twitter->performRequest();
+        $data = json_decode($datastring,1);
+        $statuses = $data['statuses'];
+        return $statuses;
+    }
+    
+    public static function getCleanList($term){
+        $statuses = self::getList($term);
+        $clean = [];
+        foreach($statuses as $status){
+            $user = $status['user'];
+            $author = $user['name'];
+            $screen_name = '@' . $user['screen_name'];
+            $dpurl = $user['profile_image_url_https'];
+            $dp = "<img src=\"$dpurl\" />";
+            $text = $status['text'];
+            $posted = $status['created_at'];
+            $new = ['' => $dp, 'Author' => $author, 'Handle' => $screen_name, 'Text' => $text, 'Date' => $posted];
+            $clean[] = $new;
+        }
+        return $clean;
+    }
+}

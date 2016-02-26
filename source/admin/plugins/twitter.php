@@ -8,7 +8,7 @@
 
 class twitter extends optionsPage{
     public $name = "plugin_twitter";
-    //public $title = "Twitter";
+    public $title = "Twitter";
     
     function setup(){
         
@@ -20,20 +20,42 @@ class twitter extends optionsPage{
         
         require_once('plugins/twitter/twitterscreen.php');
         
-        if(isset($_GET['search'])){
-            $term = filter_input(INPUT_GET,'search');
-            twitterscroller::build($term);
-        }else{
-            twitterscreen::build("fewinterball","/live/images/falkeggmedia.png","#FEWinterBall");
-        }
+        twitterscroller::build($_GET['search']);
+        
+        
         
     }
     
     function configPage(){
         global $connection;
-        $ce = new centralElement("ce-medium");
+        require('plugins/twitter/twitterscreen.php');
         
-        $ce->end();
+        ce::begin('style="width:60vw;"');
+        
+        $term = $_GET['term'];
+        //echo "<form>";
+        echo "<div class=\"form\">";
+        echo "<div class=\"fieldRow\">";
+        echo "<p>Search term</p>";
+        echo "<input id=\"term_input\" value=\"$term\"></input>";
+        echo "</div>";
+        echo "<div class=\"fieldRow\">";
+        echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value);\" >Search</button>";
+        echo "</div>";
+        echo "</div>";
+
+        //echo "</form>";
+        if(isset($_GET['term'])){
+            $term = $_GET['term'];
+            $data = twitterList::getCleanList($term);
+            $list = new ajaxList($data,'data');
+            $list->title('Matching tweets');
+            $list->display();
+        }else{
+            echo "Please enter a search term";
+        }
+        
+        ce::end();
         
     }
     function updatePage(){
