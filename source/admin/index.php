@@ -48,8 +48,8 @@ if(isset($_SESSION['username'])){
     $leftbar->elements = $pages->returnNavList();	//Import pagelist to array
    		//Set leftbar prefix
     $leftbar->addLink("logout", "Sign out");
-    $leftbar->printBar();							//Print leftbar
-    $inner->printInner();							//Print inner AJAX section                                                    //Send AJAX code
+    $leftbar->printBar();                               //Print leftbar
+    $inner->printInner();				//Print inner AJAX section                           
     $defaultPage = 'general';
 }else{
     //$leftbar->addLink("login","Log in");
