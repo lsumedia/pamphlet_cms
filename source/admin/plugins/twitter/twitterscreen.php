@@ -73,6 +73,19 @@ class twitterscroller{
 
 class twitterList{
     
+    public static function rawToClean($status){
+        $user = $status['user'];
+        $author = $user['name'];
+        $screen_name = '@' . $user['screen_name'];
+        $dpurl = $user['profile_image_url_https'];
+        $dp = "<img src=\"$dpurl\" />";
+        $text = $status['text'];
+        $posted = $status['created_at'];
+        $onclick = "if(confirm('Make this tweet live?')){ replaceCurrentTweet('" . $status['id_str'] . "');}";
+        $clean = ['' => $dp, 'Author' => $author, 'Handle' => $screen_name, 'Text' => $text, 'Date' => $posted, 'onclick' => $onclick];
+        return $clean;
+    }
+    
     public static function getList($term){
         require_once('TwitterAPIExchange.php');
 
@@ -95,15 +108,7 @@ class twitterList{
         $statuses = self::getList($term);
         $clean = [];
         foreach($statuses as $status){
-            $user = $status['user'];
-            $author = $user['name'];
-            $screen_name = '@' . $user['screen_name'];
-            $dpurl = $user['profile_image_url_https'];
-            $dp = "<img src=\"$dpurl\" />";
-            $text = $status['text'];
-            $posted = $status['created_at'];
-            $new = ['' => $dp, 'Author' => $author, 'Handle' => $screen_name, 'Text' => $text, 'Date' => $posted];
-            $clean[] = $new;
+            $clean[] = self::rawToClean($status);
         }
         return $clean;
     }
@@ -125,4 +130,9 @@ class twitterList{
         $status = json_decode($datastring,1);
         return $status;
     }   
+    
+    public static function getOneClean($tweetid){
+        $raw = self::getOne($tweetid);
+        return self::rawToClean($raw);
+    }
 }

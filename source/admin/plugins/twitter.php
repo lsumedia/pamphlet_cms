@@ -10,20 +10,20 @@ class twitter extends optionsPage {
     public $name = "plugin_twitter";
     public $title = "Twitter";
 
-    function setup() {
-        
-    }
-
-    function displayPage() {
+    function updatePage() {
 
         global $connection; //Import connection object
 
         require_once('plugins/twitter/twitterscreen.php');
 
         switch ($_GET['request']) {
-            case 'getone':
+            case 'setone':
                 $id = $_GET['id'];
-                echo json_encode(twitterList::getOne($id));
+                $status = twitterList::getOne($id);
+                $clean = twitterList::rawToClean($status);
+                $raw_json = json_encode($status);
+                file_put_contents('plugins/twitter/current.json', $raw_json);
+                echo json_encode($clean);
                 break;
             case 'search':
                 $term = $_GET['term'];
@@ -62,15 +62,27 @@ class twitter extends optionsPage {
         $currentIL->display();
 
         $term = $_GET['term'];
+        $custom = $_GET['custom'];
         //echo "<form>";
         echo "<div class=\"form\">";
+        
+        echo "<div class=\"fieldRow\">";
+        echo "<p>Load by URL</p>";
+        echo "<input id=\"tweet_url_input\" placeholder=\"Tweet URL\" value=\"$custom\"></input>";
+        echo "</div>";
+        echo "<div class=\"fieldRow\">";
+        echo "<button onclick=\"replaceTweetByUrl(document.getElementById('tweet_url_input').value);\" >Load</button>";
+        echo "</div>";
+        
+        
         echo "<div class=\"fieldRow\">";
         echo "<p>Search term</p>";
         echo "<input id=\"term_input\" placeholder=\"Search term\" value=\"$term\"></input>";
         echo "</div>";
         echo "<div class=\"fieldRow\">";
-        echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value);\" >Search</button>";
+        echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value);\" >Search</button>";
         echo "</div>";
+        
         echo "</div>";
 
         $current = file_get_contents('plugins/twitter/current.json');
@@ -89,7 +101,7 @@ class twitter extends optionsPage {
         ce::end();
     }
 
-    function updatePage() {
+    function displayPage() {
         global $connection;
     }
 
@@ -100,40 +112,31 @@ class twitterSetter extends uiElement {
     public $name = 'twitter_setter';
 
     public static function clientSide() {
-        $url = actualLink() . 'public.php?action=plugin_twitter&request=getone&id=';
+        $url = actualLink() . '/request.php?update&action=plugin_twitter&request=setone&id=';
         ?>
-<script>
+//<script>
 function replaceCurrentTweet(tweetID){
     //Function to pull some data   
     var request_url = '<?php echo $url ?>' + tweetID;
+    var list_id = 'currenttweet';
     $.ajax({
         url: request_url,
         type : 'GET',
         contentType: 'application/json',
         success: function(data){
-            var featured = JSON.parse(data);
-            var html = "";
-            for(var i = 0; i < featured.length; i++){
-                var item = featured[i];
-                var id = item['id'];
-                var title = item['title'];
-                var poster = item['poster'];
-
-                var type = player_id == channel['id'] ? "active" : "" ;
-                html += "<li class=\"" + type + "\" onclick=\"loadVideo('"+ id + "');\">";
-                html += "<div class=\"mask\"><img class=\"channel_thumb\" src=\"" + poster + "\"></div>";
-                html += "<div class=\"channel_text\">";
-                html += "<span class=\"title\">" + title + "</span><br />";
-                if(item['nowplaying']){ html += "<span class=\"programme\">" + channel['nowplaying'] + "</span>"; }
-                html += "</div>";
-                html += "</li>";
-
-            }
-            document.getElementById('related_list').innerHTML = html;
+            var status = JSON.parse(data);
+            var list_data_id = list_id + '_data';
+            var dataSection = document.getElementById(list_data_id);
+            dataSection.innerHTML = '[' + data + ']';
+            list_change_page(list_id, list_data_id, 0);
         }
 });
 }
-</script>
+function replaceTweetByUrl(url){
+    var tarray = url.split('/');
+    var last = tarray[tarray.length -1];
+    replaceCurrentTweet(last);
+}
         <?php
     }
 
