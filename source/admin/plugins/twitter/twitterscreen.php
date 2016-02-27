@@ -25,8 +25,9 @@ class twitterList{
         $screen_name = '@' . $user['screen_name'];
         $dpurl = $user['profile_image_url_https'];
         $dp = "<img src=\"$dpurl\" />";
-        $text = $status['text'];
-        $posted = $status['created_at'];
+        $text = $status['text']; 
+        $timestamp = strtotime($status['created_at']);
+        $posted = date('D dS M Y H:i',$timestamp);
         $onclick = "if(confirm('Make this tweet live?')){ replaceCurrentTweet('" . $status['id_str'] . "');}";
         $clean = ['' => $dp, 'Author' => $author, 'Handle' => $screen_name, 'Text' => $text, 'Date' => $posted, 'onclick' => $onclick];
         return $clean;
