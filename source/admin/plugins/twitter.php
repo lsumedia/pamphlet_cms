@@ -122,12 +122,16 @@ function replaceCurrentTweet(tweetID){
             dataSection.innerHTML = '[' + data + ']';
             list_change_page(list_id, list_data_id, 0);
         }
-});
+    });
 }
 function replaceTweetByUrl(url){
-    var tarray = url.split('/');
-    var last = tarray[tarray.length -1];
-    replaceCurrentTweet(last);
+    if(url.length > 0 ){
+        var tarray = url.split('/');
+        var last = tarray[tarray.length -1];
+        replaceCurrentTweet(last);
+    }else{
+        alert('Please enter a valid URL');
+    }
 }
         <?php
     }
