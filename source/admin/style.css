@@ -285,7 +285,7 @@ body {
     margin-bottom: 0px; }
 
   .centralelement {
-    width: auto;
+    width: auto !important;
     min-width: 600px !important;
     width: calc(100vw - 247px);
     margin-right: 0px;

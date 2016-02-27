@@ -47,15 +47,7 @@ class twitter extends optionsPage {
         $current = json_decode($currentString, 1);
 
         $clean = [];
-        $user = $current['user'];
-        $author = $user['name'];
-        $screen_name = '@' . $user['screen_name'];
-        $dpurl = $user['profile_image_url_https'];
-        $dp = "<img src=\"$dpurl\" />";
-        $text = $current['text'];
-        $posted = $current['created_at'];
-        $new = ['' => $dp, 'Author' => $author, 'Handle' => $screen_name, 'Text' => $text, 'Date' => $posted];
-        $clean[] = $new;
+        $clean[] = twitterList::rawToClean($current);
 
         $currentIL = new ajaxList($clean, 'currenttweet');
         $currentIL->title('Current live tweet');
@@ -88,14 +80,14 @@ class twitter extends optionsPage {
         $current = file_get_contents('plugins/twitter/current.json');
 
         //echo "</form>";
-        if (isset($_GET['term'])) {
+        if (strlen($_GET['term']) > 0){
             $term = $_GET['term'];
             $data = twitterList::getCleanList($term);
             $list = new ajaxList($data, 'data');
             $list->title('Matching tweets');
             $list->display();
-        } else {
-            echo "Please enter a search term";
+        }else {
+            echo "<p>Enter a search term to see tweets</p>";
         }
 
         ce::end();
