@@ -63,6 +63,7 @@ class twitter extends optionsPage {
         echo "<input id=\"tweet_url_input\" placeholder=\"Tweet URL\" value=\"$custom\"></input>";
         echo "</div>";
         echo "<div class=\"fieldRow\">";
+        echo "<p id='loadUrlError'></p>";
         echo "<button onclick=\"replaceTweetByUrl(document.getElementById('tweet_url_input').value);\" >Load</button>";
         echo "</div>";
         
@@ -72,8 +73,14 @@ class twitter extends optionsPage {
         echo "<input id=\"term_input\" placeholder=\"Search term\" value=\"$term\"></input>";
         echo "</div>";
         echo "<div class=\"fieldRow\">";
+        if (strlen($_GET['term']) > 0){
+            $time = date('H:m:s');
+            echo "<p>Updated tweets at $time</p>";
+        }
         echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value);\" >Search</button>";
         echo "</div>";
+        
+        
         
         echo "</div>";
 
@@ -130,7 +137,7 @@ function replaceTweetByUrl(url){
         var last = tarray[tarray.length -1];
         replaceCurrentTweet(last);
     }else{
-        alert('Please enter a valid URL');
+        document.getElementById('loadUrlError').innerHTML = 'Invalid tweet URL';
     }
 }
         <?php

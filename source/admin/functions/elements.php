@@ -351,6 +351,7 @@ var convert = function(convert){
     return $("<span />", { html: convert }).text();
 };
 
+        
 function list_get_data(dataLocation){
         var string = document.getElementById(dataLocation).innerHTML;
         return JSON.parse(string);
@@ -387,18 +388,22 @@ function list_change_page(listId,dataLocation,pageNumber){
         var backbtn = document.getElementById(listId + '_back');
         var nextbtn = document.getElementById(listId + '_next');
         //Change button targets
-        backbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
-        nextbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
+        
+        
         //Change button visibility depending on list length
         if(pageNumber == 0){
-            backbtn.style.display = 'none';
+            backbtn.setAttribute('onclick','javascript:void(0);');
+            backbtn.style.color = '#888';
         }else{
-            backbtn.style.display = 'inline';
+            backbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
+            backbtn.style.color = 'inherit';
         }
         if(pageNumber >= (numberOfPages -1) ){
-            nextbtn.style.display = 'none';
+            nextbtn.setAttribute('onclick','javascript:void(0);');
+            nextbtn.style.color = '#888';
         }else{
-            nextbtn.style.display = 'inline';
+            nextbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
+            nextbtn.style.color = 'inherit';
         }
         
 }
@@ -440,6 +445,11 @@ function list_search(listId,dataLocation,term){
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
+        //Load buttons
+        var backbtn = document.getElementById(listId + '_back');
+        var nextbtn = document.getElementById(listId + '_next');
+        backbtn.style.color = '#888';
+        nextbtn.style.color = '#888';
 }
         
 function list_all(listId, dataLocation){ 
@@ -514,8 +524,8 @@ END;
             $back_id = $this->id . '_back';
             $next_id = $this->id . '_next';
             $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
-            $back = "<img onclick=\"list_change_page('$this->id','$data_id',0);\" style='display:none;' src=\"images/back_black.png\" id='$back_id'/>";
-            $next = "<img onclick=\"list_change_page('$this->id','$data_id',1);\" src=\"images/next_black.png\" id='$next_id' />"; 
+            $back = "<i onclick=\"list_change_page('$this->id','$data_id',0);\" id='$back_id' class='material-icons' style=\"color:#888;\">chevron_left</i>";
+            $next = "<i onclick=\"list_change_page('$this->id','$data_id',1);\" id='$next_id' class='material-icons'>chevron_right</i>"; 
             echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
         echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
