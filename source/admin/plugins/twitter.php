@@ -74,7 +74,7 @@ class twitter extends optionsPage {
         echo "</div>";
         echo "<div class=\"fieldRow\">";
         if (strlen($_GET['term']) > 0){
-            $time = date('H:m:s');
+            $time = date('H:i:s');
             echo "<p>Updated tweets at $time</p>";
         }
         echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value);\" >Search</button>";
