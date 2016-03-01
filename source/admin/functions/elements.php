@@ -374,7 +374,7 @@ function list_change_page(listId,dataLocation,pageNumber){
                 html += '<tr onclick="' + row['onclick'] + '">';
                 for(var key in row){
                     if(key != 'onclick'){
-                        html += "<td>" + convert(row[key]) + "</td>";
+                        html += "<td>" + row[key] + "</td>";
                     }
                 }
                 html += "</tr>";
@@ -437,7 +437,7 @@ function list_search(listId,dataLocation,term){
                 html += '<tr onclick="' + row['onclick'] + '">';
                 for(var key in row){
                     if(key != 'onclick'){
-                        html += "<td>" + convert(row[key]) + "</td>";
+                        html += "<td>" + row[key] + "</td>";
                     }
                 }
                 html += "</tr>";
@@ -466,7 +466,7 @@ function list_all(listId, dataLocation){
                 html += '<tr onclick="' + row['onclick'] + '">';
                 for(var key in row){
                     if(key != 'onclick'){
-                        html += "<td>" + convert(row[key]) + "</td>";
+                        html += "<td>" + row[key] + "</td>";
                     }
                 }
                 html += "</tr>";
