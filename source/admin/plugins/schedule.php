@@ -313,14 +313,32 @@ class schedule extends optionsPage{
     public $title = 'Scheduling';
     
     public function displayPage(){
-        if(isset($_GET['events'])){
-            $sid = $_GET['events'];
-            if(isset($_GET['time'])){
-                $time = $_GET['time'];
-                echo json_encode(self::getEventsByTime($sid, $time));
-            }else{
-                echo json_encode(self::getEventsByTime($sid, time()));
-            }
+        switch($_GET['request']){
+            case 'events':
+                $sid = $_GET['schedule_id'];
+                if(isset($_GET['time'])){
+                    $time = $_GET['time'];
+                    echo json_encode(self::getEventsByTime($sid, $time));
+                }else{
+                    echo json_encode(self::getEventsByTime($sid, time()));
+                }
+            break;
+            case 'upcoming':
+                $sid = $_GET['schedule_id'];
+                echo json_encode(self::getUpcomingEvents($sid, time()));
+                break;
+            default:
+                echo 'Scheduling plugin read-only API',PHP_EOL;
+                echo 'Options:', PHP_EOL;
+                echo '&request=events&schedule_id=[scheduleid]', PHP_EOL;
+                echo '  Get all events currently occurring for a given schedule', PHP_EOL;
+                echo '+&time=[timestamp]', PHP_EOL;
+                echo '  Get events occurring at a given Unix time', PHP_EOL;
+                echo '&request=upcoming&schedule_id=[scheduleid]', PHP_EOL;
+                echo '  Get upcoming events sorted by time to occurrence', PHP_EOL;
+                echo '+&before=[time]', PHP_EOL;
+                echo '  Limit responses to those occurring a given number of seconds from the present time', PHP_EOL;
+                break;
         }
     }
     
@@ -508,8 +526,94 @@ class schedule extends optionsPage{
         }
         return $matching;
     }
-    public static function getUpcomingEvents($schedule_id){
+    /* Get events that are coming up, ordered by how soon they are in ascending 
+     * order before a certain time ($limit, default is 1 week). Returns array
+     * of event objects
+     */
+    public static function getUpcomingEvents($schedule_id, $time, $limit = 10080){
+        $events = self::getInstancesBySchedule($schedule_id, 'priority DESC');
+        $matching = array();
+        //go through all events
+        foreach($events as $event){
+            $data = self::timeToNextOccurrence($event, $time);
+            $matching[] = $data;
+        }
+        //get time to event
         
+        //sort by time to event
+        usort($matching, function($a,$b){
+            return $a['timeToStart'] - $b['timeToStart'];
+        });
+        
+        
+        return $matching;
+        
+        $goodmatches = [];
+        foreach($matching as $key => $occurrence){
+            if(is_numeric($occurrence['timeToStart'])){
+                $goodmatches[] = $occurrence;
+            }
+        }
+        return $goodmatches;
+    }
+    
+    public static function timeToNextOccurrence($event, $time){
+        
+        $occurrence = [];   //Array for all data
+        $timeToStart;   //time in minutes to next occurrence start
+        $timeToEnd;     //time in minutes to next occurrence end
+        //Day - the current day of the week
+        $day = intval(date('N', $time));
+        //Minutes since midnight
+        $nowminutes = (intval(date('G', $time)) * 60) + intval(date('i', $time));   
+        //$event = shows::getInstanceById($instance_id);
+        $occurrence['show'] = shows::rawGetShowById($event['show_id']);
+        //Timestamp of first occurence of show
+        $frequency = $event['frequency']; 
+        $sts = strtotime($event['first']);
+        $sstart = self::timeToMinutes($event['start_time']);
+        $send = self::timeToMinutes($event['end_time']);
+        switch($frequency){
+            case 0:
+                //Check if current date equals event date
+                if(date('Y-m-d',$sts) != date('Y-m-d',$time)){ break; } //stop if date != showdate
+            case 1:
+                //echo $event['instance_id'] . ": $sstart < $nowminutes < $send , (". ($sstart <= $nowminutes && $nowminutes < $send) .")";
+                $timeToStart = $sstart - $nowminutes;
+                $timeToEnd = $send - $nowminutes;
+                break;
+            case 7:
+                //Check if the current day of the week is the same as the show's
+                $diff = date('N', $sts) - $day;
+                if($diff < 0){
+                    $diff = 7 + $diff;
+                }
+                $occurrence['daysToStart'] = $diff;
+                //Check if current time falls within time period
+                $timeToStart = ($sstart - $nowminutes) + (1440 * $diff);
+                $timeToEnd = ($send - $nowminutes) + (1440 * $diff);
+                break;
+            case 14:
+                //If number of days since the first date % 14 = 0
+                $nowdays = floor($time / 86400);
+                $showdays = floor($sts / 86400);
+                //Check if the number of days since the start date is a multiple of 14
+                if((($nowdays-$showdays) % 14 == 0)|| $nowdays == $showdays){
+                    //Check if current time falls within time period
+                    if($sstart <= $nowminutes && $nowminutes <= $send){
+                        $matching[] = $event;
+                    }
+                }
+        } 
+        
+        $occurrence['event'] = $event;
+        $occurrence['timeToStart'] = $timeToStart;
+        $occurrence['timeToEnd'] = $timeToEnd;
+        /*
+        if($timeToStart < 0){
+            return false;
+        }*/
+        return $occurrence;
     }
     
     public static function formArray(){
