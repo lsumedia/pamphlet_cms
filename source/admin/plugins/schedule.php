@@ -619,6 +619,22 @@ class schedule extends optionsPage{
                 break;
         } 
         
+        $niceStartTime = substr($event['start_time'],0,5);
+        $niceEndTime = substr($event['end_time'],0,5);
+        
+        if($timeToStart < (1440 - $nowminutes)){
+            $niceTime = $niceStartTime . '-' . $niceEndTime;
+        }else if($timeToStart < (2880 - $nowminutes)){
+            $niceTime = 'Tomorrow ' . $niceStartTime . '-' . $niceEndTime;
+        }else{
+            $days = days();
+            $today = date('N');
+            $eventDay = round($timeToStart / 1440) + $today;
+            if($eventDay > 7){ $eventDay -= 7; }
+            $niceTime = days()[$eventDay] . ' ' . $niceStartTime . '-' . $niceEndTime; 
+        }
+        
+        $occurrence['niceTime'] = $niceTime;
         $occurrence['event'] = $event;
         $occurrence['timeToStart'] = $timeToStart;
         $occurrence['timeToEnd'] = $timeToEnd;
@@ -628,6 +644,7 @@ class schedule extends optionsPage{
         }*/
         return $occurrence;
     }
+    
     
     public static function formArray(){
         return [
