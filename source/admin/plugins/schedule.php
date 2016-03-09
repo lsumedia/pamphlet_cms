@@ -546,11 +546,9 @@ class schedule extends optionsPage{
         });
         
         
-        return $matching;
-        
         $goodmatches = [];
         foreach($matching as $key => $occurrence){
-            if(is_numeric($occurrence['timeToStart'])){
+            if($occurrence['timeToStart'] >= 0){
                 $goodmatches[] = $occurrence;
             }
         }
