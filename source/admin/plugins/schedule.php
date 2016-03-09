@@ -558,7 +558,6 @@ class schedule extends optionsPage{
     }
     
     public static function timeToNextOccurrence($event, $time){
-        
         $occurrence = [];   //Array for all data
         $timeToStart;   //time in minutes to next occurrence start
         $timeToEnd;     //time in minutes to next occurrence end
@@ -568,19 +567,32 @@ class schedule extends optionsPage{
         $nowminutes = (intval(date('G', $time)) * 60) + intval(date('i', $time));   
         //$event = shows::getInstanceById($instance_id);
         $occurrence['show'] = shows::rawGetShowById($event['show_id']);
-        //Timestamp of first occurence of show
+        //Show frequency
         $frequency = $event['frequency']; 
+        //Timestamp of first occurrence of show
         $sts = strtotime($event['first']);
+        //Minutes since midnight of the start
         $sstart = self::timeToMinutes($event['start_time']);
+        //Minutes since midnight of the end
         $send = self::timeToMinutes($event['end_time']);
+        //Minutes since epoch of the start
+        $sstarte = $sstart + floor($sts / 60);
+        //Minutes since epoch of the end
+        $sende = $send + floor($sts/60);
         switch($frequency){
             case 0:
                 //Check if current date equals event date
-                if(date('Y-m-d',$sts) != date('Y-m-d',$time)){ break; } //stop if date != showdate
+                $timeToStart = $sstarte - floor(time() / 60);
+                $timeToEnd = $sende - floor(time()/60);
+                break;
             case 1:
                 //echo $event['instance_id'] . ": $sstart < $nowminutes < $send , (". ($sstart <= $nowminutes && $nowminutes < $send) .")";
                 $timeToStart = $sstart - $nowminutes;
                 $timeToEnd = $send - $nowminutes;
+                if($timeToStart < 0){
+                    $timeToStart = 1440 + $timeToStart;
+                    $timeToEnd = 1440 + $timeToEnd;
+                }
                 break;
             case 7:
                 //Check if the current day of the week is the same as the show's
@@ -594,16 +606,19 @@ class schedule extends optionsPage{
                 $timeToEnd = ($send - $nowminutes) + (1440 * $diff);
                 break;
             case 14:
+                //TODO - Make this work!
                 //If number of days since the first date % 14 = 0
                 $nowdays = floor($time / 86400);
                 $showdays = floor($sts / 86400);
-                //Check if the number of days since the start date is a multiple of 14
-                if((($nowdays-$showdays) % 14 == 0)|| $nowdays == $showdays){
-                    //Check if current time falls within time period
-                    if($sstart <= $nowminutes && $nowminutes <= $send){
-                        $matching[] = $event;
-                    }
+                $diff = $nowdays - $showdays;
+                if($diff < 0){
+                    $diff = 14 + $diff;
                 }
+                $occurrence['daysToStart'] = $diff;
+                //Check if current time falls within time period
+                $timeToStart = ($sstart - $nowminutes) + (1440 * $diff);
+                $timeToEnd = ($send - $nowminutes) + (1440 * $diff);
+                break;
         } 
         
         $occurrence['event'] = $event;
