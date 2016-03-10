@@ -548,7 +548,7 @@ class schedule extends optionsPage{
         
         $goodmatches = [];
         foreach($matching as $key => $occurrence){
-            if($occurrence['timeToStart'] >= 0){
+            if($occurrence['timeToStart'] >= 0 && $occurrence['event']['priority'] > 0){
                 $goodmatches[] = $occurrence;
             }
         }
@@ -629,7 +629,8 @@ class schedule extends optionsPage{
         }else{
             $days = days();
             $today = date('N');
-            $eventDay = round($timeToStart / 1440) + $today;
+            $daysToStart = floor(($timeToStart + $nowminutes)/1440);
+            $eventDay = $daysToStart + $today;
             if($eventDay > 7){ $eventDay -= 7; }
             $niceTime = days()[$eventDay] . ' ' . $niceStartTime . '-' . $niceEndTime; 
         }
