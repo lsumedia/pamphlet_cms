@@ -14,8 +14,33 @@ class shows extends optionsPage{
     public $title = 'Shows';
     
     public function displayPage(){
-       global $connection;
+       switch($_GET['r']){
+            case 'list':
+                if(isset($_GET['schedule_id'])){
+                    $time = $_GET['time'];
+                    echo json_encode(self::rawGetShows());
+                }else{
+                    echo json_encode(self::rawGetShows());
+                }
+            break;
+            case 'show':
+                $id = $_GET['id'];
+                echo json_encode(self::detailedGetShowById($id));
+                break;
+            default:
+                echo 'Shows plugin read-only API',PHP_EOL;
+                echo 'Options:', PHP_EOL;
+                echo '&r=list', PHP_EOL;
+                echo '  List all shows', PHP_EOL;
+                echo '+&schedule_id=[schedule id]', PHP_EOL;
+                echo '  Restrict show list to shows which occur in a given schedule', PHP_EOL;
+                echo '&r=show&id=[Show ID]', PHP_EOL;
+                echo '  Get data for one show', PHP_EOL;
+                break;
+        }
+       
     }
+    
     public function configPage() {
         global $connection;
         ce::begin("style=\"max-width:800px;\"");
@@ -161,7 +186,7 @@ class shows extends optionsPage{
             'title' => ['type' => 'text', 'label' => 'Title', 'value' => ''],
             'poster_url' => ['type' => 'url', 'label' => 'Poster image', 'value' => ''],
             'theme_colour' => ['type' => 'color', 'label' => 'Theme colour', 'value' => '#FFFFFF'],
-            'tag' => ['type' => 'text', 'label' => 'Show category ID', 'value' => ''],
+            'tag' => ['type' => 'text', 'label' => 'Show tag', 'value' => ''],
             'description' => ['type' => 'richtext', 'label' => 'Description', 'value' => '']
         ];
     }
@@ -237,6 +262,28 @@ class shows extends optionsPage{
             return customForm::getEditForm(self::showFormArray(), $raw);
         }
         return false;
+    }
+    
+    public static function detailedGetShowById($id){
+        $data = self::rawGetShowById($id);
+        $tag = $data['tag'];
+        $episodes = [];
+        
+        global $connection;
+        if($result = $connection->query("SELECT * FROM plugin_vod WHERE tags COLLATE UTF16_GENERAL_CI LIKE '%$tag%';")){
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                unset($row['url']);
+                unset($row['source']);
+                unset($row['live']);
+                $episodes[] = $row;
+            }
+        }
+        $data['episodes'] = $episodes;
+        return $data;
+    }
+    
+    public static function getEpisodesByShow($show_id){
+        
     }
     
     /* Get show IDs and names in a key-value pair array */

@@ -30,9 +30,10 @@ class radio extends mediaPlayer{
         $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title, $json);
         $info = radioPlayer::getNowPlaying($nowplaying_url);
         $content->server_info = $info['raw'];
+        $content->server_nowplaying = $info['title'];
         
         if($content->pullsongs != false){
-            $content->nowplaying = $info['title'];
+            $content->nowplaying = $info['title']; 
             $content->title = $content->title . ': ' . $info['title'];
         }
         //$content->poster = null;
@@ -65,6 +66,7 @@ class visual_radio extends mediaPlayer{
         $info = radioPlayer::getNowPlaying($nowplaying_url);
         if(strlen($info['title']) > 0){
             $content->server_info = $info['raw'];
+            $content->server_nowplaying = $info['title'];
             if($content->pullsongs != false){
                 $content->nowplaying = $info['title'];
                 $content->title = $content->title . ': ' . $info['title'];
