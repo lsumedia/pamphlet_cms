@@ -269,13 +269,15 @@ class shows extends optionsPage{
         $tag = $data['tag'];
         $episodes = [];
         
-        global $connection;
-        if($result = $connection->query("SELECT * FROM plugin_vod WHERE tags COLLATE UTF16_GENERAL_CI LIKE '%$tag%';")){
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                unset($row['url']);
-                unset($row['source']);
-                unset($row['live']);
-                $episodes[] = $row;
+        if(strlen($tag) > 0){
+            global $connection;
+            if($result = $connection->query("SELECT * FROM plugin_vod WHERE tags COLLATE UTF16_GENERAL_CI LIKE '%$tag%';")){
+                while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                    unset($row['url']);
+                    unset($row['source']);
+                    unset($row['live']);
+                    $episodes[] = $row;
+                }
             }
         }
         $data['episodes'] = $episodes;
