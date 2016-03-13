@@ -271,7 +271,7 @@ class shows extends optionsPage{
         
         if(strlen($tag) > 0){
             global $connection;
-            if($result = $connection->query("SELECT * FROM plugin_vod WHERE tags COLLATE UTF16_GENERAL_CI LIKE '%$tag%';")){
+            if($result = $connection->query("SELECT * FROM plugin_vod WHERE tags COLLATE UTF16_GENERAL_CI LIKE '%$tag%' ORDER BY date DESC;")){
                 while($row = $result->fetch_array(MYSQLI_ASSOC)){
                     unset($row['url']);
                     unset($row['source']);
