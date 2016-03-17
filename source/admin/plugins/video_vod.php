@@ -122,7 +122,7 @@ class videos extends optionsPage{
             $form->formTitle("Editing source");
             $form->labeledInput('src', 'text', $source->src, 'Source URL');
             $form->labeledInput('type','text',$source->type,'Source type');
-            $form->labeledInput('res', 'number', $source->res, 'Source vertical resolution');
+            $form->labeledInput('res', 'text', $source->res, 'Source vertical resolution');
             $form->otherActionButton("deleteSource", "Delete source", "&delete_source=$source_id",$action);
             $form->submit('Update');
         }
@@ -144,7 +144,7 @@ class videos extends optionsPage{
             }
             $form->labeledInput("source_src", "text", "", "Primary source URL");
             $form->labeledInput('source_type', 'text', 'video/mp4', 'Primary source type');
-            $form->labeledInput('source_res','number','','Primary source vertical resolution');
+            $form->labeledInput('source_res','text','','Primary source vertical resolution');
             ajaxForm::startOptionalSection("embed","Embed code/Additional parameters");
             $form->plainText("code", "", "Custom embed code");
             ajaxForm::endOptionalSection();

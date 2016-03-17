@@ -102,7 +102,11 @@ class visual_radio extends mediaPlayer{
             $src = $source->src;
             $type = $source->type;
             $res = $source->res;
-            $label = $res . 'p';
+            if($audioonly){
+                $label = $res;
+            }else{
+                $label = $res . 'p';
+            }
             echo "<source label=\"$label\" res=\"$res\" src=\"$src\" type=\"$type\" >", PHP_EOL;
         }
         echo "Your browser does not support the video tag", PHP_EOL;
