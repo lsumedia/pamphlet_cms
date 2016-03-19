@@ -17,6 +17,10 @@ class radio extends mediaPlayer{
         $poster = $content->poster;
         $nowplaying_url = $content->source;
         
+        if(!isset($content->pullsongs)){
+            $content->pullsongs = true;
+        }
+        
         if($content->channelID){
             $json = actualLink() . "/public.php?action=plugin_videomanager&id=$content->channelID";
         }else{
@@ -58,6 +62,10 @@ class visual_radio extends mediaPlayer{
 
         $poster = $content->poster;
         $nowplaying_url = $content->source;
+        
+        if(!isset($content->pullsongs)){
+            $content->pullsongs = true;
+        }
         
         require_once('plugins/radio/player.php');
 
