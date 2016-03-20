@@ -48,6 +48,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
     float:left;
     padding-left:10px;
 }
-#play_button{
-    
+#play_btn{
+    background-color:#2486c7;
+}
+
+@media(max-width:660px){
+    #waveform{
+        width:80%;
+    }
+    #button_container{
+        width:19%;
+    }
 }

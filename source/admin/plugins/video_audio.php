@@ -53,9 +53,6 @@ class video_audio extends mediaPlayer{
         </div>
     </div>
 </div>
-<button onclick="wavesurfer.playPause()">
-    Play/pause
-</button>
 <script>
 var wavesurfer = WaveSurfer.create({
    container: '#waveform',
