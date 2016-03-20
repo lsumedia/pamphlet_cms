@@ -36,39 +36,52 @@ class video_audio extends mediaPlayer{
         
         ob_start();
  
+        html::css('plugins/audio/wavesurfer_audio.css');
+        html::css('plugins/audio/materialize.min.css');
+        html::css('https://fonts.googleapis.com/css?family=Roboto');
+        html::css('https://fonts.googleapis.com/icon?family=Material+Icons');
         html::jquery();
         html::js("//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.0.52/wavesurfer.min.js");	//WaveSurfer plugin
-        
-        echo "<div id=\"waveform\"></div>";
-        echo "<audio id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls>", PHP_EOL;
-        foreach($content->sources as $source){
-            $src = $source->src;
-            $type = $source->type;
-            $res = $source->res;
-            if($audioonly){
-                $label = $res;
-            }else{
-                $label = $res . 'p';
-            }
-            echo "<source label=\"$label\" res=\"$res\" src=\"$src\" type=\"$type\" >", PHP_EOL;
-        }
-        echo "Your browser does not support the audio tag", PHP_EOL;
-                
-        echo "</audio>", PHP_EOL;
-        
-        ?>
-<script>
+        html::js('plugins/audio/materialize.js');
+?>
+<div id='player_container'>
+    <div id='bottom_bar'> 
+        <div id='button_container'>
+            <a class="btn-floating btn-large waves-effect waves-light light-blue left" onclick='wavesurfer.playPause()' href='javascript:void(0);'><i class="material-icons" id='play_btn'>play_arrow</i></a>
+        </div>
+        <div id='waveform'>
+        </div>
+    </div>
+</div>
 <button onclick="wavesurfer.playPause()">
     Play/pause
 </button>
+<script>
 var wavesurfer = WaveSurfer.create({
    container: '#waveform',
    waveColor: 'black',
    progressColor: '#2486c7'
 });
 
+wavesurfer.on('play', function(){
+   $('#play_btn').text('pause'); 
+});
+
+wavesurfer.on('pause', function(){
+    $('#play_btn').text('play_arrow'); 
+});
+
 wavesurfer.load('<?php echo $url; ?>');
 </script>
+<style type="text/css">
+    body{
+<?php
+if(strlen($content->poster) > 0){
+    echo "background-image:url('$content->poster');";
+}
+?>
+    }
+</style>    
 <?php
         
         //echo '<script>videojs(\'#video\').videoJsResolutionSwitcher</script>';
