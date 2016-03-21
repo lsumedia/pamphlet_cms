@@ -43,8 +43,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
     height:55.5px;
     line-height:55.5px;
     text-align:middle;
-    margin-top:32.25px;
-    margin-bottom:32.25px;
+    margin-top:36px;
     float:left;
     padding-left:10px;
 }
@@ -58,5 +57,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
     }
     #button_container{
         width:19%;
+    }
+}
+
+@media(max-height:200px){
+    #bottom_bar{
+        position:fixed;
+        height:100%;
+        width:100%;
+    }
+    #waveform{
+        height:100%;
+    }
+    body{
+        background-color:transparent;
+        background-image:none !important;
     }
 }

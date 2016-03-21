@@ -57,7 +57,17 @@ class video_audio extends mediaPlayer{
 var wavesurfer = WaveSurfer.create({
    container: '#waveform',
    waveColor: 'black',
-   progressColor: '#2486c7'
+   progressColor: '#2486c7',
+   cursorColor: '#333',
+   cursorWidth: 2,
+   barWidth: 1,
+   backend: 'MediaElement',
+   normalize: true
+});
+
+wavesurfer.on('ready', function(){
+    console.log('Woop woop!');
+    wavesurfer.cursorColor = 'transparent';
 });
 
 wavesurfer.on('play', function(){
@@ -68,6 +78,12 @@ wavesurfer.on('pause', function(){
     $('#play_btn').text('play_arrow'); 
 });
 
+wavesurfer.on('error', function(){
+    console.log('Error! I am sad.');
+    wavesurfer.params.cursorColor = '#333';
+});
+
+wavesurfer.enableDragSelection;
 wavesurfer.load('<?php echo $url; ?>');
 </script>
 <style type="text/css">
