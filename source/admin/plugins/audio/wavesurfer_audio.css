@@ -51,26 +51,68 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
     background-color:#2486c7;
 }
 
-@media(max-width:660px){
-    #waveform{
-        width:80%;
-    }
-    #button_container{
-        width:19%;
-    }
+#thumbnail_image{
+    display:none;
+    float:left;
+    height:170px;
+    width:165px;
+    overflow:hidden;
+}
+#thumbnail_image img{
+    width:auto;
+    height:100%;
+    transform:translate(-25%,0);
 }
 
-@media(max-height:200px){
+@media(max-width:660px) and (min-height:170px){
     #bottom_bar{
         position:fixed;
         height:100%;
         width:100%;
     }
     #waveform{
+        position:absolute;
+        bottom:20px;
+        left:5px;
+        height:auto;
+        width:calc(100% - 20px);
+    }
+    #button_container{
+        position:absolute;
+        padding:0;
+        margin:0;
+        top:5px;
+        left:5px;
+        z-index:20;
+    }
+}
+
+@media(max-height:170px){
+    #bottom_bar{
+        position:fixed;
         height:100%;
+        width:100%;
+    }
+    #waveform{
+        position:absolute;
+        top:20px;
+        left:175px;
+        height:auto;
+        width:calc(100% - 200px);
     }
     body{
         background-color:transparent;
         background-image:none !important;
+    }
+    #thumbnail_image{
+        display:block;
+    }
+    #button_container{
+        position:absolute;
+        padding:0;
+        margin:0;
+        top:10px;
+        left:180px;
+        z-index:20;
     }
 }

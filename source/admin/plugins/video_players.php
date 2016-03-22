@@ -20,7 +20,7 @@ class youtube extends mediaPlayer{
         
         //$hash = unserialize(file_get_contents("https://gdata.youtube.com/feeds/api/videos/$id?v=2"));
 
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://www.youtube.com/embed/$id?autoplay=1\"></iframe>";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://www.youtube.com/embed/$id\"></iframe>";
         $video->poster = "http://img.youtube.com/vi/$id/maxresdefault.jpg";
         return $video;
     }
@@ -44,7 +44,7 @@ class vimeo extends mediaPlayer{
         
         $video->title = $hash[0]['title'];
         $video->description = $hash[0]['description'];
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id/?autoplay=1\"></iframe>";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id/\"></iframe>";
         $video->poster = $poster_url;
         return $video;
     }
@@ -186,8 +186,9 @@ class soundcloud extends mediaPlayer{
     public static function build($video, $setup){
         $primarySource = $video->sources[0];
         $id = $primarySource->src;
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true\"></iframe>";;
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true\"></iframe>";;
         
+        $video->alt_url = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=false";
         return $video;
     }
     

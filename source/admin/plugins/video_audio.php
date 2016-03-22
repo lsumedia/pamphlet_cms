@@ -28,6 +28,8 @@ class video_audio extends mediaPlayer{
 
         $poster = $content->poster;
         
+        $config = json_decode($content->source,1);
+        
         require_once('plugins/radio/player.php');
 
         //$title = radioPlayer::getNowPlaying($nowplaying, $content->title);
@@ -35,17 +37,20 @@ class video_audio extends mediaPlayer{
         //$content->poster = null;
         
         ob_start();
- 
-        html::css('plugins/audio/wavesurfer_audio.css');
+        
         html::css('plugins/audio/materialize.min.css');
         html::css('https://fonts.googleapis.com/css?family=Roboto');
         html::css('https://fonts.googleapis.com/icon?family=Material+Icons');
+        html::css('plugins/audio/wavesurfer_audio.css');
         html::jquery();
         html::js("//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.0.52/wavesurfer.min.js");	//WaveSurfer plugin
         html::js('plugins/audio/materialize.js');
 ?>
 <div id='player_container'>
     <div id='bottom_bar'> 
+        <div id="thumbnail_image">
+            <img src="<?php echo $content->poster; ?>">
+        </div>
         <div id='button_container'>
             <a class="btn-floating btn-large waves-effect waves-light light-blue left" onclick='wavesurfer.playPause()' href='javascript:void(0);'><i class="material-icons" id='play_btn'>play_arrow</i></a>
         </div>
@@ -66,7 +71,7 @@ var wavesurfer = WaveSurfer.create({
 });
 
 wavesurfer.on('ready', function(){
-    console.log('Woop woop!');
+    console.log('New WaveSurfer instance is ready');
     wavesurfer.cursorColor = 'transparent';
 });
 
@@ -79,12 +84,24 @@ wavesurfer.on('pause', function(){
 });
 
 wavesurfer.on('error', function(){
-    console.log('Error! I am sad.');
+    console.log('WaveSurfer encountered an error');
     wavesurfer.params.cursorColor = '#333';
 });
 
 wavesurfer.enableDragSelection;
-wavesurfer.load('<?php echo $url; ?>');
+
+<?php
+
+if(isset($config['waveform'])){
+    $wavedata = json_encode($config['waveform']);
+    echo "wavesurfer.load('$url',$wavedata);";
+    echo "console.log('Custom waveform detected');";
+}else{
+    echo "wavesurfer.load('$url');";
+}
+
+?>
+
 </script>
 <style type="text/css">
     body{
