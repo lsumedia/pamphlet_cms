@@ -498,7 +498,7 @@ class schedule extends optionsPage{
             /* Convert showID to show object */
             $show = shows::rawGetShowById($showID);
 
-            
+            $video->show = $show;
             if($show['poster_url']){ $video->poster = $show['poster_url']; }
             $video->nowplaying = $show['title'];
             if($show['description']){ $video->description = $show['description']; }
