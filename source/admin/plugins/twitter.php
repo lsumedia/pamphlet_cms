@@ -77,7 +77,7 @@ class twitter extends optionsPage {
             $time = date('H:i:s');
             echo "<p>Updated tweets at $time</p>";
         }
-        echo "<button onclick=\"cm_loadPage('plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value);\" >Search</button>";
+        echo "<button onclick=\"window.location.href='?action=plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value;\" >Search</button>";
         echo "</div>";
         
         
