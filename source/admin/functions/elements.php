@@ -413,7 +413,8 @@ function list_all(listId, dataLocation){
     
     public function display(){
         echo "<!-- ajaxList $this->id -->", PHP_EOL;
-        echo "<div class='form listWrapper'>", PHP_EOL;
+        $listStyle = (count($this->objects) > 10)? 'longList' : 'shortList';
+        echo "<div class='form listWrapper $listStyle'>", PHP_EOL;
         $data_id = $this->id . '_data';
         $body_id = $this->id . '_body';
         $search_id = $this->id . '_search';

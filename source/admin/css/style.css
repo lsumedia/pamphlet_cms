@@ -3,7 +3,7 @@
 /* Section 0: Fonts & Colours*/
 @font-face {
   font-family: "Roboto Regular";
-  src: url("fonts/Roboto-Regular.ttf"); }
+  src: url("font/Roboto-Regular.ttf"); }
 /* Section 1a: Body & Tags */
 html {
   min-width: 200px;
@@ -129,6 +129,12 @@ body {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none; }
+
+.shortList {
+  min-height: 0; }
+
+.longList {
+  min-height: 876px; }
 
 /* Form elements */
 .form {
@@ -356,10 +362,14 @@ body {
       padding-right: 10px; }
 
   .objectList {
-    width: 100%; }
+    width: 100%;
+    min-height: 0; }
 
   .objectList td {
     padding: 0px 1px; }
+
+  .longList {
+    min-height: 0; }
 
   .listitle, .formtitle {
     margin-left: 5px; }

@@ -26,13 +26,15 @@ require 'functions/elements.php';
 
 html::start();
 
-html::css('style.css');		//Import stylesheet
+html::css('css/materialize.min.css');
+html::css('css/style.css');		//Import stylesheet
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
 html::lockZoom();
-$title = 'Pamphlet 3';
+$title = 'Pamphlet 3.4';
 html::title($title);
 html::jquery();
+html::js('js/materialize.js');
 html::js("ckeditor/ckeditor.js");
 
 html::endHead();		//End head tag, start body tag
