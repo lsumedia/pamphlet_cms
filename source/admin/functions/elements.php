@@ -538,7 +538,7 @@ END;
         
         $first = $this->objects[0];
         foreach($first as $key => $value){
-            if($key != "onclick"){
+            if($key != "onclick" && $key != 'action'){
                 $this->headers[] = $key;
             }
         }
@@ -550,14 +550,11 @@ END;
         
         foreach($this->objects as $index=>$object){
             if($index >= $offset && $index < $offset + 10){
-                if($onclick = $object['onclick']){
-                    echo "<tr onclick=\"$onclick\">";
-                }else{
-                    echo "<tr>", \PHP_EOL;
-                }
+                echo "<tr>", \PHP_EOL;
+                $action = '?action=' . $object['action'];
                 foreach($object as $key => $value){
-                    if($key != "onclick"){
-                        echo "<td>".$value."</td>", \PHP_EOL;
+                    if($key != "onclick" && $key != 'action'){
+                        echo "<td><a href=\"$action\">".$value."</a></td>", \PHP_EOL;
                     }
                 }
                 echo "</tr>";
@@ -565,7 +562,7 @@ END;
         }
         echo "</tbody></table>";
         echo "</div>", PHP_EOL;
-       echo "<!-- ajaxList ends -->", PHP_EOL;
+        echo "<!-- ajaxList ends -->", PHP_EOL;
     }
     
     public static function arrayToJson($id, $objects){
@@ -1277,11 +1274,13 @@ class cm_leftbar{
 		echo '<div id="leftbar">',PHP_EOL;
 		if($this->prefix) echo  "<h3>$this->prefix</h3>", PHP_EOL;
 		echo '<ul class="leftbar_list">',PHP_EOL;
+                $currentAction = $_GET['action'];
 		foreach($this->elements as $element){
 			if(is_object($element)){	//Echo link item
-					$title = $element-> title;
-					$name = $element-> name;
-					echo "<li class=\"leftbar_item link\" id=\"leftbar_$name\"><a href=\"?action=$name\">$title</a></li>",PHP_EOL;
+					$title = $element->title;
+					$name = $element->name;
+                                        $style = ($currentAction == $name)? 'active' : '';
+					echo "<li class=\"leftbar_item link $style\" id=\"leftbar_$name\"><a href=\"?action=$name\">$title</a></li>",PHP_EOL;
 			}
 			else{		//Echo label item
 				echo "<li class=\"leftbar_item label\" id=\"leftbar_$element\">$element</li>",PHP_EOL;

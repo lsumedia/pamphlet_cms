@@ -30,38 +30,42 @@ body {
   margin: 0;
   padding: 0;
   color: white; }
-
-#leftbar h3 {
-  width: 100%;
-  font-weight: 300;
-  text-align: center;
-  border-bottom: 1px solid white;
-  height: 49px;
-  line-height: 50px;
-  vertical-align: middle;
-  margin: 0; }
-
-#leftbar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  width: 100%; }
-
-#leftbar li {
-  height: 40px;
-  line-height: 40px;
-  vertical-align: middle;
-  text-align: center;
-  width: 100%;
-  cursor: pointer; }
-
-#leftbar label {
-  margin-top: 1px solid white; }
-
-#leftbar li:hover {
-  /*background-color:$primary-strong !important;*/
-  background-color: rgba(0, 0, 0, 0.2) !important;
-  color: white; }
+  #leftbar h3 {
+    width: 100%;
+    font-weight: 300;
+    text-align: center;
+    border-bottom: 1px solid white;
+    height: 49px;
+    line-height: 50px;
+    vertical-align: middle;
+    margin: 0; }
+  #leftbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; }
+  #leftbar li {
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    text-align: center;
+    width: 100%;
+    cursor: pointer; }
+  #leftbar a {
+    display: block;
+    height: 100%;
+    width: 100%;
+    line-height: 40px;
+    text-decoration: none;
+    color: inherit; }
+  #leftbar .active {
+    background-color: #1976D2 !important; }
+  #leftbar label {
+    margin-top: 1px solid white; }
+  #leftbar li:hover {
+    background-color: #1976D2 !important;
+    /* background-color:rgba(0,0,0,0.2) !important; */
+    color: white; }
 
 /* Section 2b: Inner section ids */
 #central {
