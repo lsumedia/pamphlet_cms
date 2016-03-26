@@ -47,6 +47,16 @@ class uiElement{
         }
         return $elementTypes;
     }
+    public static function loadUiElementsJs(){
+        $elementTypes = array();
+        foreach(get_declared_classes() as $class){
+            if(is_subclass_of($class, 'uiElement')){
+                echo PHP_EOL,"//Code for $class", PHP_EOL;
+                $class::clientSide();
+            }
+        }
+        return $elementTypes;
+    }
 }
 
 class htmlStuff{
