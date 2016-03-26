@@ -239,9 +239,10 @@ class shows extends optionsPage{
         foreach($raw as $show){
             $id = $show['id'];
             $onclick = "cm_loadPage('shows&edit=$id');";
+            $action = "shows&edit=$id";
             $colour = $show['theme_colour'];
-            $colourbox = "<div style=\"background-color:$colour; width:100%; height:80%;\" ></div>";
-            $clean[] = ['Title' => $show['title'], 'Poster URL' => $show['poster_url'], 'Tag'  => $show['tag'], 'Theme colour' => $colourbox, 'onclick' => $onclick];
+            $colourbox = "<div style=\"background-color:$colour; width:100%; height:100%;\" ></div>";
+            $clean[] = ['Title' => $show['title'], 'Poster URL' => $show['poster_url'], 'Tag'  => $show['tag'], 'Theme colour' => $colourbox, "action" => $action];
         }
         return $clean;
     }
@@ -320,11 +321,12 @@ class shows extends optionsPage{
         foreach($raw as $instance){
             $id = $instance['instance_id'];
             $onclick = "cm_loadPage('shows&editinstance=$id');";
+            $action = "shows&editinstance=$id";
             $showname = self::kvpGetShows()[$instance['show_id']];
             $frequency = self::intervals()[$instance['frequency']];
             $timestamp = strtotime($instance['first']);
             $date = schedule::freqToDate($timestamp, $instance['frequency']);
-            $iclean = ['Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'Priority' => $instance['priority'], 'onclick' => $onclick];
+            $iclean = ['Start date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'Priority' => $instance['priority'], "action" => $action];
             $schedule = schedule::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
@@ -760,8 +762,9 @@ class schedule extends optionsPage{
         foreach($raw as $schedule){
             $id = $schedule['id'];
             $onclick = "cm_loadPage('schedule&edit=$id');";
+            $action = "schedule&edit=$id";
             $colourbox = "<div style=\"background-color:$colour; width:100%; height:80%;\" ></div>";
-            $clean[] = ['Title' => $schedule['title'], 'onclick' => $onclick];
+            $clean[] = ['Title' => $schedule['title'], "action" => $action];
         }
         return $clean;
     }
@@ -835,11 +838,12 @@ class schedule extends optionsPage{
         foreach($raw as $instance){
             $id = $instance['instance_id'];
             $onclick = "cm_loadPage('schedule&editinstance=$id');";
+            $action = "schedule&editinstance=$id";
             $showname = shows::kvpGetShows()[$instance['show_id']];
             $frequency = shows::intervals()[$instance['frequency']];
             $timestamp = strtotime($instance['first']);
             $date = self::freqToDate($timestamp, $instance['frequency']);
-            $iclean = ['Show name' => $showname, 'Date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'Priority' => $instance['priority'], 'onclick' => $onclick];
+            $iclean = ['Show name' => $showname, 'Date' => $date, 'Start' => $instance['start_time'], 'End' => $instance['end_time'], 'Frequency' => $frequency, 'Priority' => $instance['priority'], "action" => $action];
             $schedule = self::kvpSchedules()[$instance['schedule_id']];
             $clean[] = $iclean;
         }
