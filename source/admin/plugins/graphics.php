@@ -133,7 +133,7 @@ class scoreboard extends optionsPage{
             
             
             ce::begin("ce-medium");
-            $list = new multiPageList(self::getScoreboards(),'scoreboard_list');
+            $list = new ajaxList(self::getScoreboards(),'scoreboard_list');
             $list->title("Active scoreboards");
             $list->display($this->name);
             ce::end();

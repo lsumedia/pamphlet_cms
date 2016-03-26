@@ -107,7 +107,7 @@ class videos extends optionsPage{
             
             /* List existing sources */
             $sources = self::sourcesArray($video);
-            $list = new objectList($sources,'sourceList');
+            $list = new ajaxList($sources,'sourceList');
             $list->title('Sources');
             $list->display();
             
