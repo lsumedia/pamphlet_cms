@@ -433,7 +433,7 @@ function list_all(listId, dataLocation){
             $next = "<i onclick=\"list_change_page('$this->id','$data_id',1);\" id='$next_id' class='material-icons'>chevron_right</i>"; 
             echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
-        echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
+        echo "<table class=\"objectList bordered highlight\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
         $first = $this->objects[0];
         foreach($first as $key => $value){

@@ -131,39 +131,24 @@ body{
     border-spacing:0px;
     clear:both;
     
+    input{
+        height:auto;
+        width:auto;
+    }
+    
     tbody tr{
         cursor:pointer;
         overflow:hidden;
     }
     
-    tbody tr:hover{
-        background-color:$primary-medium;
-        color:white;
-    } 
-    
-    th{
-        margin:0px;
-        text-align:center;
-        height:76px;
-        padding:0px 15px;
-        max-width:400px;
-        overflow:hidden;
-        /* border-bottom: 1px solid $weak-border; */
-        height:56px;
-    }
-    
-    td{
-        height:76px;
-        text-align:center;
-        overflow:hidden;
-    }
-    a{
+}
+
+table a{
         text-decoration:none;
         text-align:center;
         color:inherit;
         width:100%;
         height:100%;
-    }
 }
 .listWrapper{
     min-height:300px;
@@ -180,7 +165,7 @@ body{
     min-height:0;
 }
 .longList{
-    min-height:876px;
+    min-height:666px;
 }
 
 /* Form elements */
@@ -202,6 +187,8 @@ body{
         border: none;
         border-bottom: 1px solid rgba(0,0,0,0.3);
         min-width:170px;
+        width:auto;
+        height:auto;
     }
     input:focus, button:focus, select:focus{
         outline:none;
