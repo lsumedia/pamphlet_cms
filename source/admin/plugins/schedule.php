@@ -240,7 +240,7 @@ class shows extends optionsPage{
             $id = $show['id'];
             $action = "shows&edit=$id";
             $colour = $show['theme_colour'];
-            $colourbox = "<div style=\"background-color:$colour; width:100%; height:100%;\" ></div>";
+            $colourbox = "<div style=\"background-color:$colour; width:40px; height:40px;\" ></div>";
             $clean[] = ['Title' => $show['title'], 'Poster URL' => $show['poster_url'], 'Tag'  => $show['tag'], 'Theme colour' => $colourbox, "action" => $action];
         }
         return $clean;
@@ -416,7 +416,7 @@ class schedule extends optionsPage{
             $eform->build('Add event');
             
             $list = new ajaxList($events,'eventList');
-            $list->title('Shows occuring in this schedule');
+            $list->title('Events occuring in this schedule');
             $list->display();
         }elseif(isset($_GET['editinstance'])){
             $id = $_GET['editinstance'];

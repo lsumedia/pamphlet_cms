@@ -999,7 +999,7 @@ END;
     
     public static function checkBox($id,$value,$label){
        $checked = ($value != false)? "checked":"";
-       echo "<div class=\"fieldRow checkbox\"><p>$label</p><input id=\"$id\" name=\"$id\" type=\"checkbox\" value=\"$value\" $checked onclick=\"$(this).val(this.checked ? 1 : 0)\"><label for=\"$id\"><span></span></div>", PHP_EOL;
+       echo "<div class=\"fieldRow checkbox\"><p>$label</p><input id=\"$id\" name=\"$id\" type=\"checkbox\" value=\"$value\" $checked><label for=\"$id\"><span></span></div>", PHP_EOL;
     }
     
     public static function datalist($id, $value, $options, $label){
