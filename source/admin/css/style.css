@@ -3,7 +3,7 @@
 /* Section 0: Fonts & Colours*/
 @font-face {
   font-family: "Roboto Regular";
-  src: url("font/Roboto-Regular.ttf"); }
+  src: url("../font/Roboto-Regular.ttf"); }
 /* Section 1a: Body & Tags */
 html {
   min-width: 200px;
