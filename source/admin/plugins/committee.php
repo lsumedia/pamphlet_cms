@@ -39,9 +39,9 @@ class committee extends optionsPage {
             $cstmt = $connection->prepare("SELECT c.id, c.position, c.username, u.fullname FROM committee c, users u WHERE c.username = u.username");
             $cstmt->execute();
             $cstmt->bind_result($id,$position,$username,$fullname);
-            $cList = new objectList(null, "committeeList");
+            $cList = new ajaxList(null, "committeeList");
             while($cstmt->fetch()){
-                $member = ["Position" => $position, "Name" => $fullname, "onclick" => "cm_loadPage('$this->name&position=$id');"];
+                $member = ["Position" => $position, "Name" => $fullname, "action" => "$this->name&position=$id"];
                 $cList->addObject($member);
             }
             $cList->title("Committee");

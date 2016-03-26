@@ -107,7 +107,7 @@ class videos extends optionsPage{
             
             /* List existing sources */
             $sources = self::sourcesArray($video);
-            $list = new objectList($sources,'sourceList');
+            $list = new ajaxList($sources,'sourceList');
             $list->title('Sources');
             $list->display();
             
@@ -390,8 +390,8 @@ class videos extends optionsPage{
             $videos = array();
             $stmt->bind_result($id,$vtitle,$type,$tags,$date);
             while($stmt->fetch()){
-                 $onclick = "cm_loadPage('plugin_vod&edit=$id');";
-                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Tags" => $tags, "Date posted" => $date, "onclick" => $onclick);
+                 $action = "plugin_vod&edit=$id";
+                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Tags" => $tags, "Date posted" => $date, "action" => $action);
             }
             return $videos;
         }else{
@@ -467,8 +467,8 @@ class videos extends optionsPage{
 
         $sources = array();
         while($sstmt->fetch()){
-            $onclick = "cm_loadPage('plugin_vod&edit_source=$source_id');";
-            $sources[] = array('URL' => $source_src, 'Type' => $source_type, 'Resolution' => $source_res, 'onclick' => $onclick);
+            $action = "plugin_vod&edit_source=$source_id";
+            $sources[] = array('URL' => $source_src, 'Type' => $source_type, 'Resolution' => $source_res, 'action' => $action);
             //$sources[] = new source($source_src, $source_type, $source_res);
         }
         return $sources;

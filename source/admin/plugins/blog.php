@@ -88,7 +88,7 @@ class blog extends optionsPage{
             while($bstmt->fetch()){
                 $nicedate = date("jS F Y",strtotime($postdate));
                 $tagString = tagsToString($tags);
-                $post = array("Title" => $title, "Author" => $fullname, "Tags" => $tagString, "Posted" => $nicedate, "onclick" => "cm_loadPage('$this->name&post=$id');");
+                $post = array("Title" => $title, "Author" => $fullname, "Tags" => $tagString, "Posted" => $nicedate, "action" => "$this->name&post=$id");
                 $blogList->addObject($post);
             }
 

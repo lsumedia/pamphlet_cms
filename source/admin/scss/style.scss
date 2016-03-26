@@ -36,20 +36,19 @@ body{
 /* Section 2a: Outer section ids */
 
 #leftbar{
-	position:fixed;
-	z-index: 20;
-	width:200px;
-	height:100vh;
-	top:0px;
-	left:0px;
-	background-color:$primary-medium;	/* primary-medium */
-	/*box-shadow: 5px 0px 15px rgba(0,0,0,0.12);*/
-	margin:0;
-	padding:0;
-	color:white;
-}
+    position:fixed;
+    z-index: 20;
+    width:200px;
+    height:100vh;
+    top:0px;
+    left:0px;
+    background-color:$primary-medium;	/* primary-medium */
+    /*box-shadow: 5px 0px 15px rgba(0,0,0,0.12);*/
+    margin:0;
+    padding:0;
+    color:white;
 
-#leftbar h3{
+    h3{
 	width:100%;
         font-weight:300;
 	text-align:center;
@@ -58,33 +57,43 @@ body{
 	line-height:50px;
 	vertical-align:middle;
 	margin:0;
-}
+    }
 
-#leftbar ul{
-	list-style:none;
-	padding:0;
-	margin:0;
-	width:100%;
-}
+    ul{
+        list-style:none;
+        padding:0;
+        margin:0;
+        width:100%;
+    }
 
-#leftbar li{
-	height:40px;
-	line-height:40px;
-	vertical-align:middle;
-	text-align:center;
-	width:100%;
-	cursor:pointer;
-}
+    li{
+        height:40px;
+        line-height:40px;
+        vertical-align:middle;
+        text-align:center;
+        width:100%;
+        cursor:pointer;
+    }
+    a{
+        display:block;
+        height:100%;
+        width:100%;
+        line-height:40px;
+        text-decoration:none;
+        color:inherit;
+    }
+    .active{
+        background-color: $primary-strong !important;
+    }
 
-#leftbar label{
-	margin-top:1px solid white;
-	
-}
-
-#leftbar li:hover{
-	/*background-color:$primary-strong !important;*/
-        background-color: rgba(0,0,0,0.2) !important;
-	color:white;
+    label{
+            margin-top:1px solid white;
+    }
+    li:hover{
+        background-color:$primary-strong !important;
+        /* background-color:rgba(0,0,0,0.2) !important; */
+        color:white;
+    }
 }
 
 /* Section 2b: Inner section ids */
@@ -123,25 +132,36 @@ body{
     
     tbody tr{
         cursor:pointer;
+        overflow:hidden;
     }
     
     tbody tr:hover{
         background-color:$primary-medium;
         color:white;
-    }
+    } 
     
-    th,td{
+    th{
         margin:0px;
         text-align:center;
         height:76px;
         padding:0px 15px;
         max-width:400px;
         overflow:hidden;
-    }
-    
-    th{
         /* border-bottom: 1px solid $weak-border; */
         height:56px;
+    }
+    
+    td{
+        height:76px;
+        text-align:center;
+        overflow:hidden;
+    }
+    a{
+        text-decoration:none;
+        text-align:center;
+        color:inherit;
+        width:100%;
+        height:100%;
     }
 }
 .listWrapper{
@@ -432,6 +452,7 @@ body{
     .objectList td{
         padding:0px 1px;
     }
+    
     .listitle,.formtitle{
         margin-left:5px;
     }

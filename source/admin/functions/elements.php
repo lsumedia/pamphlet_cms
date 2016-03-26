@@ -195,7 +195,7 @@ class div{
 //Content section inner elements
 
 function backButton($action){
-    echo "<div class=\"backbutton\" onclick=\"cm_loadPage('$action')\"><img src=\"images/back.png\">Back</div>";
+    echo "<div class=\"backbutton\" onclick=\"window.location.href='?action=$action';\"><img src=\"images/back.png\">Back</div>";
 }
 
 function centralElement($html,$style){
@@ -222,131 +222,14 @@ class ce{
 
 /* Lists */
 
-/* objectList - deprecated, only good for small (>10 items) lists */
-class objectList{
-    
-    //Array of arrays containing key-value pairs with friendly names for both
-    //Each entry must have same keys!
-    public $objects = array();
-    //Array of strings containing 
-    public $headers = array();
-    //DOM ID the table will have
-    public $id;
-    public $tags;
-    public $title;
-    
-    public function __construct($objects, $id){
-        $this->objects = $objects;
-        $this->id = $id;
-    }
-    
-    public function addObject($object){
-        $this->objects[] = $object;
-    }
-    
-    public function style($tags){
-        if($tags){ $this->tags = $tags; }
-    }
-    
-    public function title($text){
-        //echo "<div class=\"listtitle\">$text</div>", PHP_EOL;
-        $this->title = $text;
-    }
-    public function display($pageName){
-        echo "<!-- objectList -->", PHP_EOL;
-        echo "<div class='form'>", PHP_EOL;
-        if($this->title){ echo "<div class=\"listtitle\">$this->title</div>", PHP_EOL; }
-        echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
-        
-        $first = $this->objects[0];
-        foreach($first as $key => $value){
-            if($key != "onclick"){
-                $this->headers[] = $key;
-            }
-        }
-        echo "<thead><tr>", \PHP_EOL;
-        foreach($this->headers as $header){
-            echo "<th>". $header . "</th>", \PHP_EOL;
-        }
-        echo "</tr></thead><tbody>", \PHP_EOL;
-        
-        foreach($this->objects as $object){
-            if($onclick = $object['onclick']){
-                echo "<tr onclick=\"$onclick\">";
-            }else{
-                echo "<tr>", \PHP_EOL;
-            }
-            foreach($object as $key => $value){
-                if($key != "onclick"){
-                    echo "<td>".$value."</td>", \PHP_EOL;
-                }
-            }
-            echo "</tr>";
-        }
-        echo "</tbody></table>";
-        echo "</div>", PHP_EOL;
-    }
-}
-
-/* multiPageList - deprecated, use ajaxList instead */
-class multiPageList extends objectList{
-    public function display($pageName){
-        echo "<!-- multiPageList -->", PHP_EOL;
-        echo "<div class='form'>", PHP_EOL;
-        $offset = filter_input(INPUT_GET,"offset");
-        if(!$offset){ $offset = 0; }
-        $count = count($this->objects);
-        echo "<div class=\"listtitle\">$this->title</div>", PHP_EOL;
-        if($count > 10){
-            $ten = $offset + 10;
-            $back; $next;
-            $page = floor(($offset-1) / 10) + 1;
-            $numpages = floor(($count-1) / 10 ) + 1;
-            if($offset >= 10){ $minus = $offset - 10; $back = "<img onclick=\"cm_loadPage('$pageName&offset=$minus');\" src=\"images/back_black.png\" />"; }
-            if($count > $ten){ $next = "<img onclick=\"cm_loadPage('$pageName&offset=$ten');\" src=\"images/next_black.png\" />"; }
-            echo "<div class=\"listnav\"><p>Page $page of $numpages</p>$back$next</div>";
-        }
-        echo "<table class=\"objectList\" id=\"$this->id\" $this->tags >",PHP_EOL;
-        
-        $first = $this->objects[0];
-        foreach($first as $key => $value){
-            if($key != "onclick"){
-                $this->headers[] = $key;
-            }
-        }
-        echo "<thead><tr>", \PHP_EOL;
-        foreach($this->headers as $header){
-            echo "<th>". $header . "</th>", \PHP_EOL;
-        }
-        echo "</tr></thead><tbody>", \PHP_EOL;
-        
-        foreach($this->objects as $index=>$object){
-            if($index >= $offset && $index < $offset + 10){
-                if($onclick = $object['onclick']){
-                    echo "<tr onclick=\"$onclick\">";
-                }else{
-                    echo "<tr>", \PHP_EOL;
-                }
-                foreach($object as $key => $value){
-                    if($key != "onclick"){
-                        echo "<td>".$value."</td>", \PHP_EOL;
-                    }
-                }
-                echo "</tr>";
-            }
-        }
-        echo "</tbody></table>";
-        echo "</div>", PHP_EOL;
-    }
-}
-
 /* ajaxList - takes array as input, page changing and search */
 class ajaxList extends uiElement{
     
     public $name = 'ajaxList';
     
     public static function clientSide() {
-        echo <<<END
+        ?>
+//<script>
 var convert = function(convert){
     return $("<span />", { html: convert }).text();
 };
@@ -355,6 +238,31 @@ var convert = function(convert){
 function list_get_data(dataLocation){
         var string = document.getElementById(dataLocation).innerHTML;
         return JSON.parse(string);
+}
+
+function rowCode(row){
+    var html = '';
+    if(row['action']){
+        var action = "?action=" + row['action'];
+    }else{
+        var action = false;
+    }
+    if(row['onclick']){
+        html += '<tr onclick="' + row['onclick'] + '">';
+    }else{
+        html += '<tr>';
+    }
+    for(var key in row){
+        if(key != 'onclick' && key != 'action'){
+            if(action){
+                html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+            }else{    
+                html += '<td><a>' + row[key] + "</a></td>";
+            }
+        }
+    }
+    html += "</tr>";
+    return html;
 }
         
 function list_change_page(listId,dataLocation,pageNumber){
@@ -371,13 +279,7 @@ function list_change_page(listId,dataLocation,pageNumber){
         for(var i=offset; i < offset + 10; i++){
             var row = data[i];
             if(row){
-                html += '<tr onclick="' + row['onclick'] + '">';
-                for(var key in row){
-                    if(key != 'onclick'){
-                        html += "<td>" + row[key] + "</td>";
-                    }
-                }
-                html += "</tr>";
+                html += rowCode(row);
             }   
         }
         
@@ -434,14 +336,12 @@ function list_search(listId,dataLocation,term){
                 }
             }
             if(match == true){
-                html += '<tr onclick="' + row['onclick'] + '">';
-                for(var key in row){
-                    if(key != 'onclick'){
-                        html += "<td>" + row[key] + "</td>";
-                    }
-                }
-                html += "</tr>";
-            }  
+                var row = data[i];
+                if(row){
+                    html += rowCode(row);
+                }   
+                
+            }
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
@@ -463,20 +363,14 @@ function list_all(listId, dataLocation){
         for(var i=0; i < data.length; i++){
             var row = data[i];
             if(row){
-                html += '<tr onclick="' + row['onclick'] + '">';
-                for(var key in row){
-                    if(key != 'onclick'){
-                        html += "<td>" + row[key] + "</td>";
-                    }
-                }
-                html += "</tr>";
+                html += rowCode(row);
             }   
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
 }
         
-END;
+<?php
     }
     
     //Array of arrays containing key-value pairs with friendly names for both
@@ -532,7 +426,7 @@ END;
         
         $first = $this->objects[0];
         foreach($first as $key => $value){
-            if($key != "onclick"){
+            if($key != "onclick" && $key != 'action'){
                 $this->headers[] = $key;
             }
         }
@@ -541,24 +435,11 @@ END;
             echo "<th>". $header . "</th>", \PHP_EOL;
         }
         echo "</tr></thead><tbody id='$body_id'>", \PHP_EOL;
-        
-        foreach($this->objects as $index=>$object){
-            if($index >= $offset && $index < $offset + 10){
-                if($onclick = $object['onclick']){
-                    echo "<tr onclick=\"$onclick\">";
-                }else{
-                    echo "<tr>", \PHP_EOL;
-                }
-                foreach($object as $key => $value){
-                    if($key != "onclick"){
-                        echo "<td>".$value."</td>", \PHP_EOL;
-                    }
-                }
-                echo "</tr>";
-            }
-        }
+        //JavaScript does this bit now
         echo "</tbody></table>";
-        echo "</div>";
+        echo "</div>", PHP_EOL;
+        echo "<script>list_change_page('$this->id', '$data_id', 0);</script>", PHP_EOL;
+        echo "<!-- ajaxList ends -->", PHP_EOL;
     }
     
     public static function arrayToJson($id, $objects){
@@ -1270,11 +1151,13 @@ class cm_leftbar{
 		echo '<div id="leftbar">',PHP_EOL;
 		if($this->prefix) echo  "<h3>$this->prefix</h3>", PHP_EOL;
 		echo '<ul class="leftbar_list">',PHP_EOL;
+                $currentAction = $_GET['action'];
 		foreach($this->elements as $element){
 			if(is_object($element)){	//Echo link item
-					$title = $element-> title;
-					$name = $element-> name;
-					echo "<li class=\"leftbar_item link\" onclick=\"cm_loadPage('$name');\" id=\"leftbar_$name\">$title</li>",PHP_EOL;
+					$title = $element->title;
+					$name = $element->name;
+                                        $style = ($currentAction == $name)? 'active' : '';
+					echo "<li class=\"leftbar_item link $style\" id=\"leftbar_$name\"><a href=\"?action=$name\">$title</a></li>",PHP_EOL;
 			}
 			else{		//Echo label item
 				echo "<li class=\"leftbar_item label\" id=\"leftbar_$element\">$element</li>",PHP_EOL;

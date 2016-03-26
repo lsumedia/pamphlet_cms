@@ -50,8 +50,8 @@ class pages extends optionsPage{
                     $shortContent = substr(htmlspecialchars($content),0,140);
                     if($visible == 0){ $visible = "No"; }else{ $visible = "Yes"; }
                     if($parent == ""){ $parent = "None"; }
-                    $onclick = "cm_loadPage('$this->name"."&edit=$id')";
-                    $pList->addObject(array("Title" => $title, "Visible" => $visible, "Parent" => $parent, "onclick" => $onclick ));
+                    $action = "plugin_pages&edit=$id";
+                    $pList->addObject(array("Title" => $title, "Visible" => $visible, "Parent" => $parent, "action" => $action));
                 }
                 $pList->display();
             }
