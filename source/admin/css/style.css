@@ -69,26 +69,31 @@ body {
     color: white; }
 
 /* Section 2b: Inner section ids */
-#central {
-  position: relative;
-  margin-left: 300px;
-  margin-top: 50px;
-  margin-bottom: 25px; }
+/*
+#central{
+	position:relative;
+	margin-left:300px;
+	margin-top:50px;
+        margin-bottom:25px;
+}
 
-.centralelement {
-  display: inline-block;
-  background-color: white;
-  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.06);
-  line-height: 25px;
-  min-height: 90px;
-  margin-right: 30px;
-  margin-bottom: 15px;
-  min-width: 500px;
-  padding: 15px; }
 
-.ce-large {
-  min-width: 800px; }
-
+.centralelement{
+	display:inline-block;
+	background-color:white;
+	box-shadow: 5px 5px 25px rgba(0,0,0,0.06);
+	line-height:25px;
+	min-height:90px;
+	margin-right:30px;
+	margin-bottom:15px;
+	min-width:500px;
+	padding:15px;
+}
+*/
+  /*
+.ce-large{
+    min-width: 800px;
+}*/
 /* Object list styling */
 .objectList {
   width: 100%;

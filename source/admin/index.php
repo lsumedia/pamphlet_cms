@@ -54,9 +54,8 @@ if(isset($_SESSION['username'])){
     $leftbar->addLink("logout", "Sign out");
 }
 ?>
-
 <nav>
-    
+
 </nav>
 <div class="row">
     <div id="" class="col s12 m4 l3">
