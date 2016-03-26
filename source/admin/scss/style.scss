@@ -143,6 +143,14 @@ body{
         /* border-bottom: 1px solid $weak-border; */
         height:56px;
     }
+    a{
+        display:block;
+        text-decoration:none;
+        color:inherit;
+        width:100%;
+        height:100%;
+        line-height:76px;
+    }
 }
 .listWrapper{
     min-height:300px;
@@ -432,6 +440,7 @@ body{
     .objectList td{
         padding:0px 1px;
     }
+    
     .listitle,.formtitle{
         margin-left:5px;
     }

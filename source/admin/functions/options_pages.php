@@ -91,7 +91,8 @@ class userSettings extends optionsPage{
                     $usersList = new ajaxList(null,"usersList");
                     $usersList->style("style=\"min-width:500px;\"");
                     while($ustmt->fetch()){
-                        $userArray = array("Username" => $username, "Display name" => $fullname, "Email address" => $email, 'Permissions' => kpPermissionLevels()[$priv], "onclick" => "cm_loadPage('user&username=$username');");
+                        $action = "user&username=$username";
+                        $userArray = array("Username" => $username, "Display name" => $fullname, "Email address" => $email, 'Permissions' => kpPermissionLevels()[$priv], "onclick" => "cm_loadPage('user&username=$username');" , 'action' => $action);
                         $usersList->addObject($userArray);
                     }
                     

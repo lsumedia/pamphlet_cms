@@ -195,7 +195,7 @@ class div{
 //Content section inner elements
 
 function backButton($action){
-    echo "<div class=\"backbutton\" onclick=\"cm_loadPage('$action')\"><img src=\"images/back.png\">Back</div>";
+    echo "<div class=\"backbutton\" onclick=\"window.location.href='?action=$action';\"><img src=\"images/back.png\">Back</div>";
 }
 
 function centralElement($html,$style){
@@ -371,10 +371,11 @@ function list_change_page(listId,dataLocation,pageNumber){
         for(var i=offset; i < offset + 10; i++){
             var row = data[i];
             if(row){
-                html += '<tr onclick="' + row['onclick'] + '">';
+                var action = "?action=" + row['action'];
+                html += '<tr>';
                 for(var key in row){
-                    if(key != 'onclick'){
-                        html += "<td>" + row[key] + "</td>";
+                    if(key != 'onclick' && key != 'action'){
+                        html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
                     }
                 }
                 html += "</tr>";
@@ -434,13 +435,17 @@ function list_search(listId,dataLocation,term){
                 }
             }
             if(match == true){
-                html += '<tr onclick="' + row['onclick'] + '">';
-                for(var key in row){
-                    if(key != 'onclick'){
-                        html += "<td>" + row[key] + "</td>";
+                var row = data[i];
+                if(row){
+                    var action = "?action=" + row['action'];
+                    html += '<tr>';
+                    for(var key in row){
+                        if(key != 'onclick' && key != 'action'){
+                            html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                        }
                     }
-                }
-                html += "</tr>";
+                    html += "</tr>";
+                }   
             }  
         }
         
@@ -463,10 +468,11 @@ function list_all(listId, dataLocation){
         for(var i=0; i < data.length; i++){
             var row = data[i];
             if(row){
-                html += '<tr onclick="' + row['onclick'] + '">';
+                var action = "?action=" + row['action'];
+                html += '<tr>';
                 for(var key in row){
-                    if(key != 'onclick'){
-                        html += "<td>" + row[key] + "</td>";
+                    if(key != 'onclick' && key != 'action'){
+                        html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
                     }
                 }
                 html += "</tr>";
@@ -558,7 +564,8 @@ END;
             }
         }
         echo "</tbody></table>";
-        echo "</div>";
+        echo "</div>", PHP_EOL;
+       echo "<!-- ajaxList ends -->", PHP_EOL;
     }
     
     public static function arrayToJson($id, $objects){
@@ -1274,7 +1281,7 @@ class cm_leftbar{
 			if(is_object($element)){	//Echo link item
 					$title = $element-> title;
 					$name = $element-> name;
-					echo "<li class=\"leftbar_item link\" onclick=\"cm_loadPage('$name');\" id=\"leftbar_$name\">$title</li>",PHP_EOL;
+					echo "<li class=\"leftbar_item link\" id=\"leftbar_$name\"><a href=\"?action=$name\">$title</a></li>",PHP_EOL;
 			}
 			else{		//Echo label item
 				echo "<li class=\"leftbar_item label\" id=\"leftbar_$element\">$element</li>",PHP_EOL;

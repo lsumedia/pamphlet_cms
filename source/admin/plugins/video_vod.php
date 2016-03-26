@@ -390,8 +390,9 @@ class videos extends optionsPage{
             $videos = array();
             $stmt->bind_result($id,$vtitle,$type,$tags,$date);
             while($stmt->fetch()){
-                 $onclick = "cm_loadPage('plugin_vod&edit=$id');";
-                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Tags" => $tags, "Date posted" => $date, "onclick" => $onclick);
+                 $action = "plugin_vod&edit=$id";
+                 $onclick = "cm_loadPage('$action');";
+                $videos[] = array("Title" => $vtitle, "Type" => mediaPlayer::kpTypes()[$type], "Tags" => $tags, "Date posted" => $date, "onclick" => $onclick, "action" => $action);
             }
             return $videos;
         }else{
@@ -468,7 +469,8 @@ class videos extends optionsPage{
         $sources = array();
         while($sstmt->fetch()){
             $onclick = "cm_loadPage('plugin_vod&edit_source=$source_id');";
-            $sources[] = array('URL' => $source_src, 'Type' => $source_type, 'Resolution' => $source_res, 'onclick' => $onclick);
+            $action = "plugin_vod&edit_source=$source_id";
+            $sources[] = array('URL' => $source_src, 'Type' => $source_type, 'Resolution' => $source_res, 'onclick' => $onclick, 'action' => $action);
             //$sources[] = new source($source_src, $source_type, $source_res);
         }
         return $sources;
