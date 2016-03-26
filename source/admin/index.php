@@ -26,7 +26,7 @@ require 'functions/elements.php';
 
 html::start();
 
-html::css('css/materialize.css');
+html::css('css/materialize.min.css');
 html::css('css/style.css');		//Import stylesheet
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
@@ -36,62 +36,64 @@ html::title($title);
 html::jquery();
 html::js('js/materialize.js');
 html::js("ckeditor/ckeditor.js");
-
+html::js('functions/scripts.js.php');
 html::endHead();		//End head tag, start body tag
 
 //Body section
 //Declare objects
-$topbar = new cm_topbar();
 $leftbar = new cm_leftbar();
-$inner = new cm_inner();
 $pages = new standardOptionsPages();
 
 $pages->configure();
-$leftbar->prefixHtml($title);		
+//$leftbar->prefixHtml($title);		
+
 if(isset($_SESSION['username'])){
     	//Load page objects
     $leftbar->elements = $pages->returnNavList();	//Import pagelist to array
    		//Set leftbar prefix
     $leftbar->addLink("logout", "Sign out");
-    $leftbar->printBar();                               //Print leftbar
-    //$inner->printInner();				//Print inner AJAX section                           
-    //$defaultPage = 'general';
-}else{
-    //$leftbar->addLink("login","Log in");
-    $leftbar->printBar();
-    //$inner->printInner();
-    //$defaultPage = 'login';
 }
+?>
 
-html::js('functions/scripts.js.php');
-echo '<div id="central">';
+<nav>
+    
+</nav>
+<div class="row">
+    <div id="" class="col s12 m4 l3">
+        <ul>
+            <?php $leftbar->printBar(); ?>
+        </ul>
+    </div>
+    
+    <div id="central" class="col s12 m8 l9">
+    
+        <?php
+        /* Page content generator section */
+        if(isset($_SESSION['username'])){
+            //Logged in!
+            if(isset($_GET['action'])){
+                $action = $_GET['action'];
+            }else{
+                $action = 'general';
+            }
+            if($page = $pages->matchObject($action)){
+                $page->configPage();
+            }else{
+                echo "Invalid action request";
+            }
+        }
+        else if(!setup::isSetup()){
+            $page = $pages->matchObject("setup");
+            $page->configPage();
+        }else{
+            $page = $pages->matchObject("login");
+            $page->configPage();
+        }
 
-if(isset($_SESSION['username'])){
-    //Logged in!
-    if(isset($_GET['action'])){
-        $action = $_GET['action'];
-    }else{
-        $action = 'general';
-    }
-    if($page = $pages->matchObject($action)){
-        $page->configPage();
-    }else{
-        echo "Invalid action request";
-    }
-}
-else if(!setup::isSetup()){
-    $page = $pages->matchObject("setup");
-    $page->configPage();
-}else{
-    $page = $pages->matchObject("login");
-    $page->configPage();
-}
+        ?>
+    </div>
+</div>
 
-echo '</div>';
-//More javascript and end document
-
-
-//$leftbar->defaultPage($defaultPage);
+<?php
 html::end();
-
 ?>

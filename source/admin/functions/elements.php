@@ -1159,9 +1159,6 @@ class cm_leftbar{
 	function prefixHtml($html){ $this->prefix = $html;}
 	
 	function printBar(){
-		echo '<div id="leftbar">',PHP_EOL;
-		if($this->prefix) echo  "<h3>$this->prefix</h3>", PHP_EOL;
-		echo '<ul class="leftbar_list">',PHP_EOL;
                 $currentAction = $_GET['action'];
 		foreach($this->elements as $element){
 			if(is_object($element)){	//Echo link item
@@ -1174,8 +1171,6 @@ class cm_leftbar{
 				echo "<li class=\"leftbar_item label\" id=\"leftbar_$element\">$element</li>",PHP_EOL;
 			}
 		}
-		echo '</ul>';
-		echo '</div>',PHP_EOL;
 	}
         
         function defaultPage($name){

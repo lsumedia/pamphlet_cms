@@ -348,7 +348,7 @@ class logout extends optionsPage{
         }
         //Destroy session
         session_destroy();
-        echo "<script id=\"loadScript\">location.reload()</script>",PHP_EOL;
+        echo "<script id=\"loadScript\">window.location='?';</script>",PHP_EOL;
     }
 }
 
