@@ -228,7 +228,8 @@ class ajaxList extends uiElement{
     public $name = 'ajaxList';
     
     public static function clientSide() {
-        echo <<<END
+        ?>
+//<script>
 var convert = function(convert){
     return $("<span />", { html: convert }).text();
 };
@@ -253,11 +254,23 @@ function list_change_page(listId,dataLocation,pageNumber){
         for(var i=offset; i < offset + 10; i++){
             var row = data[i];
             if(row){
-                var action = "?action=" + row['action'];
-                html += '<tr>';
+                if(row['action']){
+                    var action = "?action=" + row['action'];
+                }else{
+                    var action = false;
+                }
+                if(row['onclick']){
+                    html += '<tr onclick="' + row['onclick'] + '">';
+                }else{
+                    html += '<tr>';
+                }
                 for(var key in row){
                     if(key != 'onclick' && key != 'action'){
-                        html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                        if(action){
+                            html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                        }else{    
+                            html += '<td><a>' + row[key] + "</a></td>";
+                        }
                     }
                 }
                 html += "</tr>";
@@ -319,16 +332,28 @@ function list_search(listId,dataLocation,term){
             if(match == true){
                 var row = data[i];
                 if(row){
-                    var action = "?action=" + row['action'];
-                    html += '<tr>';
+                    if(row['action']){
+                        var action = "?action=" + row['action'];
+                    }else{
+                        var action = false;
+                    }
+                    if(row['onclick']){
+                        html += '<tr onclick="' + row['onclick'] + '">';
+                    }else{
+                        html += '<tr>';
+                    }
                     for(var key in row){
                         if(key != 'onclick' && key != 'action'){
-                            html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                            if(action){
+                                html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                            }else{    
+                                html += '<td><a>' + row[key] + "</a></td>";
+                            }
                         }
                     }
                     html += "</tr>";
-                }   
-            }  
+                }  
+            }
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
@@ -350,21 +375,33 @@ function list_all(listId, dataLocation){
         for(var i=0; i < data.length; i++){
             var row = data[i];
             if(row){
-                var action = "?action=" + row['action'];
-                html += '<tr>';
+                if(row['action']){
+                    var action = "?action=" + row['action'];
+                }else{
+                    var action = false;
+                }
+                if(row['onclick']){
+                    html += '<tr onclick="' + row['onclick'] + '">';
+                }else{
+                    html += '<tr>';
+                }
                 for(var key in row){
                     if(key != 'onclick' && key != 'action'){
-                        html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                        if(action){
+                            html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+                        }else{    
+                            html += '<td><a>' + row[key] + "</a></td>";
+                        }
                     }
                 }
                 html += "</tr>";
-            }   
+            }
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
 }
         
-END;
+<?php
     }
     
     //Array of arrays containing key-value pairs with friendly names for both
@@ -432,11 +469,19 @@ END;
         
         foreach($this->objects as $index=>$object){
             if($index >= $offset && $index < $offset + 10){
-                echo "<tr>", \PHP_EOL;
-                $action = '?action=' . $object['action'];
+                if($onclick = $object['onclick']){
+                    echo "<tr onclick=\"$onclick\">";
+                }else{
+                    echo "<tr>", \PHP_EOL;
+                }
                 foreach($object as $key => $value){
                     if($key != "onclick" && $key != 'action'){
-                        echo "<td><a href=\"$action\">".$value."</a></td>", \PHP_EOL;
+                        if($object['action']){
+                            $action = '?action=' . $object['action'];
+                            echo "<td><a href=\"$action\">".$value."</a></td>", \PHP_EOL;
+                        }else{
+                            echo "<td><a>".$value."</a></td>", \PHP_EOL;
+                        }
                     }
                 }
                 echo "</tr>";
