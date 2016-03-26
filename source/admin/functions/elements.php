@@ -437,8 +437,8 @@ function list_all(listId, dataLocation){
         echo "</tr></thead><tbody id='$body_id'>", \PHP_EOL;
         //JavaScript does this bit now
         echo "</tbody></table>";
-        echo "</div>", PHP_EOL;
         echo "<script>list_change_page('$this->id', '$data_id', 0);</script>", PHP_EOL;
+        echo "</div>", PHP_EOL;
         echo "<!-- ajaxList ends -->", PHP_EOL;
     }
     
