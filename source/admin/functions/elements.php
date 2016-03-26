@@ -239,6 +239,31 @@ function list_get_data(dataLocation){
         var string = document.getElementById(dataLocation).innerHTML;
         return JSON.parse(string);
 }
+
+function rowCode(row){
+    var html = '';
+    if(row['action']){
+        var action = "?action=" + row['action'];
+    }else{
+        var action = false;
+    }
+    if(row['onclick']){
+        html += '<tr onclick="' + row['onclick'] + '">';
+    }else{
+        html += '<tr>';
+    }
+    for(var key in row){
+        if(key != 'onclick' && key != 'action'){
+            if(action){
+                html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
+            }else{    
+                html += '<td><a>' + row[key] + "</a></td>";
+            }
+        }
+    }
+    html += "</tr>";
+    return html;
+}
         
 function list_change_page(listId,dataLocation,pageNumber){
         var data = list_get_data(dataLocation);
@@ -254,26 +279,7 @@ function list_change_page(listId,dataLocation,pageNumber){
         for(var i=offset; i < offset + 10; i++){
             var row = data[i];
             if(row){
-                if(row['action']){
-                    var action = "?action=" + row['action'];
-                }else{
-                    var action = false;
-                }
-                if(row['onclick']){
-                    html += '<tr onclick="' + row['onclick'] + '">';
-                }else{
-                    html += '<tr>';
-                }
-                for(var key in row){
-                    if(key != 'onclick' && key != 'action'){
-                        if(action){
-                            html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
-                        }else{    
-                            html += '<td><a>' + row[key] + "</a></td>";
-                        }
-                    }
-                }
-                html += "</tr>";
+                html += rowCode(row);
             }   
         }
         
@@ -332,27 +338,9 @@ function list_search(listId,dataLocation,term){
             if(match == true){
                 var row = data[i];
                 if(row){
-                    if(row['action']){
-                        var action = "?action=" + row['action'];
-                    }else{
-                        var action = false;
-                    }
-                    if(row['onclick']){
-                        html += '<tr onclick="' + row['onclick'] + '">';
-                    }else{
-                        html += '<tr>';
-                    }
-                    for(var key in row){
-                        if(key != 'onclick' && key != 'action'){
-                            if(action){
-                                html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
-                            }else{    
-                                html += '<td><a>' + row[key] + "</a></td>";
-                            }
-                        }
-                    }
-                    html += "</tr>";
-                }  
+                    html += rowCode(row);
+                }   
+                
             }
         }
         
@@ -375,27 +363,8 @@ function list_all(listId, dataLocation){
         for(var i=0; i < data.length; i++){
             var row = data[i];
             if(row){
-                if(row['action']){
-                    var action = "?action=" + row['action'];
-                }else{
-                    var action = false;
-                }
-                if(row['onclick']){
-                    html += '<tr onclick="' + row['onclick'] + '">';
-                }else{
-                    html += '<tr>';
-                }
-                for(var key in row){
-                    if(key != 'onclick' && key != 'action'){
-                        if(action){
-                            html += '<td><a href="' + action + '">' + row[key] + "</a></td>";
-                        }else{    
-                            html += '<td><a>' + row[key] + "</a></td>";
-                        }
-                    }
-                }
-                html += "</tr>";
-            }
+                html += rowCode(row);
+            }   
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
@@ -466,7 +435,7 @@ function list_all(listId, dataLocation){
             echo "<th>". $header . "</th>", \PHP_EOL;
         }
         echo "</tr></thead><tbody id='$body_id'>", \PHP_EOL;
-        
+        /*
         foreach($this->objects as $index=>$object){
             if($index >= $offset && $index < $offset + 10){
                 if($onclick = $object['onclick']){
@@ -486,9 +455,10 @@ function list_all(listId, dataLocation){
                 }
                 echo "</tr>";
             }
-        }
+        }*/
         echo "</tbody></table>";
         echo "</div>", PHP_EOL;
+        echo "<script>list_change_page('$this->id', '$data_id', 0);</script>", PHP_EOL;
         echo "<!-- ajaxList ends -->", PHP_EOL;
     }
     

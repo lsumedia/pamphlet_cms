@@ -61,6 +61,8 @@ if(isset($_SESSION['username'])){
     //$defaultPage = 'login';
 }
 
+uiElement::loadUiElements();
+
 echo '<div id="central">';
 
 if(isset($_SESSION['username'])){
@@ -87,7 +89,7 @@ else if(!setup::isSetup()){
 echo '</div>';
 //More javascript and end document
 
-uiElement::loadUiElements();
+
 //$leftbar->defaultPage($defaultPage);
 html::end();
 
