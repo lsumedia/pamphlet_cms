@@ -986,7 +986,7 @@ END;
     public static function select($id, $value, $options, $label){
          //Select field with key-pair elements ("value"=>"label")
         echo "<div class=\"fieldRow\"><p>$label</p>", PHP_EOL;
-        echo "<select id=\"$id\" name=\"$id\">", PHP_EOL;
+        echo "<select id=\"$id\" name=\"$id\" class=\"browser-default\">", PHP_EOL;
         foreach($options as $key => $choice){
                 if($key == $value){
                 echo "<option value=\"$key\" selected>$choice</option>", PHP_EOL;
