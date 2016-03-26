@@ -41,7 +41,7 @@ class committee extends optionsPage {
             $cstmt->bind_result($id,$position,$username,$fullname);
             $cList = new ajaxList(null, "committeeList");
             while($cstmt->fetch()){
-                $member = ["Position" => $position, "Name" => $fullname, "onclick" => "cm_loadPage('$this->name&position=$id');"];
+                $member = ["Position" => $position, "Name" => $fullname, "action" => "$this->name&position=$id"];
                 $cList->addObject($member);
             }
             $cList->title("Committee");

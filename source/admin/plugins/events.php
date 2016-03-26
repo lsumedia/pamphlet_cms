@@ -75,7 +75,8 @@ class events extends optionsPage{
             while($bstmt->fetch()){
                 //$nicedate = date("jS F Y",strtotime($date));
                 $combodate = combodate($date,$enddate);
-                $post = array("Title" => $title, "Author" => $fullname, "Category" => $type, "Date" => $combodate, "onclick" => "cm_loadPage('$this->name&event=$id');");
+                $action = "plugin_events&event=$id";
+                $post = array("Title" => $title, "Author" => $fullname, "Category" => $type, "Date" => $combodate, "action" => $action);
                 $blogList->addObject($post);
             }
 

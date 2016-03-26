@@ -435,27 +435,7 @@ function list_all(listId, dataLocation){
             echo "<th>". $header . "</th>", \PHP_EOL;
         }
         echo "</tr></thead><tbody id='$body_id'>", \PHP_EOL;
-        /*
-        foreach($this->objects as $index=>$object){
-            if($index >= $offset && $index < $offset + 10){
-                if($onclick = $object['onclick']){
-                    echo "<tr onclick=\"$onclick\">";
-                }else{
-                    echo "<tr>", \PHP_EOL;
-                }
-                foreach($object as $key => $value){
-                    if($key != "onclick" && $key != 'action'){
-                        if($object['action']){
-                            $action = '?action=' . $object['action'];
-                            echo "<td><a href=\"$action\">".$value."</a></td>", \PHP_EOL;
-                        }else{
-                            echo "<td><a>".$value."</a></td>", \PHP_EOL;
-                        }
-                    }
-                }
-                echo "</tr>";
-            }
-        }*/
+        //JavaScript does this bit now
         echo "</tbody></table>";
         echo "</div>", PHP_EOL;
         echo "<script>list_change_page('$this->id', '$data_id', 0);</script>", PHP_EOL;

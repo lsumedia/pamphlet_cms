@@ -235,8 +235,8 @@ class scoreboard extends optionsPage{
         $stmt->bind_result($id,$name,$sport);
         $results = array();
         while($stmt->fetch()){
-            $onclick = "cm_loadPage('plugin_scoreboard&edit=$id');";
-            $results[] = array("Name" => $name, "Sport" => $sport, "onclick" => $onclick);
+            $action = "plugin_scoreboard&edit=$id";
+            $results[] = array("Name" => $name, "Sport" => $sport, "action" => $action);
         }
         $stmt->close();
         return $results;

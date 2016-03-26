@@ -92,7 +92,7 @@ class userSettings extends optionsPage{
                     $usersList->style("style=\"min-width:500px;\"");
                     while($ustmt->fetch()){
                         $action = "user&username=$username";
-                        $userArray = array("Username" => $username, "Display name" => $fullname, "Email address" => $email, 'Permissions' => kpPermissionLevels()[$priv], "onclick" => "cm_loadPage('user&username=$username');" , 'action' => $action);
+                        $userArray = array("Username" => $username, "Display name" => $fullname, "Email address" => $email, 'Permissions' => kpPermissionLevels()[$priv], 'action' => $action);
                         $usersList->addObject($userArray);
                     }
                     

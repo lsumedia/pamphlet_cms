@@ -115,10 +115,9 @@ class manager extends optionsPage{
                 $vstmt->execute();
                 $vstmt->bind_result($id,$title,$type,$visible);
                 while($vstmt->fetch()){
-                    $onclick = "cm_loadPage('$this->name&edit=$id');";
                     $action = "plugin_videomanager&edit=$id";
                     $status = ($visible == 1)? "Yes" : "No";
-                    $item = array("Title" => $title, "Type" => self::kpVideoTypes()[$type], "Live" => $status, "onclick" => $onclick, 'action' => $action);
+                    $item = array("Title" => $title, "Type" => self::kpVideoTypes()[$type], "Live" => $status, 'action' => $action);
                     $slist->addObject($item);
                 }
                 $slist->display($this->name);
@@ -530,9 +529,8 @@ class cover extends optionsPage{
             $stmt->bind_result($id,$title,$description,$url);
             $covers = array();
             while($stmt->fetch()){
-                $onclick = "cm_loadPage('plugin_cover&edit=$id')";
                 $action = "plugin_cover&edit=$id";
-                $covers[] = array("Title" => $title, "Description" => $description, "URL" => $url, "onclick" => $onclick, 'action' => $action);
+                $covers[] = array("Title" => $title, "Description" => $description, "URL" => $url, 'action' => $action);
             }
             return $covers;
         }else{
