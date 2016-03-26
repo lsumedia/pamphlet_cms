@@ -26,7 +26,7 @@ require 'functions/elements.php';
 
 html::start();
 
-html::css('css/materialize.min.css');
+html::css('css/materialize.css');
 html::css('css/style.css');		//Import stylesheet
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
