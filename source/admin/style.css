@@ -114,7 +114,6 @@ body {
     text-align: center;
     overflow: hidden; }
   .objectList a {
-    display: inline-block;
     text-decoration: none;
     text-align: center;
     color: inherit;
