@@ -35,6 +35,10 @@ body{
 
 /* Section 2a: Outer section ids */
 
+#wrapper{
+    margin-left:260px;
+}
+
 #leftbar{
     position:fixed;
     z-index: 20;
@@ -218,7 +222,6 @@ table a{
         margin-right:15px;
     }
     textarea{
-        width:calc(100% - 10px);
         resize:auto;
         border:none;
         height:auto;

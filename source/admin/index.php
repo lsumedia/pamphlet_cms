@@ -54,17 +54,23 @@ if(isset($_SESSION['username'])){
     $leftbar->addLink("logout", "Sign out");
 }
 ?>
-<nav>
-
-</nav>
-<div class="row">
-    <div id="" class="col s12 m4 l3">
-        <ul>
-            <?php $leftbar->printBar(); ?>
+<header>
+    <nav class="blue darken-1 hide-on-med-and-up">
+        
+    </nav>
+    <!-- <div id="" class="col s12 m4 l3 blue lighten-1 side-nav fixed"> -->
+    <ul class="side-nav fixed">
+        <li class="logo">
+            <?php echo $title; ?>
+        </li>
+<!-- Left navigation content -->
+<?php $leftbar->printBar(); ?>
+<!-- End of navigation list-->
         </ul>
-    </div>
-    
-    <div id="central" class="col s12 m8 l9">
+</header>
+<div id="wrapper">
+    <!-- </div> -->
+        <div id="central" class="col s12 m8 l9">
     
         <?php
         /* Page content generator section */
@@ -90,8 +96,8 @@ if(isset($_SESSION['username'])){
         }
 
         ?>
-    </div>
-</div>
+        </div>
+</main>
 
 <?php
 html::end();

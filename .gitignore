@@ -230,3 +230,4 @@ pip-log.txt
 #Other
 source/admin/plugins/wordpress_relay.php
 source/admin/plugins/wtwitter/TwitterAPIExchange.php
+/source/admin/plugins/twitter/twitter_keys.php
