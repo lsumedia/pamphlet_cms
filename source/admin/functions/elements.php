@@ -445,7 +445,7 @@ function list_all(listId, dataLocation){
             echo '</ul>';
             //echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
-        echo "<table class=\"objectList bordered highlight\" id=\"$this->id\" $this->tags >",PHP_EOL;
+        echo "<table class=\"objectList bordered highlight responsive-table\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
         $first = $this->objects[0];
         foreach($first as $key => $value){
