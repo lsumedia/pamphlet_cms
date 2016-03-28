@@ -414,8 +414,7 @@ function list_all(listId, dataLocation){
     
     public function display(){
         echo "<!-- ajaxList $this->id -->", PHP_EOL;
-        $listStyle = (count($this->objects) > 10)? 'longList' : 'shortList';
-        echo "<div class='form listWrapper $listStyle'>", PHP_EOL;
+        echo "<div class='form listWrapper'>", PHP_EOL;
         $data_id = $this->id . '_data';
         $body_id = $this->id . '_body';
         $search_id = $this->id . '_search';
@@ -423,7 +422,7 @@ function list_all(listId, dataLocation){
         self::arrayToJson($data_id, $this->objects);
         
         $count = count($this->objects);
-        echo "<div class=\"listtitle\">$this->title</div>", PHP_EOL;
+        echo "<h3 class=\"listtitle\">$this->title</h3>", PHP_EOL;
         if($count > 10){
             $back; $next;
             $numpages = floor(($count-1) / 10 ) + 1;
@@ -445,7 +444,8 @@ function list_all(listId, dataLocation){
             echo '</ul>';
             //echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
-        echo "<table class=\"objectList bordered highlight responsive-table\" id=\"$this->id\" $this->tags >",PHP_EOL;
+        $listStyle = (count($this->objects) > 10)? 'longList' : 'shortList';
+        echo "<table class=\"objectList bordered highlight responsive-table $listStyle\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
         $first = $this->objects[0];
         foreach($first as $key => $value){
@@ -493,11 +493,11 @@ class ajaxForm{
     }
     function formTitle($text){
         //Simple title for the form
-        echo "<div class=\"formtitle\">$text</div>", PHP_EOL;
+        echo "<h3 class=\"formtitle\">$text</h3>", PHP_EOL;
     }
     function input($name,$type,$value){
         //DEPRECATED - input with no label
-        echo "<div class=\"fieldRow\">", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field\">", \PHP_EOL;
         echo "<input type=\"$type\" id=\"$name\" name=\"$name\" value=\"$value\" />", \PHP_EOL;
         echo "</div>", \PHP_EOL;
         $this->fieldNames[] = $name;
@@ -511,7 +511,7 @@ class ajaxForm{
      */
     function inputWithButton($name,$value,$label,$onclick,$blabel){
         //Input with a label and an JS button. Useful for image uploaders
-        echo "<div class=\"fieldRow\" id=\"filePath\"><p>$label</p>";
+        echo "<div class=\"fieldRow input-field\" id=\"filePath\"><p>$label</p>";
         echo "<input id=\"$name\" type=\"text\" value=\"$value\">";
         echo "<button class=\"btn waves-effect waves-light\" onclick=\"$onclick\">$blabel</button>";
         echo "</div>";
@@ -520,29 +520,29 @@ class ajaxForm{
     
     function labeledInput($name,$type,$value,$label){
         //Regular text input
-        echo "<div class=\"fieldRow\"><p>$label</p><input type=\"$type\" id=\"$name\" name=\"$name\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p><input type=\"$type\" id=\"$name\" name=\"$name\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
         $this->fieldNames[] = $name;
     }
     function lockedInput($value,$label){
         //Readonly text input
-        echo "<div class=\"fieldRow\"><p>$label</p><input onClick=\"this.select();\" readonly value=\"$value\"></div>";
+        echo "<div class=\"fieldRow input-field\"><p>$label</p><input onClick=\"this.select();\" readonly value=\"$value\"></div>";
     }
      function number($name,$min,$max,$value,$label){
-        echo "<div class=\"fieldRow\"><p>$label</p><input type=\"number\" id=\"$name\" name=\"$name\" value=\"$value\" min=\"$min\" max=\"$max\"/></div>", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p><input type=\"number\" id=\"$name\" name=\"$name\" value=\"$value\" min=\"$min\" max=\"$max\"/></div>", \PHP_EOL;
         $this->fieldNames[] = $name;
     }
     function lockedInputJs($id,$label){
-        echo "<div class=\"fieldRow\"><p>$label</p><input onClick=\"this.select();\" readonly id=\"$id\"></div>";
+        echo "<div class=\"fieldRow input-field\"><p>$label</p><input onClick=\"this.select();\" readonly id=\"$id\"></div>";
     }
     function checkBox($name,$value,$label){
         //Simple checkbox
        $checked = ($value != false)? "checked":"";
-       echo "<div class=\"fieldRow checkbox\"><p>$label</p><input id=\"$name\" name=\"$name\" type=\"checkbox\" value=\"$value\" $checked onclick=\"$(this).val(this.checked ? 1 : 0)\"><label for=\"$name\"><span></span></div>";
+       echo "<div class=\"fieldRow input-field checkbox\"><p>$label</p><input id=\"$name\" name=\"$name\" type=\"checkbox\" value=\"$value\" $checked onclick=\"$(this).val(this.checked ? 1 : 0)\"><label for=\"$name\"><span></span></div>";
        $this->fieldNames[] = $name;
     }
     function selector($name,$elements,$value,$label){
         //Regular selector (takes array of strings)
-        echo "<div class=\"fieldRow\"><p>$label</p>", PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p>", PHP_EOL;
         echo "<select id=\"$name\" name=\"$name\">", PHP_EOL;
         foreach($elements as $key => $choice){
             if($choice == $value){
@@ -556,7 +556,7 @@ class ajaxForm{
     }
     function kpSelector($name,$kpelements,$current,$label){
         //Select field with key-pair elements ("value"=>"label")
-        echo "<div class=\"fieldRow\"><p>$label</p>", PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p>", PHP_EOL;
         echo "<select id=\"$name\" name=\"$name\">", PHP_EOL;
         foreach($kpelements as $key => $choice){
                 if($key == $current){
@@ -570,7 +570,7 @@ class ajaxForm{
     }
     function plainText($name,$value,$label){
         //Plain textarea, no formatting options
-        echo "<div class=\"fieldRow\"><p>$label</p></div>", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p></div>", \PHP_EOL;
         echo "<textarea class=\"richtext\" id=\"$name\" id=\"$name\" rows=\"5\">";
         echo $value;
         echo "</textarea>";
@@ -579,7 +579,7 @@ class ajaxForm{
     function largeText($name,$value,$label){
         //textarea with CKEditor - one per page as this takes over the loadScript
         //TODO - upgrade loadScript for multiple elements
-        echo "<div class=\"fieldRow\"><p>$label</p></div>", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p></div>", \PHP_EOL;
         echo "<textarea class=\"richtext\" id=\"$name\" id=\"$name\" rows=\"5\">";
         echo $value;
         echo "</textarea>";
@@ -602,7 +602,7 @@ END;
         $this->fieldNames[] = $name;
     }
     function infoRow($content){
-        echo "<div class=\"fieldRow\"><p>$content</p></div>",PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$content</p></div>",PHP_EOL;
     }
     
     function submit($label,$onReloadAction){
@@ -615,7 +615,7 @@ END;
         $fields .= "]";
         $idArray = explode("=", $this->action);
         $lastId = end($idArray);
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"fieldRow input-field\">";
         echo "<p class=\"response\" id=\"$this->id-response\"></p>";
         echo "<button class=\"btn waves-effect waves-light\"  title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
         echo "</div>";
@@ -633,7 +633,7 @@ END;
         $fields .= "]";
         $idArray = explode("=", $this->action);
         $lastId = end($idArray);
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"fieldRow input-field\">";
         echo "<button class=\"btn waves-effect waves-light\" title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
         echo "</div>";
         $this->lockedInputJs("$this->id-response",$resultLabel);
@@ -647,26 +647,26 @@ END;
         if(!isset($onReloadAction)){
             $onReloadAction = $action;
         }
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"fieldRow input-field\">";
         echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response','$onReloadAction');};\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     function linkButton($id,$label,$action){
         //A button which requests a cp_loadPage page
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"fieldRow input-field\">";
         echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"cm_loadPage('$action');\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     function jsActionButton($id,$label,$action){
         //A button which performs a custom cp_updateForm action
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"fieldRow input-field\">";
         echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"$action\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     
     static function startOptionalSection($id,$label){
         //Start an optional selection section - only one level of this is allowed (no opsec within an opsec)... opsection
-        echo "<div class=\"fieldRow togglebutton\" onclick=\"expand('$id');\"><p>$label</p><img src=\"images/down_black.png\"></div>", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field togglebutton\" onclick=\"expand('$id');\"><p>$label</p><img src=\"images/down_black.png\"></div>", \PHP_EOL;
         echo "<div id=\"$id\" class=\"hiddensection\">";
     }
     
@@ -713,7 +713,8 @@ class customForm extends uiElement{
      * Javascript for sending form request
      */
     public static function clientSide(){
-        echo <<<END
+?>
+//<script>
 function cm_updateForm(fields,action,method,result,onReloadAction){
     if(!onReloadAction){
         var onReloadAction = action;
@@ -765,8 +766,7 @@ function expand(id){
         thing.style.maxHeight = "0px";
     }
 }
-        
-END;
+<?php
     }
     
     /**
@@ -797,7 +797,7 @@ END;
 
         //Echo title if it is set
         if($this->title){
-            echo "<div class='formtitle'>$this->title</div>", PHP_EOL;
+            echo "<h3 class='formtitle'>$this->title</h3>", PHP_EOL;
         }
         
         //Print each element in the option array
@@ -825,7 +825,7 @@ END;
         $fields .= "]";
         $idArray = explode("=", $this->action);
         $lastId = end($idArray);
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"fieldRow input-field\">";
         echo "<p class=\"response\" id=\"$this->id-response\"></p>";
         echo "<button class=\"btn waves-effect waves-light\" title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$this->onReloadAction');\">$submitLabel</button>", \PHP_EOL;
         echo "</div>";
@@ -951,27 +951,58 @@ END;
     }
     
     public static function button($id, $action, $label, $onReloadAction, $formID){
-        echo "<div class=\"fieldRow\">";
+        echo "<div class=\"input-field\">";
         echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$action','GET','$formID-response','$onReloadAction');};\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     
     public static function text($id, $value, $label){
-        echo "<div class=\"fieldRow\"><p>$label</p><input type=\"text\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
+        echo "<div class=\"input-field\">"
+            . "<input type=\"text\" id=\"$id\" name=\"$id\" value=\"$value\" />"
+            . "<label for=\"$id\">$label</label>"
+        . "</div>", \PHP_EOL;
     }
     
     public static function input($id, $value, $type, $label){
-        echo "<div class=\"fieldRow\"><p>$label</p><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
+        echo "<div class=\"input-field\">"
+            . "<input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\"/>" 
+            . "<label for=\"$id\">$label</label>"
+            . "</div>", \PHP_EOL;
+    }
+    
+    public static function date($id, $value, $type, $label){
+         echo "<div class=\"input-field\">"
+            . "<input type=\"date\" id=\"$id\" name=\"$id\" value=\"$value\" class=\"datepicker\"/>"
+            . "<label for=\"$id\" class=\"active\">$label</label>"
+        . "</div>", \PHP_EOL;
+         ?> 
+<script>
+    $('#<?php echo $id ?>').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15 // Creates a dropdown of 15 years to control year
+  }); 
+</script>
+         <?php
+    }
+    
+    public static function time($id, $value, $type, $label){
+         echo "<div class=\"input-field\">"
+            . "<input type=\"time\" id=\"$id\" name=\"$id\" value=\"$value\" class=\"timepicker\"/>"
+            . "<label for=\"$id\" class=\"active\">$label</label>"
+        . "</div>", \PHP_EOL;
     }
     
     public static function hidden($id, $value, $type, $label){
-        echo "<div class=\"fieldRow\" style=\"display:none;\"><p>$label</p><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
+        echo "<div class=\"input-field\" style=\"display:none;\">"
+                . "<input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/>" 
+                . "<label for=\"$id\">$label</label>"
+                . "</div>", \PHP_EOL;
     }
     
     public static function richtext($id, $value, $label){
        //textarea with CKEditor - one per page as this takes over the loadScript
         //TODO - upgrade loadScript for multiple elements
-        echo "<div class=\"fieldRow\"><p>$label</p></div>", \PHP_EOL;
+        echo "<div class=\"input-field\"><p>$label</p></div>", \PHP_EOL;
         echo "<textarea class=\"richtext\" id=\"$id\" id=\"$id\" rows=\"5\">";
         echo $value;
         echo "</textarea>";
@@ -997,8 +1028,8 @@ END;
     
     public static function select($id, $value, $options, $label){
          //Select field with key-pair elements ("value"=>"label")
-        echo "<div class=\"fieldRow\"><p>$label</p>", PHP_EOL;
-        echo "<select id=\"$id\" name=\"$id\" class=\"browser-default\">", PHP_EOL;
+        echo "<div class=\"input-field\">", PHP_EOL;
+        echo "<select id=\"$id\" name=\"$id\">", PHP_EOL;
         foreach($options as $key => $choice){
                 if($key == $value){
                 echo "<option value=\"$key\" selected>$choice</option>", PHP_EOL;
@@ -1006,17 +1037,19 @@ END;
                 echo "<option value=\"$key\">$choice</option>", PHP_EOL;
             }
         }
-        echo "</select></div>", PHP_EOL;
+        echo "</select>"
+        . "<label for=\"$id\">$label</label>"
+        . "</div>", PHP_EOL;
     }
     
     public static function checkBox($id,$value,$label){
        $checked = ($value != false)? "checked":"";
-       echo "<div class=\"fieldRow checkbox\"><p>$label</p><input id=\"$id\" name=\"$id\" type=\"checkbox\" value=\"$value\" $checked><label for=\"$id\"><span></span></div>", PHP_EOL;
+       echo "<div class=\"fieldRow input-field checkbox\"><p>$label</p><input id=\"$id\" name=\"$id\" type=\"checkbox\" value=\"$value\" $checked><label for=\"$id\"><span></span></div>", PHP_EOL;
     }
     
     public static function datalist($id, $value, $options, $label){
         $list_id = $id . '_list';
-        echo "<div class=\"fieldRow\"><p>$label</p><input type=\"text\" id=\"$id\" name=\"$id\" value=\"$value\" list=\"$list_id\" placeholder=\"$label\"/>", \PHP_EOL;
+        echo "<div class=\"fieldRow input-field\"><p>$label</p><input type=\"text\" id=\"$id\" name=\"$id\" value=\"$value\" list=\"$list_id\" placeholder=\"$label\"/>", \PHP_EOL;
         echo "<datalist id=\"$list_id\">", PHP_EOL;
         foreach($options as $option){
             echo "<option value=\"$option\">", PHP_EOL;
@@ -1026,7 +1059,7 @@ END;
     }
     
     public static function customlist($id, $value, $options, $label){
-         echo "<div class=\"fieldRow\" style=\"height:auto\"><p>$label</p>", PHP_EOL;
+         echo "<div class=\"fieldRow input-field\" style=\"height:auto\"><p>$label</p>", PHP_EOL;
         echo "<select style=\"height:auto;\" id=\"$id\" name=\"$id\" value=\"$value\" >", PHP_EOL;
         if(count($options > 0)){
             foreach($options as $key => $option){
@@ -1039,7 +1072,7 @@ END;
     
     public static function multiselect($id, $value, $options, $label){
         $values = explode(',',$value);
-        echo "<div class=\"fieldRow\" style=\"height:auto\"><p>$label</p>", PHP_EOL;
+        echo "<div class=\"input-field fieldRow input-field\" style=\"height:auto\"><p>$label</p>", PHP_EOL;
         echo "<select class=\"multiselect\" multiple id=\"$id\" name=\"$id\" value=\"$value\" >", PHP_EOL;
         if(count($options > 0)){
             foreach($options as $key => $option){
@@ -1055,7 +1088,7 @@ END;
     }
     
     public static function readonly($id,$value,$label){
-        echo "<div class=\"fieldRow\" ><p>$label</p><input id=\"$id\" onClick=\"this.select();\" readonly value=\"$value\" ></div>";
+        echo "<div class=\"fieldRow input-field\" ><p>$label</p><input id=\"$id\" onClick=\"this.select();\" readonly value=\"$value\" ></div>";
 
     }
     

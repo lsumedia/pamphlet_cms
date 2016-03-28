@@ -27,7 +27,7 @@ require 'functions/elements.php';
 html::start();
 
 html::css('css/materialize.min.css');
-html::css('css/style.css');		//Import stylesheet
+
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
 html::lockZoom();
@@ -37,6 +37,7 @@ html::jquery();
 html::js('js/materialize.js');
 html::js("ckeditor/ckeditor.js");
 html::js('functions/scripts.js.php');
+html::css('css/style.css');		//Import stylesheet 
 html::endHead();		//End head tag, start body tag
 
 //Body section
@@ -55,11 +56,11 @@ if(isset($_SESSION['username'])){
 }
 ?>
 <header>
-    <nav class="blue darken-1 hide-on-med-and-up">
-        
+    <nav data-activates="main_nav" class="btn-collapse top-nav blue darken-1 full hide-on-large-only">
+        <i class="material-icons btn">menu</i>
     </nav>
     <!-- <div id="" class="col s12 m4 l3 blue lighten-1 side-nav fixed"> -->
-    <ul class="side-nav fixed">
+    <ul id="main_nav" class="side-nav fixed">
         <li class="logo">
             <?php echo $title; ?>
         </li>

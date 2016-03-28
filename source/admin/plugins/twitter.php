@@ -39,7 +39,7 @@ class twitter extends optionsPage {
         global $connection;
         require('plugins/twitter/twitterscreen.php');
         //Make inner central element
-        ce::begin('style="width:60vw;"');
+        ce::begin('');
         //Make lists smaller
         echo "<style type=\"text/css\">.listWrapper{ min-height:0; margin-bottom:0; padding-bottom:0; }</style>";
         //Load in current string file

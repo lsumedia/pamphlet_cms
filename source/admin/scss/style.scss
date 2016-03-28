@@ -9,6 +9,26 @@
     margin-left:240px;
 }
 
+#central{
+    margin-top:3em;
+    margin-bottom:7em;
+}
+
+/* Repeated classes */
+
+.cke{
+    margin-bottom:1em;
+}
+.fieldRow{
+   /* padding:0.5em 0px; */
+}
+
+.longList{
+    min-height:583px;
+}
+
+/* Media queries */
+
 @media(max-width:500px){
     
 }
