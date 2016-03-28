@@ -70,7 +70,7 @@ if(isset($_SESSION['username'])){
 </header>
 <div id="wrapper">
     <!-- </div> -->
-        <div id="central" class="col s12 m8 l9">
+        <div id="central" class="container">
     
         <?php
         /* Page content generator section */
