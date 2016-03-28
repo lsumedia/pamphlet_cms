@@ -11,11 +11,24 @@
   margin-bottom: 7em; }
 
 /* Repeated classes */
+/* Form-related */
 .cke {
   margin-bottom: 1em; }
 
 .fieldRow {
-  /* padding:0.5em 0px; */ }
+  /* padding:0.5em 0px */ }
+
+input[type="color"], input[type="date"] {
+  height: 3rem;
+  width: 100%;
+  border: none; }
+
+select {
+  height: 3rem; }
+
+/* List related */
+.objectList a {
+  color: inherit; }
 
 .longList {
   min-height: 583px; }

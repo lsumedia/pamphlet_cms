@@ -205,7 +205,7 @@ class div{
 //Content section inner elements
 
 function backButton($action){
-    echo "<div class=\"backbutton\" onclick=\"window.location.href='?action=$action';\"><img src=\"images/back.png\">Back</div>";
+    echo "<button class=\"btn wave-effect red\" onclick=\"window.location.href='?action=$action';\">Back</button>";
 }
 
 function centralElement($html,$style){
@@ -557,7 +557,7 @@ class ajaxForm{
     function kpSelector($name,$kpelements,$current,$label){
         //Select field with key-pair elements ("value"=>"label")
         echo "<div class=\"fieldRow input-field\"><p>$label</p>", PHP_EOL;
-        echo "<select id=\"$name\" name=\"$name\">", PHP_EOL;
+        echo "<select id=\"$name\" name=\"$name\" class=\"browser-default\">", PHP_EOL;
         foreach($kpelements as $key => $choice){
                 if($key == $current){
                 echo "<option value=\"$key\" selected>$choice</option>", PHP_EOL;
@@ -973,16 +973,16 @@ function expand(id){
     public static function date($id, $value, $type, $label){
          echo "<div class=\"input-field\">"
             . "<input type=\"date\" id=\"$id\" name=\"$id\" value=\"$value\" class=\"datepicker\"/>"
-            . "<label for=\"$id\" class=\"active\">$label</label>"
-        . "</div>", \PHP_EOL;
-         ?> 
+            . "<label for=\"$id\">$label</label>"
+        . "</div>";
+        ?> 
 <script>
-    $('#<?php echo $id ?>').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15 // Creates a dropdown of 15 years to control year
-  }); 
+$('#<?php echo $id ?>').pickadate({
+selectMonths: true, // Creates a dropdown to control month
+selectYears: 15 // Creates a dropdown of 15 years to control year
+}); 
 </script>
-         <?php
+<?php
     }
     
     public static function time($id, $value, $type, $label){
@@ -1002,29 +1002,27 @@ function expand(id){
     public static function richtext($id, $value, $label){
        //textarea with CKEditor - one per page as this takes over the loadScript
         //TODO - upgrade loadScript for multiple elements
-        echo "<div class=\"input-field\"><p>$label</p></div>", \PHP_EOL;
+        echo "<div class=\"input-field\"></div>", \PHP_EOL;
         echo "<textarea class=\"richtext\" id=\"$id\" id=\"$id\" rows=\"5\">";
         echo $value;
         echo "</textarea>";
+        echo "<label for=\"$id\">$label</label>";
         $editor = $id . "editor";
-        echo <<<END
-        <script id="loadScript">
-            var $editor = CKEDITOR.replace('$id');
-            $editor.on( 'change', function( evt ) {
-                $editor.updateElement();
-            });
-            $editor.on( 'loaded', function(evt){
-                    $('.cke').css('border','none');
-                    $('.cke').css('box-shadow','none');
-                    $('.cke_bottom').css('background-color','#2196F3');
-                });
-                //CKFinder Setup (TODO: replace with free alternative)
-            CKFinder.setupCKEditor($editor, '/cms/ckfinder/');
-        </script>
-END;
+        ?> 
+<script class="loadScript">
+var $editor = CKEDITOR.replace('<?php echo $id; ?>');
+$editor.on( 'change', function( evt ) {
+    $editor.updateElement();
+});
+$editor.on( 'loaded', function(evt){
+        $('.cke').css('border','none');
+        $('.cke').css('box-shadow','none');
+        $('.cke_bottom').css('background-color','#2196F3');
+    });
+    //CKFinder Setup (TODO: replace with free alternative)
+</script>
+<?php
     }
-    
-    
     
     public static function select($id, $value, $options, $label){
          //Select field with key-pair elements ("value"=>"label")
@@ -1038,13 +1036,21 @@ END;
             }
         }
         echo "</select>"
-        . "<label for=\"$id\">$label</label>"
-        . "</div>", PHP_EOL;
+        . "<label>$label</label>"
+        . "</div>";
+        ?> 
+<script>
+$('#<?php echo $id ?>').material_select();
+</script>
+<?php
     }
     
     public static function checkBox($id,$value,$label){
        $checked = ($value != false)? "checked":"";
-       echo "<div class=\"fieldRow input-field checkbox\"><p>$label</p><input id=\"$id\" name=\"$id\" type=\"checkbox\" value=\"$value\" $checked><label for=\"$id\"><span></span></div>", PHP_EOL;
+       echo "<div class=\"fieldRow input-field checkbox\">"
+        . "<input id=\"$id\" name=\"$id\" type=\"checkbox\" value=\"$value\" $checked>"
+        . "<label for=\"$id\">$label</label>"
+        . "</div>", PHP_EOL;
     }
     
     public static function datalist($id, $value, $options, $label){
@@ -1060,7 +1066,7 @@ END;
     
     public static function customlist($id, $value, $options, $label){
          echo "<div class=\"fieldRow input-field\" style=\"height:auto\"><p>$label</p>", PHP_EOL;
-        echo "<select style=\"height:auto;\" id=\"$id\" name=\"$id\" value=\"$value\" >", PHP_EOL;
+        echo "<select class=\"browser-default\" style=\"height:auto;\" id=\"$id\" name=\"$id\" value=\"$value\" >", PHP_EOL;
         if(count($options > 0)){
             foreach($options as $key => $option){
                 echo "<option value=\"$key\">$option</option>", PHP_EOL;
@@ -1072,8 +1078,8 @@ END;
     
     public static function multiselect($id, $value, $options, $label){
         $values = explode(',',$value);
-        echo "<div class=\"input-field fieldRow input-field\" style=\"height:auto\"><p>$label</p>", PHP_EOL;
-        echo "<select class=\"multiselect\" multiple id=\"$id\" name=\"$id\" value=\"$value\" >", PHP_EOL;
+        echo "<div class=\"input-field fieldRow input-field\" style=\"height:auto\">", PHP_EOL;
+        echo "<select class=\"multiselect browser-default\" multiple id=\"$id\" name=\"$id\" value=\"$value\" >", PHP_EOL;
         if(count($options > 0)){
             foreach($options as $key => $option){
                 if(in_array($key, $values)){
@@ -1084,12 +1090,15 @@ END;
             }
         }
         echo "</select>", PHP_EOL;
+        echo "<label class=\"active\" for=\"$id\">$label</label>";
         echo "</div>";
     }
     
     public static function readonly($id,$value,$label){
-        echo "<div class=\"fieldRow input-field\" ><p>$label</p><input id=\"$id\" onClick=\"this.select();\" readonly value=\"$value\" ></div>";
-
+         echo "<div class=\"input-field\">"
+            . "<input disabled readonly type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\"/>" 
+            . "<label for=\"$id\">$label</label>"
+            . "</div>", \PHP_EOL;
     }
     
     

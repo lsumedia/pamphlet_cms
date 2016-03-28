@@ -31,7 +31,7 @@ html::css('css/materialize.min.css');
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
 html::lockZoom();
-$title = 'Pamphlet 3.4';
+$title = 'Pamphlet 3.5';
 html::title($title);
 html::jquery();
 html::js('js/materialize.js');
