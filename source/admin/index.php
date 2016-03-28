@@ -36,7 +36,7 @@ html::title($title);
 html::jquery();
 html::js('js/materialize.js');
 html::js("ckeditor/ckeditor.js");
-html::js('functions/scripts.js.php');
+html::js('scripts.js.php');
 html::css('css/style.css');		//Import stylesheet 
 html::endHead();		//End head tag, start body tag
 
