@@ -300,23 +300,24 @@ function list_change_page(listId,dataLocation,pageNumber){
         var backbtn = document.getElementById(listId + '_back');
         var nextbtn = document.getElementById(listId + '_next');
         //Change button targets
-        
-        
+
         //Change button visibility depending on list length
         if(pageNumber == 0){
             backbtn.setAttribute('onclick','javascript:void(0);');
-            backbtn.classname = 'disabled';
+            backbtn.className = 'disabled';
         }else{
             backbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
-            backbtn.classname = 'waves-effect';
+            backbtn.className = 'waves-effect';
         }
         if(pageNumber >= (numberOfPages -1) ){
             nextbtn.setAttribute('onclick','javascript:void(0);');
-            nextbtn.classname = 'disabled';
+            nextbtn.className = 'disabled';
         }else{
             nextbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
-            nextbtn.classname = 'waves-effect';
+            nextbtn.className = 'waves-effect';
         }
+        
+        
         
 }
         
