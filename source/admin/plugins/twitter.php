@@ -64,7 +64,7 @@ class twitter extends optionsPage {
         echo "</div>";
         echo "<div class=\"fieldRow\">";
         echo "<p id='loadUrlError'></p>";
-        echo "<button onclick=\"replaceTweetByUrl(document.getElementById('tweet_url_input').value);\" >Load</button>";
+        echo "<button class=\"btn waves-effect waves-light blue\" onclick=\"replaceTweetByUrl(document.getElementById('tweet_url_input').value);\" >Load</button>";
         echo "</div>";
         
         
@@ -77,7 +77,7 @@ class twitter extends optionsPage {
             $time = date('H:i:s');
             echo "<p>Updated tweets at $time</p>";
         }
-        echo "<button onclick=\"window.location.href='?action=plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value;\" >Search</button>";
+        echo "<button class=\"btn waves-effect waves-light blue\" onclick=\"window.location.href='?action=plugin_twitter&term=' + document.getElementById('term_input').value + '&custom=' + document.getElementById('tweet_url_input').value;\" >Search</button>";
         echo "</div>";
         
         

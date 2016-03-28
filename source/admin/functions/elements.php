@@ -294,7 +294,7 @@ function list_change_page(listId,dataLocation,pageNumber){
         }
         
         document.getElementById(listId + '_body').innerHTML = html;
-        document.getElementById(listId + '_pagenumber').innerHTML = pageNumber + 1;
+        //document.getElementById(listId + '_pagenumber').innerHTML = pageNumber + 1;
         
         //Load buttons
         var backbtn = document.getElementById(listId + '_back');
@@ -305,17 +305,17 @@ function list_change_page(listId,dataLocation,pageNumber){
         //Change button visibility depending on list length
         if(pageNumber == 0){
             backbtn.setAttribute('onclick','javascript:void(0);');
-            backbtn.style.color = '#888';
+            backbtn.classname = 'disabled';
         }else{
             backbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + prev + ');' );
-            backbtn.style.color = 'inherit';
+            backbtn.classname = 'waves-effect';
         }
         if(pageNumber >= (numberOfPages -1) ){
             nextbtn.setAttribute('onclick','javascript:void(0);');
-            nextbtn.style.color = '#888';
+            nextbtn.classname = 'disabled';
         }else{
             nextbtn.setAttribute('onclick','list_change_page(\'' + listId + '\',\'' + dataLocation + '\',' + next + ');' );
-            nextbtn.style.color = 'inherit';
+            nextbtn.classname = 'waves-effect';
         }
         
 }
@@ -429,9 +429,20 @@ function list_all(listId, dataLocation){
             $back_id = $this->id . '_back';
             $next_id = $this->id . '_next';
             $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
-            $back = "<i onclick=\"list_change_page('$this->id','$data_id',0);\" id='$back_id' class='material-icons' style=\"color:#888;\">chevron_left</i>";
-            $next = "<i onclick=\"list_change_page('$this->id','$data_id',1);\" id='$next_id' class='material-icons'>chevron_right</i>"; 
-            echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
+            $back = "<i class='material-icons'>chevron_left</i>";
+            $next = "<i class='material-icons'>chevron_right</i>"; 
+            echo $search;
+            echo '<ul class="pagination">';
+            echo "<li onclick=\"list_change_page('$this->id','$data_id',0);\" id='$back_id' class='disabled'><a href=\"javascript:void(0);\">". $back . '</a></li>';
+            for($i = 0; $i < $numpages; $i++){
+                $number_id = $this->id . '_page' . $i;
+                $active = ($i == 0)? 'blue active' : '';
+                $pageref = $i+1;    //Index 1-10 rather than 0-9
+                echo "<li onclick=\"list_change_page('$this->id','$data_id',$i);\" class=\"waves-effect $active\" id=\"$number_id\"><a href=\"javascript:void(0);\">$pageref</a></li>";
+            }
+            echo "<li onclick=\"list_change_page('$this->id','$data_id',1);\" id='$next_id' class='waves-effect'><a href=\"javascript:void(0);\">" . $next . '</a></li>';
+            echo '</ul>';
+            //echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
         echo "<table class=\"objectList bordered highlight\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
@@ -501,7 +512,7 @@ class ajaxForm{
         //Input with a label and an JS button. Useful for image uploaders
         echo "<div class=\"fieldRow\" id=\"filePath\"><p>$label</p>";
         echo "<input id=\"$name\" type=\"text\" value=\"$value\">";
-        echo "<button onclick=\"$onclick\">$blabel</button>";
+        echo "<button class=\"btn waves-effect waves-light\" onclick=\"$onclick\">$blabel</button>";
         echo "</div>";
         $this->fieldNames[] = $name;
     }
@@ -605,7 +616,7 @@ END;
         $lastId = end($idArray);
         echo "<div class=\"fieldRow\">";
         echo "<p class=\"response\" id=\"$this->id-response\"></p>";
-        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
+        echo "<button class=\"btn waves-effect waves-light\"  title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
         echo "</div>";
         echo "</div>", PHP_EOL;
         echo "<!-- ajaxForm $this->id ends -->", PHP_EOL;
@@ -622,7 +633,7 @@ END;
         $idArray = explode("=", $this->action);
         $lastId = end($idArray);
         echo "<div class=\"fieldRow\">";
-        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
+        echo "<button class=\"btn waves-effect waves-light\" title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$onReloadAction');\">$label</button>", \PHP_EOL;
         echo "</div>";
         $this->lockedInputJs("$this->id-response",$resultLabel);
         echo "</div>", PHP_EOL;
@@ -636,19 +647,19 @@ END;
             $onReloadAction = $action;
         }
         echo "<div class=\"fieldRow\">";
-        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response','$onReloadAction');};\">$label</button>";
+        echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$newAction','GET','$this->id-response','$onReloadAction');};\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     function linkButton($id,$label,$action){
         //A button which requests a cp_loadPage page
         echo "<div class=\"fieldRow\">";
-        echo "<button id=\"$id\" onclick=\"cm_loadPage('$action');\">$label</button>";
+        echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"cm_loadPage('$action');\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     function jsActionButton($id,$label,$action){
         //A button which performs a custom cp_updateForm action
         echo "<div class=\"fieldRow\">";
-        echo "<button id=\"$id\" onclick=\"$action\">$label</button>";
+        echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"$action\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     
@@ -815,7 +826,7 @@ END;
         $lastId = end($idArray);
         echo "<div class=\"fieldRow\">";
         echo "<p class=\"response\" id=\"$this->id-response\"></p>";
-        echo "<button title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$this->onReloadAction');\">$submitLabel</button>", \PHP_EOL;
+        echo "<button class=\"btn waves-effect waves-light\" title=\"Item id: $lastId\"onclick=\"cm_updateForm($fields,'$this->action','POST','$this->id-response','$this->onReloadAction');\">$submitLabel</button>", \PHP_EOL;
         echo "</div>";
         echo "</div>", PHP_EOL;
         echo "<!-- ajaxForm2 $this->id ends -->", PHP_EOL;
@@ -940,7 +951,7 @@ END;
     
     public static function button($id, $action, $label, $onReloadAction, $formID){
         echo "<div class=\"fieldRow\">";
-        echo "<button id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$action','GET','$formID-response','$onReloadAction');};\">$label</button>";
+        echo "<button class=\"btn waves-effect waves-light\" id=\"$id\" onclick=\"if(confirm('$label?')){ cm_updateForm([],'$action','GET','$formID-response','$onReloadAction');};\">$label</button>";
         echo "</div>", PHP_EOL;
     }
     
