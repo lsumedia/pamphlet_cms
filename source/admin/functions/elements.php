@@ -422,7 +422,7 @@ function list_all(listId, dataLocation){
         self::arrayToJson($data_id, $this->objects);
         
         $count = count($this->objects);
-        echo "<h3 class=\"listtitle\">$this->title</h3>", PHP_EOL;
+        echo "<h4 class=\"listtitle\">$this->title</h4>", PHP_EOL;
         if($count > 10){
             $back; $next;
             $numpages = floor(($count-1) / 10 ) + 1;
@@ -493,7 +493,7 @@ class ajaxForm{
     }
     function formTitle($text){
         //Simple title for the form
-        echo "<h3 class=\"formtitle\">$text</h3>", PHP_EOL;
+        echo "<h4 class=\"formtitle\">$text</h4>", PHP_EOL;
     }
     function input($name,$type,$value){
         //DEPRECATED - input with no label
@@ -797,7 +797,7 @@ function expand(id){
 
         //Echo title if it is set
         if($this->title){
-            echo "<h3 class='formtitle'>$this->title</h3>", PHP_EOL;
+            echo "<h4 class='formtitle'>$this->title</h4>", PHP_EOL;
         }
         
         //Print each element in the option array

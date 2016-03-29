@@ -43,7 +43,7 @@ class shows extends optionsPage{
     
     public function configPage() {
         global $connection;
-        ce::begin("style=\"max-width:800px;\"");
+        ce::begin("");
         if(isset($_GET['edit'])){
             backButton($this->name);
             $id = $_GET['edit'];
@@ -392,7 +392,7 @@ class schedule extends optionsPage{
     }
     
     public function configPage() {
-        ce::begin("style=\"width:800px;\"");
+        ce::begin('');
         if(isset($_GET['edit'])){
             backButton($this->name);
             $sid = $_GET['edit'];
