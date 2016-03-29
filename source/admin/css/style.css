@@ -34,6 +34,17 @@ select {
   min-height: 583px; }
 
 /* Media queries */
+@media (min-width: 992px) {
+  body {
+    background-color: #EEE; }
+
+  #central {
+    width: 800px;
+    background-color: white;
+    padding: 15px; } }
+@media (min-width: 1240px) {
+  #central {
+    margin-left: 165px; } }
 @media (max-width: 992px) {
   #wrapper {
     margin: 0;
