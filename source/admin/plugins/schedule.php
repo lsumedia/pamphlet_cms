@@ -699,7 +699,6 @@ class schedule extends optionsPage{
     public static function formArray(){
         return [
             'title' => ['type' => 'text', 'label' => 'Title', 'value' => ''],
-            'timezone' => ['type' => 'number', 'label' => 'Time zone', 'value' => 0],
             'replace_title' => ['type' => 'checkbox', 'label' => 'Replace title', 'value' => 0],
             'replace_nowplaying' => ['type' => 'checkbox', 'label' => 'Replace nowplaying', 'value' => 0],
             'replace_description' => ['type' => 'checkbox', 'label' => 'Replace description', 'value' => 0]
