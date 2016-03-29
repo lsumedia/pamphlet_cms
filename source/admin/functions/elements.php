@@ -317,7 +317,14 @@ function list_change_page(listId,dataLocation,pageNumber){
             nextbtn.className = 'waves-effect';
         }
         
-        
+        var number_class = '.' + listId + '_pagebtn';
+        console.log(number_class);
+        $(number_class).removeClass('active');
+        $(number_class).removeClass('blue');
+        var active_id = '#' + listId + '_page' + pageNumber;
+        console.log(active_id);
+        $(active_id).addClass('active');
+        $(active_id).addClass('blue');
         
 }
         
@@ -359,8 +366,15 @@ function list_search(listId,dataLocation,term){
         //Load buttons
         var backbtn = document.getElementById(listId + '_back');
         var nextbtn = document.getElementById(listId + '_next');
-        backbtn.style.color = '#888';
-        nextbtn.style.color = '#888';
+        //Change button targets
+        backbtn.className = 'disabled';
+        nextbtn.className = 'disabled';
+        
+        
+        var number_class = '.' + listId + '_pagebtn';
+        console.log(number_class);
+        $(number_class).removeClass('active');
+        $(number_class).removeClass('blue');
 }
         
 function list_all(listId, dataLocation){ 
@@ -431,6 +445,7 @@ function list_all(listId, dataLocation){
             $search = "<input onkeyup=\"list_search('$this->id','$data_id',this.value);\" placeholder='Search' type='text' id='$search_id' />";
             $back = "<i class='material-icons'>chevron_left</i>";
             $next = "<i class='material-icons'>chevron_right</i>"; 
+            $number_class = $this->id . '_pagebtn';
             echo $search;
             echo '<ul class="pagination">';
             echo "<li onclick=\"list_change_page('$this->id','$data_id',0);\" id='$back_id' class='disabled'><a href=\"javascript:void(0);\">". $back . '</a></li>';
@@ -438,7 +453,7 @@ function list_all(listId, dataLocation){
                 $number_id = $this->id . '_page' . $i;
                 $active = ($i == 0)? 'blue active' : '';
                 $pageref = $i+1;    //Index 1-10 rather than 0-9
-                echo "<li onclick=\"list_change_page('$this->id','$data_id',$i);\" class=\"waves-effect $active\" id=\"$number_id\"><a href=\"javascript:void(0);\">$pageref</a></li>";
+                echo "<li onclick=\"list_change_page('$this->id','$data_id',$i);\" class=\"waves-effect $active $number_class\" id=\"$number_id\"><a href=\"javascript:void(0);\">$pageref</a></li>";
             }
             echo "<li onclick=\"list_change_page('$this->id','$data_id',1);\" id='$next_id' class='waves-effect'><a href=\"javascript:void(0);\">" . $next . '</a></li>';
             echo '</ul>';
