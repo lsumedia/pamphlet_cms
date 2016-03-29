@@ -34,5 +34,12 @@ select {
   min-height: 583px; }
 
 /* Media queries */
+@media (max-width: 992px) {
+  #wrapper {
+    margin: 0;
+    width: 100%; }
+
+  .longList {
+    min-height: 0; } }
 
 /*# sourceMappingURL=style.css.map */

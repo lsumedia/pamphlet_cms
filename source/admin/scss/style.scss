@@ -45,6 +45,16 @@ select{
 
 /* Media queries */
 
+@media(max-width:992px){
+    #wrapper{
+        margin:0;
+        width:100%;
+    }
+    .longList{
+        min-height:0;
+    }
+}
+
 @media(max-width:500px){
     
 }

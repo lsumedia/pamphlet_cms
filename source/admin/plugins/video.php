@@ -61,7 +61,7 @@ class manager extends optionsPage{
     public function configPage(){
         
         global $connection;
-        ce::begin("ce-medium");
+        ce::begin("");
         if($channel = filter_input(INPUT_GET,"edit")){
             
             backButton($this->name);
@@ -568,7 +568,7 @@ class videojs_embed extends optionsPage{
     }
     
     public function configPage(){ 
-       ce::begin('ce-medium');
+       ce::begin('');
         $form = new ajaxForm("embedCodeForm",$this->name,"POST");
         $form->formTitle("VideoJS Player Maker");
         $form->labeledInput("url", "text", "", "Video URL");

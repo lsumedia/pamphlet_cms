@@ -460,7 +460,8 @@ function list_all(listId, dataLocation){
             //echo "$search<div class=\"listnav\"><p>Page <span id='$page_number'>1</span> of $numpages</p>$back$next</div>";
         }
         $listStyle = (count($this->objects) > 10)? 'longList' : 'shortList';
-        echo "<table class=\"objectList bordered highlight responsive-table $listStyle\" id=\"$this->id\" $this->tags >",PHP_EOL;
+        $responsive = (count($this->objects[0]) > 4)? 'responsive-table' : '';
+        echo "<table class=\"objectList bordered highlight $responsive $listStyle\" id=\"$this->id\" $this->tags >",PHP_EOL;
         
         $first = $this->objects[0];
         foreach($first as $key => $value){
@@ -739,7 +740,7 @@ function cm_updateForm(fields,action,method,result,onReloadAction){
         if(updateRequest.readyState == 4 && updateRequest.status == 200){
             var response = updateRequest.responseText;
             if(response == "reload"){
-                cm_loadPage(onReloadAction);
+                window.location.href = '.?action=' + onReloadAction;
             }else if(response == "refresh"){
                 location.reload();
             }
@@ -1264,7 +1265,8 @@ class cm_inner extends uiElement{
 	}
 	//Run this second
 	public static function clientSide(){
-		echo <<<END
+?>
+//<script>
 function cm_loadPage(code){
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
@@ -1289,8 +1291,7 @@ function cm_loadPage(code){
         
             //show loading animation
 }
-END;
-echo PHP_EOL;
+<?php
 		
 	}
 }

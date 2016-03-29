@@ -56,8 +56,8 @@ if(isset($_SESSION['username'])){
 }
 ?>
 <header>
-    <nav data-activates="main_nav" class="btn-collapse top-nav blue darken-1 full hide-on-large-only">
-        <i class="material-icons btn">menu</i>
+    <nav data-activates="main_nav" class="btn-collapse top-nav blue darken-1 full hide-on-large-only fixed">
+        <a href='#' data-activates='main_nav' class='button-collapse'><i class="mdi-navigation-menu"></i></a>
     </nav>
     <!-- <div id="" class="col s12 m4 l3 blue lighten-1 side-nav fixed"> -->
     <ul id="main_nav" class="side-nav fixed">
@@ -99,7 +99,9 @@ if(isset($_SESSION['username'])){
         ?>
         </div>
 </main>
-
+<script id="ui-load">
+    $('.button-collapse').sideNav();
+</script>
 <?php
 html::end();
 ?>

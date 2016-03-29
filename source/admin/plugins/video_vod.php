@@ -43,7 +43,7 @@ class videos extends optionsPage{
     
     public function configPage($live){
         global $connection;
-        ce::begin("style='min-width:800px'");
+        ce::begin("");
         /* Declare $live as false if we don't want to see live videos*/
         if(!isset($live)){
             $live = 0;
