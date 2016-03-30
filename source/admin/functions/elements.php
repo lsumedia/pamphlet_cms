@@ -701,7 +701,7 @@ class customForm extends uiElement{
      * Javascript for sending form request
      */
     public static function clientSide(){
-        echo <<<END
+        ?>
 function cm_updateForm(fields,action,method,result,onReloadAction){
     if(!onReloadAction){
         var onReloadAction = action;
@@ -711,7 +711,7 @@ function cm_updateForm(fields,action,method,result,onReloadAction){
         if(updateRequest.readyState == 4 && updateRequest.status == 200){
             var response = updateRequest.responseText;
             if(response == "reload"){
-                cm_loadPage(onReloadAction);
+                window.location.href = '.?action=' + onReloadAction;
             }else if(response == "refresh"){
                 location.reload();
             }
@@ -754,7 +754,7 @@ function expand(id){
     }
 }
         
-END;
+<?php
     }
     
     /**
