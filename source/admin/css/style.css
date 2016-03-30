@@ -318,6 +318,9 @@ body {
     margin-right: 0px;
     margin-bottom: 0px; } }
 @media (max-width: 800px) {
+  #body {
+    background-color: #FFF; }
+
   #leftbar {
     position: static;
     height: auto;
