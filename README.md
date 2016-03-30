@@ -22,7 +22,10 @@ FEATURES:
 - Scoreboard graphics generator that you totally don't need on a blog
 
 External code used
--ckeditor
--video.js
--flashls (Mozilla Public Licence)
--videojs-osmf (doesn't work)
+- ckeditor
+- video.js
+- video-js resolution switcher
+- flashls (Mozilla Public Licence)
+- videojs-osmf (doesn't work)
+- waversurfer-js
+- Materialize CSS
