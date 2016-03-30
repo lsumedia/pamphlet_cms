@@ -13,7 +13,7 @@
  */
 class video_audio extends mediaPlayer{
     //put your code here
-    public $name = 'wavesurfer';
+    public $name = 'audio';
     public $title = 'Wavesurfer Audio';
     
     public $live = false;

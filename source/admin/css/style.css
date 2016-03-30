@@ -35,9 +35,6 @@ select {
 
 /* Media queries */
 @media (min-width: 992px) {
-  body {
-    background-color: #EEE; }
-
   #central {
     width: 800px;
     background-color: white;
