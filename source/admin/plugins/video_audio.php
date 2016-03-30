@@ -13,13 +13,13 @@
  */
 class video_audio extends mediaPlayer{
     //put your code here
-    public $name = 'wavesurfer';
-    public $title = 'Wavesurfer Audio';
+    public $name = 'audio';
+    public $title = 'HTML5 Audio';
     
     public $live = false;
     public $ondemand = true;
     
-    public $supported = array('audio/mp3', 'audio/ogg', 'audio/wave', 'audio/wav');
+    public $supported = array('audio/mp3', 'audio/ogg', 'audio/wave', 'audio/wav', 'audio/mpeg', 'audio/aac', 'audio/x-aac');
     
     public static function build($content, $options = ''){
         
