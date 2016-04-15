@@ -488,7 +488,7 @@ class ajaxForm{
         echo "<div class=\"fieldRow\">", \PHP_EOL;
         echo "<input type=\"$type\" id=\"$name\" name=\"$name\" value=\"$value\" />", \PHP_EOL;
         echo "</div>", \PHP_EOL;
-        $this->fieldNames[] = $name;
+       $this->fieldNames[] = $name;
     }
     /* function inputWithButton(name,value,label,onlick,blabel
      * name: the input's name for the post request
