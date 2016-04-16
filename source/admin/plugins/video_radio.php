@@ -102,6 +102,8 @@ class visual_radio extends mediaPlayer{
             }
         }
         
+        $content->audioonly = $audioonly;
+        
         $cbcode = ($audioonly == true) ? ',"inactivityTimeout": 0' : '';
         $autoplay = ($content->live)? 'autoplay' : '';
         
