@@ -211,6 +211,55 @@ class spotify extends mediaPlayer{
     
 }
 
+class clappr extends mediaPlayer{
+    public $name = 'clappr';
+    public $title = 'Clappr';
+    
+    public $live = true;
+    public $ondemand = true;
+    
+    public static function build($video,$setup){
+        ob_start();
+        
+        $primarySource = $video->sources[0];
+        
+        ?>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script> 
+  <style>
+      
+  </style>
+</head>
+<body>
+    <div id="player" class="vidplayer" style="width:100%; height:100%; height:100vh;">
+</div>
+  <script>
+    var player = new Clappr.Player({
+        source: "<?= $primarySource->src ?>",
+        mimeType: "<?= $primarySource->type ?>",
+        poster: "<?= $video->poster ?>",
+        parentId: "#player",
+        height:"100%",
+        width:"100%"
+    });
+  </script>
+  </div>
+</body>
+</html>
+        
+<?php
+        
+        $video->source =  ob_get_contents();
+        ob_end_clean();
+        
+        return $video;
+    }
+    
+}
+
 
 class custom extends mediaPlayer{
     public $name = 'custom';
