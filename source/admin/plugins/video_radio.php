@@ -105,7 +105,7 @@ class visual_radio extends mediaPlayer{
         $content->audioonly = $audioonly;
         
         $cbcode = ($audioonly == true) ? ',"inactivityTimeout": 0' : '';
-        $autoplay = ($content->live)? 'autoplay' : '';
+        $autoplay = ($content->live || $_GET['autoplay'])? 'autoplay' : '';
         
         echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls $autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"] , \"plugins\": { \"videoJsResolutionSwitcher\" : { \"default\" : \"720\" } } $cbcode}' $video->code>", PHP_EOL;
         foreach($content->sources as $source){

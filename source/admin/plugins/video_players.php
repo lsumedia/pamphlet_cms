@@ -19,8 +19,10 @@ class youtube extends mediaPlayer{
         $id = $primarySource->src;
         
         //$hash = unserialize(file_get_contents("https://gdata.youtube.com/feeds/api/videos/$id?v=2"));
+        
+        $autoplay = ($_GET['autoplay'])? '?autoplay=1' : '';
 
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://www.youtube.com/embed/$id\"></iframe>";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://www.youtube.com/embed/$id$autoplay\"></iframe>";
         $video->poster = "http://img.youtube.com/vi/$id/maxresdefault.jpg";
         return $video;
     }
@@ -42,9 +44,11 @@ class vimeo extends mediaPlayer{
 
         $poster_url = $hash[0]['thumbnail_large'];          
         
+        $autoplay = ($_GET['autoplay'])? '?autoplay=1' : '';
+        
         $video->title = $hash[0]['title'];
         $video->description = $hash[0]['description'];
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id/\"></iframe>";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://player.vimeo.com/video/$id$autoplay\"></iframe>";
         $video->poster = $poster_url;
         return $video;
     }
@@ -83,7 +87,9 @@ class videojs_4 extends mediaPlayer{
         
         videojs::init();
         
-        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"], \"plugins\" : { \"resolutionSelector\" : { \"default_res\" : \"720\" } } }'>", PHP_EOL;
+        $autoplay = ($_GET['autoplay'])? 'autoplay' : '';
+        
+        echo "<video id=\"video\" class=\"vidplayer video-js vjs-default-skin html5vid\" width=\"100%\" height=\"100%\" poster=\"$poster\" controls $autoplay data-setup='{\"techOrder\": [\"html5\",\"flash\"], \"plugins\" : { \"resolutionSelector\" : { \"default_res\" : \"720\" } } }'>", PHP_EOL;
         foreach($video->sources as $source){
             $src = $source->src;
             $type = $source->type;
@@ -148,7 +154,7 @@ class videojs_5 extends mediaPlayer{
         html::js('plugins/video/videojs/chromecast/videojs.chromecast.min.js');
         */
         
-        if($video->live == 1 || $data['autoplay'] == 1){
+        if($video->live == 1 || $data['autoplay'] == 1 | $_GET['autoplay'] == true){
             $autoplay = 'autoplay';
         }else{
             $autoplay = '';
