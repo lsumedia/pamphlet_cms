@@ -192,9 +192,11 @@ class soundcloud extends mediaPlayer{
     public static function build($video, $setup){
         $primarySource = $video->sources[0];
         $id = $primarySource->src;
-        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true\"></iframe>";;
+        $autoplay = ($_GET['autoplay'])? '&auto_play=true' : '';
         
-        $video->alt_url = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=false";
+        $video->source = "<iframe frameborder=\"0\" class=\"vidplayer\" width=\"100%\" height=\"100%\" allowfullscreen src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true$autoplay\"></iframe>";;
+        
+        $video->alt_url = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/$id&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=false$autoplay";
         return $video;
     }
     
@@ -229,6 +231,8 @@ class clappr extends mediaPlayer{
         
         $primarySource = $video->sources[0];
         
+        $autoplay = ($_GET['autoplay'])? 'autoPlay : true,' : '';
+        
         ?>
 
 <html lang="en">
@@ -249,6 +253,7 @@ class clappr extends mediaPlayer{
         poster: "<?= $video->poster ?>",
         parentId: "#player",
         height:"100%",
+        <?= $autoplay ?>
         width:"100%"
     });
   </script>
