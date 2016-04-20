@@ -248,7 +248,15 @@ class clappr extends mediaPlayer{
 </div>
   <script>
     var player = new Clappr.Player({
-        source: "<?= $primarySource->src ?>",
+        sources: [<?php 
+        $first = true;
+        foreach($video->sources as $source){
+            if(!$first){ echo ','; }
+            echo '{source : "' . $source->src . '", mimeType : "' . $source->type . '"}';
+            $first = false;
+        }
+                
+                ?>],
         mimeType: "<?= $primarySource->type ?>",
         poster: "<?= $video->poster ?>",
         parentId: "#player",
