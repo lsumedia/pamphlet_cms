@@ -20,6 +20,8 @@ $session_expiration = time() + 3600 * 24 * 2; // +2 days
 session_set_cookie_params($session_expiration);
 session_start();
 
+
+require 'config.php';
 require 'connect.php';
 require 'functions/data_wrangler.php';
 require 'functions/elements.php';
@@ -31,7 +33,7 @@ html::css('css/style.css');		//Import stylesheet
 html::css("https://fonts.googleapis.com/icon?family=Material+Icons");
 echo "<script>var CKEDITOR_BASEPATH = 'ckeditor/';</script>";
 html::lockZoom();
-$title = 'Pamphlet 3.4';
+$title = $config['siteTitle'];
 html::title($title);
 html::jquery();
 //html::js('js/materialize.js');

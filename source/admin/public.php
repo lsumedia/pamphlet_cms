@@ -16,6 +16,7 @@ error_reporting(-1);
     error_reporting(0);
 }
 
+require 'config.php';
 require 'connect.php';
 require 'functions/data_wrangler.php';
 require 'functions/elements.php';
