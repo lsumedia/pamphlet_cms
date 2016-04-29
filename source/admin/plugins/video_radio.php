@@ -1,62 +1,26 @@
 <?php
 
-class radio extends mediaPlayer{
-    public $name = 'radio';
-    public $title = 'Radio';
-    
-    public $live = true;
-    public $ondemand = false;
-    
-    public $supported = array('audio/mp3', 'audio/ogg', 'audio/wave', 'audio/wav');
-    
-    public static function build($content,$setup){
-        
-        $primarySource = $content->sources[0];
-        $url= $primarySource->src;
-        
-        $poster = $content->poster;
-        $nowplaying_url = $content->source;
-        
-        if(!isset($content->pullsongs)){
-            $content->pullsongs = true;
-        }
-        
-        if($content->channelID){
-            $json = actualLink() . "/public.php?action=plugin_videomanager&id=$content->channelID";
-        }else{
-            $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
-        }
-        
-        require_once('plugins/radio/player.php');
-       
-        //$title = radioPlayer::getNowPlaying($nowplaying, $content->title);
-        $content->plaintitle = $content->title;
-        $content->source = radioPlayer::build($url, $poster, $nowplaying, $content->title, $json);
-        $info = radioPlayer::getNowPlaying($nowplaying_url);
-        $content->server_info = $info['raw'];
-        $content->server_nowplaying = $info['title'];
-        
-        if($content->pullsongs != false){
-            $content->nowplaying = $info['title']; 
-            $content->title = $content->title . ': ' . $info['title'];
-        }
-        //$content->poster = null;
-        
-        return $content;
-        
+class lastfm{
+    static function searchSong($title){
+        global $config;
+        $key = $config['lastfm_apikey'];
+        $json = file_get_contents("http://ws.audioscrobbler.com/2.0/?method=track.search&track=$title&api_key=$key&format=json");
+        return json_decode($json,true);
     }
-    
 }
+
 
 class visual_radio extends mediaPlayer{
     
     public $name = 'radio_visual';
     
-    public $title = 'LCR Video Player';
+    public $title = 'LCR VideoJS';
     public $live = true;
     public $vod = true;
     
     static function build($content,$setup){
+        global $config;
+        
         $primarySource = $content->sources[0];
         $url= $primarySource->src;
 
@@ -78,8 +42,13 @@ class visual_radio extends mediaPlayer{
             if($content->pullsongs != false){
                 $content->nowplaying = $info['title'];
                 $content->title = $content->title . ': ' . $info['title'];
+                $content->liveSongInfo = true;
+                if($config['lastfm_apikey']){
+                    $content->songinfo = lastfm::searchSong($content->nowplaying);
+                }
+            }else{
+                $content->liveSongInfo = false;
             }
-           
         }
         //$content->poster = null;
         

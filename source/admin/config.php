@@ -17,9 +17,15 @@ $config = array(
     'dbUser' => '',
     'dbPass' => '',
     
-    /* */
+    /* Recovery user account which permits logging in if user accounts are broken
+    in some way. Disable when not needed. */
     'recoveryUserEnabled' => false,
-    'recoveryUserName' => 'admin_recovery',
-    'recoveryUserPass' => 'pass'
+    'recoveryUserName' => 'recovery',
+    'recoveryUserPass' => 'pass',
     
+    /* Last.fm API access - uncomment and fill in to use */
+    /*
+    'lastfm_apikey' => '',
+    'lastfm_secret' => ''
+    */
 );
