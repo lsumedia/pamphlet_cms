@@ -45,6 +45,9 @@ class visual_radio extends mediaPlayer{
                 $content->liveSongInfo = true;
                 if($config['lastfm_apikey']){
                     $content->songinfo = lastfm::searchSong($content->nowplaying);
+                    if($track = $content->songinfo['results']['trackmatches']['track'][0]){
+                        $content->nowplaying = $track['artist'] . ' - ' . $track['name'];
+                    }
                 }
             }else{
                 $content->liveSongInfo = false;
