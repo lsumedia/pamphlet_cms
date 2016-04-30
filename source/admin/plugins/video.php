@@ -335,7 +335,12 @@ class manager extends optionsPage{
         $stmt->bind_result($id,$title,$type,$live,$vod,$cover,$thumbnail,$schedule_id);
         $channels = array();
         while($stmt->fetch()){
-            $channels[] = new channel($id, $title, "", $thumbnail, "");
+            $newchannel = new channel($id, $title, "", $thumbnail, "");
+            $newchannel->type = $type;
+            $newchannel->live = $live;
+            $newchannel->vod = $vod;
+            $newchannel->cover = $cover;
+            $channels[] = $newchannel;
         }
         foreach($channels as $key => $channel){
             $id = $channel->id;
