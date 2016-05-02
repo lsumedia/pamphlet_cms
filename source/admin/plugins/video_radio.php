@@ -103,6 +103,7 @@ class visual_radio extends mediaPlayer{
             $json = actualLink() . "/public.php?action=plugin_vod&id=$content->id";
         }
 
+        echo "<script>videojs('#video');</script>";
         echo  "<script> var json_url = '$json'; </script>", PHP_EOL;
         html::js('plugins/radio/vjs-update.js');
 

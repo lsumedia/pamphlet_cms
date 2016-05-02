@@ -149,7 +149,7 @@ class videojs_5 extends mediaPlayer{
         html::css('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.css');
         html::js('plugins/video/videojs/resolution-switcher/videojs-resolution-switcher.js');
         
-        /* Chromecast (requires app) *//*
+        /* Chromecast (requires app key) *//*
         html::css('plugins/video/videojs/chromecast/videojs.chromecast.min.css');
         html::js('plugins/video/videojs/chromecast/videojs.chromecast.min.js');
         */
@@ -171,6 +171,8 @@ class videojs_5 extends mediaPlayer{
         echo "Your browser does not support the video tag";
                 
         echo "</video>";
+        
+        echo "<script>videojs('#video');</script>";
         
         //echo '<script>videojs(\'#video\').videoJsResolutionSwitcher</script>';
         

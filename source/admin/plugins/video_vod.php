@@ -356,7 +356,9 @@ class videos extends optionsPage{
             echo "&id=[id] : Returns a particular video's source code<br />";
             echo "&iframe=[id] : Return a video's source code for use in iframe<br />";
             echo "&tag=[tag] : Returns a list of all videos with a specified tag<br />";
+            echo "+&limit=[limit] : Limit results to a given size<br />";
             echo "&search=[term] : Returns a list of all videos matching a search term<br />";
+            echo "+&limit=[limit] : Limit results to a given size<br />";
         }
     }
 
@@ -439,7 +441,8 @@ class videos extends optionsPage{
     
     public static function searchByTag($live,$searchtags){
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE tags LIKE ? AND live=? ORDER BY date desc")){
+        $limitstr = (isset($_GET['limit']))? "LIMIT " . $_GET['limit'] : "";
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE tags LIKE ? AND live=? ORDER BY date desc $limitstr")){
             $searchtags = '%' . $searchtags . '%';
             $stmt->bind_param('si',$searchtags,$live);
             $stmt->execute();
@@ -463,7 +466,8 @@ class videos extends optionsPage{
     
     public static function searchByString($live,$term){
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE (LOWER(tags) LIKE LOWER(?) OR LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND live=? ORDER BY date desc")){
+         $limitstr = (isset($_GET['limit']))? "LIMIT " . $_GET['limit'] : "";
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE (LOWER(tags) LIKE LOWER(?) OR LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND live=? ORDER BY date desc $limitstr")){
         //if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE (tags LIKE ? COLLATE latin1_general_ci OR title LIKE ? COLLATE latin1_general_ci OR description LIKE ? ) AND live=? ORDER BY date desc ")){
             $termre = '%' . $term . '%';
             $stmt->bind_param('sssi',$termre,$termre,$termre,$live);
