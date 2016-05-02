@@ -277,7 +277,8 @@ class manager extends optionsPage{
                     //Build player with new info
                     $player_content = videos::buildRawVideo($player_content);
                     //Replace poster if thumbnail is specified
-                    if(strlen($thumbnail) > 0){ $player_content->poster = $thumbnail; }
+                    //No don't do that that's stupid
+                    
                     break;
                 case "vod":
                     $player_content = videos::getVideo($vod,true);
@@ -287,6 +288,7 @@ class manager extends optionsPage{
                     break;
             }
             
+            $player_content->thumbnail = $thumbnail;
             $player_content->schedule_id = $schedule_id;
             $player_content->id = $type . '_' . $player_content->id;
             
@@ -346,9 +348,6 @@ class manager extends optionsPage{
             $id = $channel->id;
             $data = self::kpChannel($id);
             $channels[$key]->programme = $data->title;
-            if($data->poster){
-                $channels[$key]->thumbnail = $data->poster;
-            }
             $channels[$key]->schedule_id = $data->$schedule_id;
         }
         return $channels;
