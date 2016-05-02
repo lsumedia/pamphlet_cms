@@ -184,6 +184,21 @@ class videojs_5 extends mediaPlayer{
     
 }
 
+
+/* Pointless will not keep */
+/*
+class videojs5_cinescope extends mediaPlayer{
+    public $name = 'cinescope';
+    public $title = 'VideoJS 5 Cinescope';
+    
+    public $live = true;
+    public $ondemand = true;
+    
+    public static function build($video,$setup){
+        return videojs_5::build($video,$setup);
+    }
+}*/
+
 class soundcloud extends mediaPlayer{
     public $name = 'soundcloud';
     public $title = 'SoundCloud';
