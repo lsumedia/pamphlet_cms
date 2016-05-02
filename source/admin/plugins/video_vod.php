@@ -331,7 +331,8 @@ class videos extends optionsPage{
         }
         
         if(isset($_GET['list'])){
-            echo json_encode(self::listVideos($live));
+            $limit = $_GET['limit'];
+            echo json_encode(self::listVideos($live,$limit));
         }else if(isset($_GET['id'])){
             //html::div("player_container","player1");
             $videoid = filter_input(INPUT_GET,"id");
@@ -388,6 +389,7 @@ class videos extends optionsPage{
     public static function allVideos($live){
         /* Returns all video information in a multi-dimensional array */
         global $connection;
+        
         if($stmt = $connection->prepare("SELECT id,title,type,tags,date FROM plugin_vod WHERE live=? ORDER BY id DESC")){
             $stmt->bind_param('i',$live);
             $stmt->execute();
@@ -409,10 +411,11 @@ class videos extends optionsPage{
      * 
      * Returns all video information for a JSON array
      */
-    public static function listVideos($live){
+    public static function listVideos($live, $limit){
         /* Returns all video information in a multi-dimensional array ordered by date */
         global $connection;
-        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE live=? ORDER BY date desc")){
+        $limitstr = (isset($limit))? "LIMIT $limit" : "";
+        if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE live=? ORDER BY date desc $limitstr")){
             $stmt->bind_param('i',$live);
             $stmt->execute();
             $ids = array();
