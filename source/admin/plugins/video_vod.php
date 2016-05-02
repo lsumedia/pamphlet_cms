@@ -352,6 +352,7 @@ class videos extends optionsPage{
             echo "VOD iFrame generator<br />", PHP_EOL;
             echo "Valid requests:<br />";
             echo "&list : Returns list of videos in JSON format<br />";
+            echo "+&limit=[limit] : Limit list to a given size<br />";
             echo "&id=[id] : Returns a particular video's source code<br />";
             echo "&iframe=[id] : Return a video's source code for use in iframe<br />";
             echo "&tag=[tag] : Returns a list of all videos with a specified tag<br />";
