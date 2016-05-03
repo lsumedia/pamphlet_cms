@@ -495,7 +495,7 @@ class schedule extends optionsPage{
             $preferredEvent = $events[0];
             $showID = $preferredEvent['show_id'];
             
-            /* Convert showID to show object */
+            /* Get show object by show ID */
             $show = shows::rawGetShowById($showID);
 
             $video->show = $show;
@@ -504,9 +504,7 @@ class schedule extends optionsPage{
             if($show['description']){ $video->description = $show['description']; }
             $video->theme_colour = $show['theme_colour'];
             $video->pullsongs = $preferredEvent['pullsongs'];
-            if($video->pullsongs){
-                $video->title = $video->title . ': ' . $show['title'];
-            }
+            $video->title = $show['title'];
         }
         return $video;
     }
