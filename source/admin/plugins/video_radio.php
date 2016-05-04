@@ -40,7 +40,7 @@ class visual_radio extends mediaPlayer{
             $content->server_info = $info['raw'];
             $content->server_nowplaying = $info['title'];
             if($content->pullsongs != false){
-                //$content->nowplaying = $info['title'];
+                $content->nowplaying = $info['title'];
                 //$content->title = $content->title . ': ' . $info['title'];
                 $content->liveSongInfo = true;
                 if($config['lastfm_apikey']){

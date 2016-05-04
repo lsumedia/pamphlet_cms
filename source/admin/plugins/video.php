@@ -264,15 +264,18 @@ class manager extends optionsPage{
             $stmt->fetch();
             $stmt->close();
             
+           
+            
             switch($type){
                 case "live":
                     $player_content = videos::getVideo($live,false);
                     $player_content->pullsongs = true;
+                    $player_content->channelID = $id;
                     /* scheduling section goes HERE */
                     if($schedule_id > 0){
                         $player_content->plaintitle = $player_content->title;
                         $player_content = schedule::processVideo($player_content, $schedule_id);
-                        $player_content->channelID = $id;
+                        
                     }
                     //Build player with new info
                     $player_content = videos::buildRawVideo($player_content);
@@ -288,6 +291,7 @@ class manager extends optionsPage{
                     break;
             }
             
+            $player_content->channelID = $id;
             $player_content->thumbnail = $thumbnail;
             $player_content->channel_name = $title;
             $player_content->schedule_id = $schedule_id;
