@@ -19,10 +19,12 @@ class twitter extends optionsPage {
         switch ($_GET['request']) {
             case 'setone':
                 $id = $_GET['id'];
+                //Get raw status from Twitter API
                 $status = twitterList::getOne($id);
                 $clean = twitterList::rawToClean($status);
                 $raw_json = json_encode($status);
                 file_put_contents('plugins/twitter/current.json', $raw_json);
+                //Get OEmbed status from Twitter API
                 echo json_encode($clean);
                 break;
             case 'search':

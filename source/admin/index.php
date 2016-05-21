@@ -65,7 +65,7 @@ if(isset($_SESSION['username'])){
     //$defaultPage = 'login';
 }
 
-html::js('functions/scripts.js.php');
+html::js('scripts.js.php');
 echo '<div id="central">';
 
 if(isset($_SESSION['username'])){

@@ -3,7 +3,7 @@
 /* 
  * public.php
  * Sends JSON responses for requests for public pages
- * If 
+ * 
  */
 
 if(isset($_GET['debug'])){	//Error reporting - disable for production
