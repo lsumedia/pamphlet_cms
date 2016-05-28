@@ -78,6 +78,24 @@ class twitterList{
         return $status;
     }   
     
+    public static function getOneOembed($tweeturl){
+        require_once('TwitterAPIExchange.php');
+
+        require_once('twitter_keys.php');
+
+        $url = 'https://api.twitter.com/1.1/statuses/show.json';
+        $getfield = "?id=$tweetid";
+        $requestMethod = 'GET';
+
+        $twitter = new TwitterAPIExchange($settings);
+        $twitter->setGetfield($getfield)      
+                ->buildOauth($url, $requestMethod);
+        $datastring = $twitter->performRequest();
+        
+        $status = json_decode($datastring,1);
+        return $status;
+    }
+    
     public static function getOneClean($tweetid){
         $raw = self::getOne($tweetid);
         return self::rawToClean($raw);

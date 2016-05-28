@@ -416,7 +416,7 @@ class schedule extends optionsPage{
             $eform->build('Add event');
             
             $list = new ajaxList($events,'eventList');
-            $list->title('Shows occuring in this schedule');
+            $list->title('All events');
             $list->display();
         }elseif(isset($_GET['editinstance'])){
             $id = $_GET['editinstance'];

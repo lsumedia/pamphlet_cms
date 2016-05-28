@@ -118,7 +118,9 @@ body {
     text-align: center;
     color: inherit;
     width: 100%;
-    height: 100%; }
+    line-height: 100%;
+    display: inline-block;
+    vertical-align: middle; }
 
 .listWrapper {
   min-height: 300px; }
