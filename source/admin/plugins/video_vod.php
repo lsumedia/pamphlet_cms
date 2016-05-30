@@ -419,9 +419,9 @@ class videos extends optionsPage{
     public static function listVideos($live, $limit){
         /* Returns all video information in a multi-dimensional array ordered by date */
         global $connection;
-        $limitstr = (isset($limit))? "LIMIT $limit" : "";
-        $beforestring = (isset($_GET['before']))? "AND date < '" . $_GET['before'] . "'" : "";
-        $afterstring = (isset($_GET['after']))? "AND date > '" . $_GET['after'] . "'": "";
+        $limitstr = (isset($_GET['limit']))? "LIMIT " . $connection->escape_string($_GET['limit']) : "";
+        $beforestring = (isset($_GET['before']))? "AND date < '" . $connection->escape_string($_GET['before']) . "'" : "";
+        $afterstring = (isset($_GET['after']))? "AND date > '" . $connection->escape_string($_GET['after']) . "'": "";
         $query = "SELECT id,title,url,type,tags,date FROM plugin_vod WHERE live=? $beforestring $afterstring ORDER BY date desc $limitstr";
         if($stmt = $connection->prepare($query)){ 
             $stmt->bind_param('i',$live);
@@ -446,9 +446,9 @@ class videos extends optionsPage{
     
     public static function searchByTag($live,$searchtags){
         global $connection;
-        $limitstr = (isset($_GET['limit']))? "LIMIT " . $_GET['limit'] : "";
-        $beforestring = (isset($_GET['before']))? "AND date < '" . $_GET['before'] . "'" : "";
-        $afterstring = (isset($_GET['after']))? "AND date > '" . $_GET['after'] . "'": "";
+        $limitstr = (isset($_GET['limit']))? "LIMIT " . $connection->escape_string($_GET['limit']) : "";
+        $beforestring = (isset($_GET['before']))? "AND date < '" . $connection->escape_string($_GET['before']) . "'" : "";
+        $afterstring = (isset($_GET['after']))? "AND date > '" . $connection->escape_string($_GET['after']) . "'": "";
         $query = "SELECT id,title,url,type,tags,date FROM plugin_vod WHERE tags COLLATE UTF16_GENERAL_CI LIKE ? AND live=? $beforestring $afterstring ORDER BY date desc $limitstr";
         if($stmt = $connection->prepare($query)){
             $searchtags = '%' . $searchtags . '%';
@@ -474,9 +474,9 @@ class videos extends optionsPage{
     
     public static function searchByString($live,$term){
         global $connection;
-        $limitstr = (isset($_GET['limit']))? "LIMIT " . $_GET['limit'] : "";
-        $beforestring = (isset($_GET['before']))? "AND date < '" . $_GET['before'] . "'" : "";
-        $afterstring = (isset($_GET['after']))? "AND date > '" . $_GET['after'] . "'": "";
+        $limitstr = (isset($_GET['limit']))? "LIMIT " . $connection->escape_string($_GET['limit']) : "";
+        $beforestring = (isset($_GET['before']))? "AND date < '" . $connection->escape_string($_GET['before']) . "'" : "";
+        $afterstring = (isset($_GET['after']))? "AND date > '" . $connection->escape_string($_GET['after']) . "'": "";
         $querystring  = "SELECT id,title,url,type,tags,date FROM plugin_vod WHERE (LOWER(tags) LIKE LOWER(?) OR LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND live=? $beforestring $afterstring ORDER BY date desc $limitstr";
         if($stmt = $connection->prepare($querystring)){
         //if($stmt = $connection->prepare("SELECT id,title,url,type,tags,date FROM plugin_vod WHERE (tags LIKE ? COLLATE latin1_general_ci OR title LIKE ? COLLATE latin1_general_ci OR description LIKE ? ) AND live=? ORDER BY date desc ")){
