@@ -336,7 +336,6 @@ class manager extends optionsPage{
      */
     static function activeChannels(){
         global $connection;
-        
         $stmt = $connection->prepare("SELECT id,title,type,live,vod,cover,thumbnail,schedule_id FROM plugin_videomanager WHERE visible=1;");
         $stmt->execute();
         $stmt->bind_result($id,$title,$type,$live,$vod,$cover,$thumbnail,$schedule_id);
@@ -347,13 +346,16 @@ class manager extends optionsPage{
             $newchannel->live = $live;
             $newchannel->vod = $vod;
             $newchannel->cover = $cover;
+            $newchannel->schedule_id = $schedule_id;
             $channels[] = $newchannel;
         }
-        foreach($channels as $key => $channel){
-            $id = $channel->id;
-            $data = self::kpChannel($id);
-            $channels[$key]->programme = $data->title;
-            $channels[$key]->schedule_id = $data->$schedule_id;
+        if(isset($_GET['detailed'])){
+            foreach($channels as $key => $channel){
+                $id = $channel->id;
+                $data = self::kpChannel($id);
+                $channels[$key]->programme = $data->title;
+                $channels[$key]->schedule_id = $data->$schedule_id;
+            }
         }
         return $channels;
         
