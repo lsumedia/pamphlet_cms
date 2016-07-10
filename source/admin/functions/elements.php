@@ -1088,7 +1088,7 @@ class standardOptionsPages{
 	}
 	
 	function configure(){
-		$this->importStandardPages();
+		//$this->importStandardPages();
 		$this->importPluginPages();
 	}
 	

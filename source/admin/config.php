@@ -17,6 +17,15 @@ $config = array(
     'dbUser' => '',
     'dbPass' => '',
     
+    /* Database name */
+    'db_name' => 'grovestr_media_user_manager',
+    /* Database server */
+    'db_host' => 'luna.servers.prgn.misp.co.uk',
+    /* Database user name */
+    'db_user' => 'grovestr_media',
+    /* Database user password */
+    'db_pass' => 'i<3media16',
+    
     /* Recovery user account which permits logging in if user accounts are broken
     in some way. Disable when not needed. */
     'recoveryUserEnabled' => false,

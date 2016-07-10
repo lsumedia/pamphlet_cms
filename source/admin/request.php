@@ -14,10 +14,7 @@ error_reporting(-1);
     error_reporting(0);
 }
 
-require 'config.php';
-require 'connect.php';
-require 'functions/data_wrangler.php';
-require 'functions/elements.php';
+require 'init.php';
 
 //Current internal pages
 $action = filter_input(INPUT_GET,'action');
@@ -25,33 +22,17 @@ $action = filter_input(INPUT_GET,'action');
 $pages = new standardOptionsPages();
 $pages->configure();
 
+$auth = new authenticator();
 
-if(isset($_SESSION['username'])){
-    //Logged in!
-    if($page = $pages->matchObject($action)){
-        if(isset($_GET['update'])){
-            $page->updatePage();
-        }else{
-            $page->configPage();
-        }
+//Logged in!
+if($page = $pages->matchObject($action)){
+    if(isset($_GET['update'])){
+        $page->updatePage();
     }else{
-        echo "Invalid action request";
+        $page->configPage();
     }
-}
-else if(!setup::isSetup()){
-    $page = $pages->matchObject("setup");
-    if(isset($_GET['update'])){
-            $page->updatePage();
-        }else{
-            $page->configPage();
-        }
 }else{
-    $page = $pages->matchObject("login");
-    if(isset($_GET['update'])){
-            $page->updatePage();
-        }else{
-            $page->configPage();
-        }
+    echo "Invalid action request";
 }
 
 

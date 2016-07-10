@@ -21,10 +21,9 @@ session_set_cookie_params($session_expiration);
 session_start();
 
 
-require 'config.php';
-require 'connect.php';
-require 'functions/data_wrangler.php';
-require 'functions/elements.php';
+require 'init.php';
+
+$auth = new authenticator();
 
 html::start();
 
@@ -41,6 +40,9 @@ html::js("ckeditor/ckeditor.js");
 
 html::endHead();		//End head tag, start body tag
 
+//Print login info thingy
+$auth->status_bug();
+
 //Body section
 //Declare objects
 $topbar = new cm_topbar();
@@ -49,49 +51,33 @@ $inner = new cm_inner();
 $pages = new standardOptionsPages();
 
 $pages->configure();
-$leftbar->prefixHtml($title);		
-if(isset($_SESSION['username'])){
-    	//Load page objects
-    $leftbar->elements = $pages->returnNavList();	//Import pagelist to array
-   		//Set leftbar prefix
-    $leftbar->addLink("logout", "Sign out");
-    $leftbar->printBar();                               //Print leftbar
-    //$inner->printInner();				//Print inner AJAX section                           
-    //$defaultPage = 'general';
-}else{
-    //$leftbar->addLink("login","Log in");
-    $leftbar->printBar();
-    //$inner->printInner();
-    //$defaultPage = 'login';
-}
+$leftbar->prefixHtml($title);	
+
+    //Load page objects
+$leftbar->elements = $pages->returnNavList();	//Import pagelist to array
+            //Set leftbar prefix
+//$leftbar->addLink('', 'Log out');
+$leftbar->printBar();                               //Print leftbar
+//$inner->printInner();				//Print inner AJAX section                           
+//$defaultPage = 'general';
 
 html::js('scripts.js.php');
 echo '<div id="central">';
 
-if(isset($_SESSION['username'])){
-    //Logged in!
-    if(isset($_GET['action'])){
-        $action = $_GET['action'];
-    }else{
-        $action = 'general';
-    }
-    if($page = $pages->matchObject($action)){
-        $page->configPage();
-    }else{
-        echo "Invalid action request";
-    }
+//Logged in!
+if(isset($_GET['action'])){
+    $action = $_GET['action'];
+}else{
+    $action = 'general';
 }
-else if(!setup::isSetup()){
-    $page = $pages->matchObject("setup");
+if($page = $pages->matchObject($action)){
     $page->configPage();
 }else{
-    $page = $pages->matchObject("login");
-    $page->configPage();
+    echo "Invalid action request";
 }
 
 echo '</div>';
 //More javascript and end document
-
 
 //$leftbar->defaultPage($defaultPage);
 html::end();

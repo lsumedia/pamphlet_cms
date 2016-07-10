@@ -16,10 +16,7 @@ error_reporting(-1);
     error_reporting(0);
 }
 
-require 'config.php';
-require 'connect.php';
-require 'functions/data_wrangler.php';
-require 'functions/elements.php';
+require 'init.php';
 
 //Prevent caching
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
