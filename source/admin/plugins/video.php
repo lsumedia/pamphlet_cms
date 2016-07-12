@@ -122,7 +122,10 @@ class manager extends optionsPage{
                 }
                 $slist->display($this->name);
             }else{
-                echo "Error accessing database!";
+                if(self::setup()){
+                    echo "Database configured!";
+                }
+                
             }
             
         }
@@ -361,7 +364,26 @@ class manager extends optionsPage{
         
     }
     
-    
+    static function setup(){
+        global $connection;
+        
+        $sql = file_get_contents('./plugins/video/setup.sql', true);
+        
+        try{
+            $res = $connection->query($sql);
+        }catch(Exception $e){
+            echo "Error: $e<br/>{$connection->error}";
+            return false;
+        }
+        
+        if(!$res){
+            echo $connection->error;
+            return false;
+        }
+        
+        return true;
+        
+    }
 }
 
 $pluginPages[] = new manager();
@@ -551,17 +573,6 @@ class cover extends optionsPage{
 }
 
 $pluginPages[] = new cover();
-
-class video_setup extends optionsPage{
-    
-    public $name = "plugin_videosetup";
-    
-    function updatePage(){
-        
-    }
-}
-
-
 
 /**
  * Generate code for creating a dynamically generated videoJS player that can be embedded on another site

@@ -5,22 +5,17 @@
 $config = array(
   
     /* Site title (appears in the top bar) */
-    'siteTitle' => 'Pamphlet',
+    'siteTitle' => 'LSUTV Admin',
     
     /* Site name prefix for cookies; make sure this is unique if using multiple Pamphlet installations on one server */
     'sitePrefix' => 'pamphlet',
     
     /* Database options */ 
     
-    'dbHost' => '',
-    'dbDataBase' => '',
-    'dbUser' => '',
-    'dbPass' => '',
-    
     /* Database name */
-    'db_name' => 'grovestr_media_user_manager',
+    'db_name' => 'grovestr_lsutv',
     /* Database server */
-    'db_host' => 'luna.servers.prgn.misp.co.uk',
+    'db_host' => 'localhost',
     /* Database user name */
     'db_user' => 'grovestr_media',
     /* Database user password */
