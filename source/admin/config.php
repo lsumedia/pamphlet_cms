@@ -21,11 +21,11 @@ $config = array(
     /* Database user password */
     'db_pass' => 'i<3media16',
     
-    /* Recovery user account which permits logging in if user accounts are broken
-    in some way. Disable when not needed. */
-    'recoveryUserEnabled' => false,
-    'recoveryUserName' => 'recovery',
-    'recoveryUserPass' => 'pass',
+    /* Authenticator permission required to access the site
+     * (set to NULL to allow access to any logged-in user)
+     */
+    
+    'access_perm' => 'lsutv_edit_content',
     
     /* Last.fm API access - uncomment and fill in to use */
     /*

@@ -25,6 +25,13 @@ require 'init.php';
 
 $auth = new authenticator();
 
+if(strlen($config['access_perm']) > 0){
+    if($auth->server_check_permission($config['access_perm']) == false){
+        echo "<p>You do not have permission to access this page</p>";
+        die();
+    }
+}
+
 html::start();
 
 //html::css('css/materialize.min.css');
@@ -56,7 +63,7 @@ $leftbar->prefixHtml($title);
     //Load page objects
 $leftbar->elements = $pages->returnNavList();	//Import pagelist to array
             //Set leftbar prefix
-//$leftbar->addLink('', 'Log out');
+$leftbar->addLink('auth_logout', 'Log out');
 $leftbar->printBar();                               //Print leftbar
 //$inner->printInner();				//Print inner AJAX section                           
 //$defaultPage = 'general';
