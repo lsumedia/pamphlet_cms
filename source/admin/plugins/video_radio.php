@@ -14,7 +14,7 @@ class visual_radio extends mediaPlayer{
     
     public $name = 'radio_visual';
     
-    public $title = 'LCR VideoJS';
+    public $title = 'SHOUTcast/Icecast';
     public $live = true;
     public $vod = true;
     
