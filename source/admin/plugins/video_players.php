@@ -11,7 +11,7 @@
 
 class videojs_5 extends mediaPlayer{
     public $name = 'html5';
-    public $title = 'HTML5';
+    public $title = 'VideoJS';
     
     public $live = true;
     public $ondemand = true;

@@ -28,8 +28,9 @@ $config = array(
     'access_perm' => 'lsutv_edit_content',
     
     /* Last.fm API access - uncomment and fill in to use */
-    /*
+    
     'lastfm_apikey' => '',
-    'lastfm_secret' => ''
-    */
+    'lastfm_secret' => '',
+    'enable_lastfm' => 'false'
+    
 );

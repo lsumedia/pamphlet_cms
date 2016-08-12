@@ -43,7 +43,7 @@ class visual_radio extends mediaPlayer{
                 $content->nowplaying = $info['title'];
                 //$content->title = $content->title . ': ' . $info['title'];
                 $content->liveSongInfo = true;
-                if($config['lastfm_apikey'] && false){
+                if(strlen($config['lastfm_apikey']) > 0 && $config['enable_lastfm'] == true){
                     $content->songinfo = lastfm::searchSong($content->nowplaying);
                     if($track = $content->songinfo['results']['trackmatches']['track'][0]){
                         $content->nowplaying = $track['artist'] . ' - ' . $track['name'];
@@ -113,4 +113,29 @@ class visual_radio extends mediaPlayer{
         
         return $content;
     }
+}
+
+
+class gifv_audio extends mediaPlayer{
+    
+    public $name = 'gifv_audio';
+    
+    public $title = 'Audio with GIFV';
+    public $live = false;
+    public $vod = true;
+    
+    public static function build($content, $setup){
+       
+        ob_start();
+        
+        ?>
+<video src="<?= $content->poster ?>" loop autoplay="true">
+</video>
+<?php
+        $content->source = ob_get_contents();
+        ob_end_clean();
+        
+        return $content;
+    }
+    
 }
