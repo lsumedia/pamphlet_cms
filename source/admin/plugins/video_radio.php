@@ -114,28 +114,3 @@ class visual_radio extends mediaPlayer{
         return $content;
     }
 }
-
-
-class gifv_audio extends mediaPlayer{
-    
-    public $name = 'gifv_audio';
-    
-    public $title = 'Audio with GIFV';
-    public $live = false;
-    public $vod = true;
-    
-    public static function build($content, $setup){
-       
-        ob_start();
-        
-        ?>
-<video src="<?= $content->poster ?>" loop autoplay="true">
-</video>
-<?php
-        $content->source = ob_get_contents();
-        ob_end_clean();
-        
-        return $content;
-    }
-    
-}
