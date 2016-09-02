@@ -422,7 +422,8 @@ class cover extends optionsPage{
             $form = new ajaxForm("newItemForm", $this->name, "POST");
             $form->formTitle("New holding screen");
             $form->labeledInput("title", "text", "", "Title");
-            $form->inputWithButton("url", "", "Image URL", "browseServer()", "Upload");
+            //$form->inputWithButton("url", "", "Image URL", "browseServer()", "Upload");
+            $form->file('url','','Image URL');
             $form->largeText("description", "", "Description");
             $form->submit("Add new item");
             

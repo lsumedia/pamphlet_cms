@@ -27,6 +27,11 @@ $config = array(
     
     'access_perm' => 'lsutv_edit_content',
     
+    
+    /* media_server location for choosing files (with trailing slash) */
+    
+    'media_server' => 'http://grovestreet.me/media_server/',
+    
     /* Last.fm API access - uncomment and fill in to use */
     
     'lastfm_apikey' => '',

@@ -506,6 +506,15 @@ class ajaxForm{
         $this->fieldNames[] = $name;
     }
     
+    function file($name, $value, $label){
+          //Input with an upload button
+        echo "<div class=\"fieldRow\" id=\"filePath\"><p>$label</p>";
+        echo "<input id=\"$name\" type=\"text\" value=\"$value\">";
+        echo "<button onclick=\"choose_file('$name');\">Choose file</button>";
+        echo "</div>";
+        $this->fieldNames[] = $name;
+    }
+    
     function labeledInput($name,$type,$value,$label){
         //Regular text input
         echo "<div class=\"fieldRow\"><p>$label</p><input type=\"$type\" id=\"$name\" name=\"$name\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
