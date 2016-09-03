@@ -12,6 +12,7 @@ class videos extends optionsPage{
     public $title = "On Demand Videos";
     
     
+    
     public static function formArray($live,$new){
         /* AjaxForm2 options array for future use */
         if($live){
@@ -42,7 +43,12 @@ class videos extends optionsPage{
     }
     
     public function configPage($live){
+        
         global $connection;
+        global $config;
+        
+        $perm_required = $config['access_perm'];
+        
         ce::begin("style='min-width:800px'");
         /* Declare $live as false if we don't want to see live videos*/
         if(!isset($live)){
@@ -80,7 +86,7 @@ class videos extends optionsPage{
             if($live){
                 $editForm->kpSelector("poster", cover::kpCovers(), $details->poster, "Poster URL");
             }else{
-                $editForm->labeledInput("poster", "text", $details->poster, "Poster URL");
+                $editForm->file("poster", $details->poster, "Poster URL"); 
             }
             $editForm->largeText("description", $details->description, "Description");
             $editForm->lockedInput(actualLink() . "/public.php?action=$this->name&iframe=$video", "External embed URL");
@@ -154,7 +160,7 @@ class videos extends optionsPage{
             if($live){
                 $form->kpSelector("poster", cover::kpCoverURLs(), '', "Poster URL");
             }else{
-                $form->labeledInput("poster", "text", '', "Poster URL");
+                $form->file("poster", '', "Poster URL");
             }
             $form->largeText("description", "", "Description");
             if($live){
@@ -191,6 +197,9 @@ class videos extends optionsPage{
         
         
         global $connection;
+        global $config;
+        
+        $perm_required = $config['access_perm'];
         
         $title = filter_input(INPUT_POST,"title");
         $tags = filter_input(INPUT_POST,"tags");
@@ -205,7 +214,7 @@ class videos extends optionsPage{
         if(isset($_GET['delete'])){
             //Deleting video
             $delete = filter_input(INPUT_GET,"delete");
-            block(2);
+            block($perm_required);
             
             $bdstmt = $connection->prepare("DELETE FROM plugin_vod WHERE id=?");
             $sdstmt = $connection->prepare("DELETE FROM plugin_vod_sources WHERE video_id=?");
@@ -219,7 +228,7 @@ class videos extends optionsPage{
         }
         else if(isset($_GET['edit'])){
             //Editing video
-            block(2);
+            block($perm_required);
             $edit = filter_input(INPUT_GET,"edit");
             //Editing existing post
             if($bstmt = $connection->prepare("UPDATE plugin_vod SET title=?, tags=?, date=?, description=?, type=? ,url=?, source=?, poster=?  WHERE id=?")){
@@ -233,7 +242,7 @@ class videos extends optionsPage{
             return;
             
         }else if(isset($_GET['delete_source'])){
-            block(2);
+            block($perm_required);
             $source_id = filter_input(INPUT_GET,'delete_source');
             
             $bdstmt = $connection->prepare("DELETE FROM plugin_vod_sources WHERE source_id=?");
@@ -245,7 +254,7 @@ class videos extends optionsPage{
             }
         }
         else if(isset($_GET['edit_source'])){
-            block(2);
+            block($perm_required);
             $source_id = filter_input(INPUT_GET,"edit_source");
             $src = filter_input(INPUT_POST,'src');
             $type = filter_input(INPUT_POST,'type');
@@ -263,7 +272,7 @@ class videos extends optionsPage{
             
         }
         else if(isset($_GET['add_source'])){
-            block(2);
+            block($perm_required);
             $video_id = filter_input(INPUT_GET,'video_id');
             $src = filter_input(INPUT_POST,'source_src');
             $type = filter_input(INPUT_POST,'source_type');
@@ -285,7 +294,7 @@ class videos extends optionsPage{
             
         }
         else{
-            block(2);
+            block($perm_required);
             //Creating new video
             
             if(isset($_GET['live'])){

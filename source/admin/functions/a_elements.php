@@ -510,7 +510,7 @@ class ajaxForm{
           //Input with an upload button
         echo "<div class=\"fieldRow\" id=\"filePath\"><p>$label</p>";
         echo "<input id=\"$name\" type=\"text\" value=\"$value\">";
-        echo "<button onclick=\"choose_file('$name');\">Choose file</button>";
+        echo "<button onclick=\"choose_file('$name');\">Upload</button>";
         echo "</div>";
         $this->fieldNames[] = $name;
     }

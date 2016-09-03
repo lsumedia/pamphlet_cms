@@ -77,7 +77,7 @@ class manager extends optionsPage{
                 $form->formTitle("Edit channel");
                 $form->labeledInput("title", "text", $title, "Channel name");
                 $form->checkBox("visible", $visible, "Visible in controller");
-                $form->inputWithButton("thumbnail", $thumbnail, "Thumbnail image", "browseServer()", "Upload");
+                $form->file("thumbnail", $thumbnail, "Thumbnail image");
                 $form->kpSelector("type", self::kpVideoTypes(), $type, "Content to display");
                 $form->kpSelector("live", videos::kpVideos(1), $live, "Live stream");
                 $form->kpSelector("vod", videos::kpVideos(0), $vod, "On-demand video");
@@ -98,7 +98,7 @@ class manager extends optionsPage{
             $form->formTitle("New channel");
             $form->labeledInput("title", "text", "", "Channel name");
             $form->checkBox("visible", "1", "Visible in controller");
-            $form->inputWithButton("thumbnail", "", "Thumbnail image", "browseServer()", "Upload");
+            $form->file("thumbnail", "", "Thumbnail image");
             $form->kpSelector("type", manager::kpVideoTypes() , "", "Content to display");
             $form->kpSelector("live", videos::kpVideos(1), "", "Live stream");
             $form->kpSelector("vod", videos::kpVideos(0) , "", "On-demand video");
@@ -142,6 +142,9 @@ class manager extends optionsPage{
     public function displayPage() {
         
         global $connection;
+        global $config;
+        
+        $perm_required = $config['access_perm'];
         
         if(isset($_GET['list'])){
             
@@ -183,7 +186,10 @@ class manager extends optionsPage{
      * Edit/add/delete channel
      */
     public function updatePage(){
-       global $connection;
+        global $connection;
+        global $config;
+        
+        $perm_required = $config['access_perm'];
         
         $title = filter_input(INPUT_POST,"title");
         $type = filter_input(INPUT_POST,"type");
@@ -198,7 +204,7 @@ class manager extends optionsPage{
         if(isset($_GET['delete'])){
             
             $delete = filter_input(INPUT_GET,"delete");
-            block(2);
+            block($perm_required);
             
             $bdstmt = $connection->prepare("DELETE FROM $this->name WHERE id=?");
             $bdstmt->bind_param("i",$delete);
@@ -210,7 +216,7 @@ class manager extends optionsPage{
         }
         else if(isset($_GET['edit'])){
             
-            block(2);
+            block($perm_required);
             $edit = filter_input(INPUT_GET,"edit");
             //Editing existing post
             $bstmt = $connection->prepare("UPDATE $this->name SET title=?, type=?, live=?, vod=?, cover=?, visible=?, thumbnail=?, schedule_id=? WHERE id=?");
@@ -224,7 +230,7 @@ class manager extends optionsPage{
             
         }
         else{
-            block(2);
+            block($perm_required);
             //Creating new channel
             if(!$title){
                 echo "Please enter a title";
@@ -413,7 +419,7 @@ class cover extends optionsPage{
             $editForm = new ajaxForm("editVideoForm", $this->name . "&edit=" . $cover_id, "POST", $this->name);
             $editForm->formTitle("Edit holding screen");
             $editForm->labeledInput("title", "text", $title, "Title");
-            $editForm->inputWithButton("url", $url, "Image URL", "browseServer()", "Upload");
+            $editForm->file("url", $url, "Image URL");
             $editForm->largeText("description", $description, "Description");
             $editForm->otherActionButton("deleteVideo", "Delete", "&delete=$cover_id", $this->name);
             $editForm->submit("Save changes",'plugin_cover');
@@ -422,7 +428,6 @@ class cover extends optionsPage{
             $form = new ajaxForm("newItemForm", $this->name, "POST");
             $form->formTitle("New holding screen");
             $form->labeledInput("title", "text", "", "Title");
-            //$form->inputWithButton("url", "", "Image URL", "browseServer()", "Upload");
             $form->file('url','','Image URL');
             $form->largeText("description", "", "Description");
             $form->submit("Add new item");
@@ -438,6 +443,9 @@ class cover extends optionsPage{
     
     public function updatePage(){
         global $connection;
+         global $config;
+        
+        $perm_required = $config['access_perm'];
         
         $title = filter_input(INPUT_POST,"title");
         $description = content("description");
@@ -446,7 +454,7 @@ class cover extends optionsPage{
         if(isset($_GET['delete'])){
             
             $delete = filter_input(INPUT_GET,"delete");
-            block(2);
+            block($perm_required);
             
             $bdstmt = $connection->prepare("DELETE FROM $this->name WHERE id=?");
             $bdstmt->bind_param("i",$delete);
@@ -457,7 +465,7 @@ class cover extends optionsPage{
             }
         }
         else if(isset($_GET['edit'])){
-            block(2);
+            block($perm_required);
             
             $edit = filter_input(INPUT_GET,"edit");
             //Editing existing post
@@ -475,7 +483,7 @@ class cover extends optionsPage{
             
         }
         else{
-            block(2);
+            block($perm_required);
             //Creating new stream
             if(!$title){
                 echo "Please enter a title";
