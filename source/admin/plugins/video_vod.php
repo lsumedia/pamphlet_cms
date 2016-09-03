@@ -106,7 +106,7 @@ class videos extends optionsPage{
             /* New source form */
             $sourceForm = new ajaxForm('newSourceForm', "plugin_vod&add_source&video_id=$video",'POST');
             $sourceForm->formTitle("Add source");
-            $sourceForm->labeledInput('source_src', 'text', '', 'Source URL');
+            $sourceForm->file('source_src', '', 'Source URL');
             $sourceForm->labeledInput('source_type', 'text', 'video/mp4', 'Source type');
             $sourceForm->labeledInput('source_res', 'number', '720', 'Source vertical resolution');
             $sourceForm->submit('Add source',"plugin_vod&edit=$video");
@@ -148,7 +148,7 @@ class videos extends optionsPage{
             }else{                
                 $form->kpSelector("type", mediaPlayer::kpVodTypes(), 'html5', "Video type");  
             }
-            $form->labeledInput("source_src", "text", "", "Primary source URL");
+            $form->file("source_src", "", "Primary source URL");
             $form->labeledInput('source_type', 'text', 'video/mp4', 'Primary source type');
             $form->labeledInput('source_res','text','','Primary source vertical resolution');
             ajaxForm::startOptionalSection("embed","Embed code/Additional parameters");
