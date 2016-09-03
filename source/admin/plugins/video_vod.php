@@ -126,7 +126,7 @@ class videos extends optionsPage{
             backButton($action);
             $form = new ajaxForm("sourceForm", "$this->name&edit_source=$source_id", 'POST');
             $form->formTitle("Editing source");
-            $form->labeledInput('src', 'text', $source->src, 'Source URL');
+            $form->file('src', $source->src, 'Source URL');
             $form->labeledInput('type','text',$source->type,'Source type');
             $form->labeledInput('res', 'text', $source->res, 'Source vertical resolution');
             $form->otherActionButton("deleteSource", "Delete source", "&delete_source=$source_id",$action);
