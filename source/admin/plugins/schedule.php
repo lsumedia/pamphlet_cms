@@ -89,7 +89,10 @@ class shows extends optionsPage{
     
     public function updatePage() {
         global $connection;
-        block(3);
+        global $config;
+        
+        $perm_required = $config['access_perm'];
+        block($perm_required);
         switch($_GET['request']){
             case 'newinstance':
                 $validate = customForm::simpleArray(self::instanceFormArray(), $_POST);
@@ -184,7 +187,7 @@ class shows extends optionsPage{
     public static function showFormArray(){
         return [
             'title' => ['type' => 'text', 'label' => 'Title', 'value' => ''],
-            'poster_url' => ['type' => 'url', 'label' => 'Poster image', 'value' => ''],
+            'poster_url' => ['type' => 'file', 'label' => 'Poster image', 'value' => ''],
             'theme_colour' => ['type' => 'color', 'label' => 'Theme colour', 'value' => '#FFFFFF'],
             'tag' => ['type' => 'text', 'label' => 'Show tag', 'value' => ''],
             'description' => ['type' => 'richtext', 'label' => 'Description', 'value' => '']
@@ -444,7 +447,9 @@ class schedule extends optionsPage{
     
     public function updatePage() {
         global $connection;
-        block(3);
+        global $config;                
+        $perm_required = $config['access_perm'];        
+        block($perm_required);
         switch($_GET['request']){
             case 'new':
                 $validate = customForm::simpleArray(self::formArray(), $_POST);

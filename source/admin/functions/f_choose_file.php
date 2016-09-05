@@ -19,7 +19,7 @@ class choose_file extends uiElement{
         media_server_root = '<?= $config['media_server'] ?>';
         
         popup_page = media_server_root + 'popup.php?result_id=' + result_id;
-        window.open(popup_page,'_blank','width=950,height=750,menubar=0,status=0');
+        window.open(popup_page,'_blank','width=950,height=820,menubar=0,status=0');
         
     }
     

@@ -509,7 +509,7 @@ class ajaxForm{
     function file($name, $value, $label){
           //Input with an upload button
         echo "<div class=\"fieldRow\" id=\"filePath\"><p>$label</p>";
-        echo "<input id=\"$name\" type=\"text\" value=\"$value\">";
+        echo "<input id=\"$name\" type=\"text\" value=\"$value\" placeholder=\"$label\">";
         echo "<button onclick=\"choose_file('$name');\">Upload</button>";
         echo "</div>";
         $this->fieldNames[] = $name;
@@ -963,6 +963,14 @@ function expand(id){
     
     public static function hidden($id, $value, $type, $label){
         echo "<div class=\"fieldRow\" style=\"display:none;\"><p>$label</p><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"$value\" placeholder=\"$label\"/></div>", \PHP_EOL;
+    }
+    
+    function file($id, $value, $label){
+          //Input with an upload button
+        echo "<div class=\"fieldRow\" id=\"filePath\"><p>$label</p>";
+        echo "<input id=\"$id\" type=\"text\" value=\"$value\" placeholder=\"$label\">";
+        echo "<button onclick=\"choose_file('$id');\">Upload</button>";
+        echo "</div>";
     }
     
     public static function richtext($id, $value, $label){
