@@ -73,7 +73,21 @@ class videojs_5 extends mediaPlayer{
                 
         echo "</video>";
         
-        echo "<script>videojs('#video');</script>";
+        ?>
+        <script>
+            videojs('#video'); 
+            var video = document.getElementById('video_html5_api');
+            if (video.addEventListener) {
+                video.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                }, false);
+            } else {
+                video.attachEvent('oncontextmenu', function() {
+                    window.event.returnValue = false;
+                });
+            }
+        </script>
+        <?php
         
         //echo '<script>videojs(\'#video\').videoJsResolutionSwitcher</script>';
         

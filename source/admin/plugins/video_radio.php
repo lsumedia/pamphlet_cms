@@ -105,7 +105,21 @@ class visual_radio extends mediaPlayer{
         }
 
         echo "<script>videojs('#video');</script>";
-        echo  "<script> var json_url = '$json'; </script>", PHP_EOL;
+        ?>
+        <script>
+            var json_url = '$json'; 
+            var video = document.getElementById('video_html5_api');
+            if (video.addEventListener) {
+                video.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                }, false);
+            } else {
+                video.attachEvent('oncontextmenu', function() {
+                    window.event.returnValue = false;
+                });
+            }
+        </script>
+            <?php
         html::js('plugins/radio/vjs-update.js');
 
         $content->source =  ob_get_contents();
