@@ -21,6 +21,15 @@ class videojs_5 extends mediaPlayer{
         $data = json_decode($video->source,1);
         $css = false;   //Whether a primary CSS file has been included yet
         
+        $audioonly = true;
+        foreach($content->sources as $source){
+            if(stripos($source->type,'audio') === false){
+                $audioonly = false;
+            }
+        }
+        
+        $content->audioonly = $audioonly;
+        
         ob_start();
         
         if($data['css']){
